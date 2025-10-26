@@ -32,17 +32,21 @@ export const HeroSection = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button
               size="lg"
+              asChild
               className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 h-auto"
             >
-              Conoce nuestros servicios
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <a href="#servicios">
+                Conoce nuestros servicios
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </a>
             </Button>
             <Button
               size="lg"
+              asChild
               variant="outline"
               className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-6 h-auto"
             >
-              Contáctanos
+              <a href="#contacto">Contáctanos</a>
             </Button>
           </div>
         </div>

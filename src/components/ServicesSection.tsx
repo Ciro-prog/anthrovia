@@ -71,7 +71,7 @@ const services = [
 
 export const ServicesSection = () => {
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-gray-50">
+    <section id="servicios" className="py-20 bg-gradient-to-b from-white to-gray-50">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
