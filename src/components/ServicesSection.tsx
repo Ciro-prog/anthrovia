@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { useScrollAnimation } from "@/hooks/useScrollAnimation"
 import {
   Users,
   TrendingUp,
@@ -9,7 +10,8 @@ import {
   Briefcase,
   UserCheck,
   LineChart,
-  GraduationCap
+  GraduationCap,
+  type LucideIcon
 } from "lucide-react"
 
 const services = [
@@ -69,12 +71,70 @@ const services = [
   }
 ]
 
+interface ServiceCardProps {
+  service: typeof services[0]
+  Icon: LucideIcon
+  index: number
+}
+
+const ServiceCard = ({ service, Icon, index }: ServiceCardProps) => {
+  const animation = useScrollAnimation()
+
+  return (
+    <div
+      ref={animation.ref}
+      className={`transition-all duration-700 ${
+        animation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+      style={{ transitionDelay: `${index * 100}ms` }}
+    >
+      <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 overflow-hidden h-full">
+        {/* Gradient header */}
+        <div className={`h-2 bg-gradient-to-r ${service.color}`}></div>
+
+        <CardHeader>
+          <div className="mb-4">
+            <div className={`w-14 h-14 rounded-lg bg-gradient-to-br ${service.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+              <Icon className="w-7 h-7 text-white" />
+            </div>
+          </div>
+          <CardTitle className="text-xl text-primary group-hover:text-accent-burgundy transition-colors">
+            {service.title}
+          </CardTitle>
+        </CardHeader>
+
+        <CardContent>
+          <CardDescription className="text-gray-600 leading-relaxed">
+            {service.description}
+          </CardDescription>
+
+          <Button
+            variant="ghost"
+            className="mt-4 text-primary hover:text-accent-burgundy p-0 h-auto font-semibold group/btn"
+          >
+            Conoce más
+            <span className="ml-2 group-hover/btn:translate-x-1 transition-transform inline-block">→</span>
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
 export const ServicesSection = () => {
+  const headerAnimation = useScrollAnimation()
+  const ctaAnimation = useScrollAnimation()
+
   return (
     <section id="servicios" className="py-20 bg-gradient-to-b from-white to-gray-50">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div
+          ref={headerAnimation.ref}
+          className={`text-center mb-16 transition-all duration-700 ${
+            headerAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
             Nuestros Servicios
           </h2>
@@ -90,44 +150,23 @@ export const ServicesSection = () => {
           {services.map((service, index) => {
             const Icon = service.icon
             return (
-              <Card
+              <ServiceCard
                 key={index}
-                className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 overflow-hidden"
-              >
-                {/* Gradient header */}
-                <div className={`h-2 bg-gradient-to-r ${service.color}`}></div>
-
-                <CardHeader>
-                  <div className="mb-4">
-                    <div className={`w-14 h-14 rounded-lg bg-gradient-to-br ${service.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                      <Icon className="w-7 h-7 text-white" />
-                    </div>
-                  </div>
-                  <CardTitle className="text-xl text-primary group-hover:text-accent-burgundy transition-colors">
-                    {service.title}
-                  </CardTitle>
-                </CardHeader>
-
-                <CardContent>
-                  <CardDescription className="text-gray-600 leading-relaxed">
-                    {service.description}
-                  </CardDescription>
-
-                  <Button
-                    variant="ghost"
-                    className="mt-4 text-primary hover:text-accent-burgundy p-0 h-auto font-semibold group/btn"
-                  >
-                    Conoce más
-                    <span className="ml-2 group-hover/btn:translate-x-1 transition-transform inline-block">→</span>
-                  </Button>
-                </CardContent>
-              </Card>
+                service={service}
+                Icon={Icon}
+                index={index}
+              />
             )
           })}
         </div>
 
         {/* CTA Section */}
-        <div className="mt-16 text-center">
+        <div
+          ref={ctaAnimation.ref}
+          className={`mt-16 text-center transition-all duration-700 ${
+            ctaAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           <div className="bg-gradient-to-r from-primary via-accent-teal to-primary-light rounded-2xl p-12 text-white">
             <h3 className="text-3xl md:text-4xl font-bold mb-4">
               ¿Listo para potenciar tu talento?
@@ -139,9 +178,10 @@ export const ServicesSection = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
+                asChild
                 className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 h-auto"
               >
-                Agendar consultoría
+                <a href="#contacto">Agendar consultoría</a>
               </Button>
               <Button
                 size="lg"

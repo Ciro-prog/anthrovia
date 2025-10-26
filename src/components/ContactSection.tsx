@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
+import { useScrollAnimation } from "@/hooks/useScrollAnimation"
 import {
   Phone,
   Mail,
@@ -16,6 +17,9 @@ import {
 const WHATSAPP_NUMBER = "5492625435328"
 
 export const ContactSection = () => {
+  const headerAnimation = useScrollAnimation()
+  const formAnimation = useScrollAnimation()
+  const infoAnimation = useScrollAnimation()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -71,7 +75,12 @@ ${formData.message}
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-16">
+          <div
+            ref={headerAnimation.ref}
+            className={`text-center mb-16 transition-all duration-700 ${
+              headerAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
+          >
             <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
               Contáctanos
             </h2>
@@ -84,7 +93,12 @@ ${formData.message}
 
           <div className="grid md:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <div>
+            <div
+              ref={formAnimation.ref}
+              className={`transition-all duration-700 ${
+                formAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+              }`}
+            >
               <Card className="border-2">
                 <CardContent className="p-6">
                   <form onSubmit={handleSubmit} className="space-y-6">
@@ -196,7 +210,12 @@ ${formData.message}
             </div>
 
             {/* Contact Info */}
-            <div className="space-y-6">
+            <div
+              ref={infoAnimation.ref}
+              className={`space-y-6 transition-all duration-700 ${
+                infoAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+              }`}
+            >
               <div>
                 <h3 className="text-2xl font-bold text-primary mb-6">
                   Información de Contacto
