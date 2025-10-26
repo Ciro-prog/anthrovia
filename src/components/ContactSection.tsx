@@ -259,10 +259,10 @@ ${formData.message}
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-1">Email</h4>
                         <a
-                          href="mailto:contacto@anthroviahr.com"
+                          href="mailto:anthroviahr@gmail.com"
                           className="text-primary hover:underline"
                         >
-                          contacto@anthroviahr.com
+                          anthroviahr@gmail.com
                         </a>
                         <p className="text-sm text-gray-500 mt-1">
                           Respuesta en 24 horas
@@ -281,7 +281,7 @@ ${formData.message}
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-1">Ubicación</h4>
                         <p className="text-gray-600">
-                          San Luis, Argentina
+                          Mendoza, Argentina
                         </p>
                         <p className="text-sm text-gray-500 mt-1">
                           Servicios a nivel nacional
