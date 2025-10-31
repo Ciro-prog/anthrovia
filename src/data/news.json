@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "title": "Tendencias en Recursos Humanos para 2025",
+    "excerpt": "Descubre las principales tendencias que están transformando la gestión del talento y cómo preparar tu organización para el futuro.",
+    "content": "El mundo de los recursos humanos está en constante evolución. En este artículo exploramos las tendencias clave que definirán el 2025.",
+    "image": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
+    "category": "Tendencias",
+    "date": "2025-01-15",
+    "author": "Equipo Anthrovia HR"
+  },
+  {
+    "id": 2,
+    "title": "La Importancia de la Cultura Organizacional",
+    "excerpt": "Una cultura sólida es la base del éxito empresarial. Aprende cómo construir y mantener una cultura que atraiga y retenga talento.",
+    "content": "La cultura organizacional es el ADN de toda empresa exitosa. Descubre las claves para crear un ambiente de trabajo positivo.",
+    "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
+    "category": "Cultura",
+    "date": "2025-01-10",
+    "author": "Equipo Anthrovia HR"
+  },
+  {
+    "id": 3,
+    "title": "Estrategias Efectivas de Reclutamiento Digital",
+    "excerpt": "El reclutamiento ha evolucionado. Conoce las mejores prácticas para atraer talento de calidad en el entorno digital.",
+    "content": "Las estrategias de reclutamiento digital son esenciales en el mundo moderno. Te compartimos las técnicas más efectivas.",
+    "image": "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80",
+    "category": "Reclutamiento",
+    "date": "2025-01-05",
+    "author": "Equipo Anthrovia HR"
+  },
+  {
+    "id": 4,
+    "title": "Desarrollo de Líderes en la Era Digital",
+    "excerpt": "Los líderes del futuro necesitan nuevas habilidades. Exploramos cómo desarrollar liderazgo efectivo en equipos remotos e híbridos.",
+    "content": "El liderazgo digital requiere competencias únicas. Descubre cómo formar líderes preparados para los desafíos actuales.",
+    "image": "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&q=80",
+    "category": "Liderazgo",
+    "date": "2024-12-28",
+    "author": "Equipo Anthrovia HR"
+  },
+  {
+    "id": 5,
+    "title": "Bienestar Laboral: Más Allá del Salario",
+    "excerpt": "El bienestar de los colaboradores es clave para la productividad. Conoce estrategias integrales para mejorar la calidad de vida laboral.",
+    "content": "Un equipo saludable es un equipo productivo. Te mostramos cómo implementar programas efectivos de bienestar laboral.",
+    "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80",
+    "category": "Bienestar",
+    "date": "2024-12-20",
+    "author": "Equipo Anthrovia HR"
+  },
+  {
+    "id": 6,
+    "title": "Análisis de Datos en RRHH: Decisiones Inteligentes",
+    "excerpt": "Los datos transforman la gestión de personas. Aprende a utilizar métricas y analytics para tomar decisiones estratégicas.",
+    "content": "El people analytics está revolucionando los RRHH. Descubre cómo implementar una estrategia basada en datos.",
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    "category": "Analytics",
+    "date": "2024-12-15",
+    "author": "Equipo Anthrovia HR"
+  }
+]
