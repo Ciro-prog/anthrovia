@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
 import { Calendar, User, ArrowRight } from "lucide-react"
 import newsData from "@/data/news.json"
+import { useState } from "react"
+import AllNews from "@/components/AllNews"
 
-interface NewsArticle {
+export interface NewsArticle {
   id: number
   title: string
   excerpt: string
@@ -16,6 +18,7 @@ interface NewsArticle {
 
 const NewsCard = ({ article, index }: { article: NewsArticle; index: number }) => {
   const animation = useScrollAnimation()
+  const [expanded, setExpanded] = useState(false)
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -49,12 +52,17 @@ const NewsCard = ({ article, index }: { article: NewsArticle; index: number }) =
           </div>
         </div>
 
-        <CardHeader className="flex-grow">
+          <CardHeader className="flex-grow">
           <CardTitle className="text-xl text-primary group-hover:text-accent-burgundy transition-colors line-clamp-2">
             {article.title}
           </CardTitle>
-          <CardDescription className="text-gray-600 leading-relaxed line-clamp-3">
-            {article.excerpt}
+          <CardDescription className="text-gray-600 leading-relaxed">
+            {/* Show excerpt when collapsed, full content when expanded */}
+            {!expanded ? (
+              <p className="line-clamp-3">{article.excerpt}</p>
+            ) : (
+              <p className="whitespace-pre-line">{article.content || article.excerpt}</p>
+            )}
           </CardDescription>
         </CardHeader>
 
@@ -73,9 +81,11 @@ const NewsCard = ({ article, index }: { article: NewsArticle; index: number }) =
 
           <Button
             variant="ghost"
+            onClick={() => setExpanded((s) => !s)}
+            aria-expanded={expanded}
             className="text-primary hover:text-accent-burgundy p-0 h-auto font-semibold group/btn w-full justify-start"
           >
-            Leer más
+            {expanded ? "Ver menos" : "Leer más"}
             <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
           </Button>
         </CardContent>
@@ -89,6 +99,7 @@ export const NewsSection = () => {
   const articles = newsData as NewsArticle[]
   // Mostrar solo las 3 noticias más recientes
   const latestArticles = articles.slice(0, 3)
+  const [showAll, setShowAll] = useState(false)
 
   return (
     <section id="noticias" className="py-20 bg-white">
@@ -122,12 +133,16 @@ export const NewsSection = () => {
           <Button
             size="lg"
             variant="outline"
+            onClick={() => setShowAll(true)}
             className="border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all"
           >
             Ver todas las noticias
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
+
+        {/* All news modal/overlay */}
+        {showAll && <AllNews articles={articles} onClose={() => setShowAll(false)} />}
       </div>
     </section>
   )
