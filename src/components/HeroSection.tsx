@@ -3,48 +3,41 @@ import { ArrowRight } from "lucide-react"
 
 export const HeroSection = () => {
   return (
-    <section className="relative min-h-[600px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary via-accent-teal to-primary-light">
-      {/* Decorative background elements inspired by the brand */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-white rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent-rose rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+    <section className="relative min-h-[700px] md:min-h-[600px] flex items-end justify-center overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <img
+          src="/hero.jpeg"
+          alt="Anthrovia HR Hero"
+          className="w-full h-full object-fill sm:object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-white/10"></div>
+        {/* Gradient fade to white at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent"></div>
       </div>
 
-      <div className="container mx-auto px-4 py-20 relative z-10">
-        <div className="max-w-4xl mx-auto text-center text-white">
-          {/* Logo placeholder - you can add the Anthrovia logo here */}
-          <div className="mb-8 animate-fade-in">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
-              Anthrovia<span className="text-sm align-super ml-2">HR</span>
-            </h1>
-            <div className="h-1 w-32 bg-accent-rose mx-auto mb-8"></div>
-          </div>
+      <div className="container mx-auto px-4 pb-20 md:pb-4 relative z-10">
+        <div className="max-w-4xl mx-auto text-center">
 
-          <h2 className="text-3xl md:text-4xl font-semibold mb-6 animate-fade-in-up" style={{ animationDelay: '0.2s', opacity: 0 }}>
-            Potenciando el talento
-          </h2>
-
-          <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.4s', opacity: 0 }}>
+          <p className="text-base md:text-lg mb-6 text-primary/80 max-w-2xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.4s', opacity: 0 }}>
             Soluciones integrales de recursos humanos diseñadas para transformar
             tu organización y maximizar el potencial de tu equipo
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up" style={{ animationDelay: '0.6s', opacity: 0 }}>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center animate-fade-in-up" style={{ animationDelay: '0.6s', opacity: 0 }}>
             <Button
-              size="lg"
               asChild
-              className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 h-auto"
+              className=" bg-primary  text-white hover:bg-primary/90 text-sm px-6 py-2.5 h-auto"
             >
-              <a href="#servicios">
+              <a href="#servicios" className="flex items-center">
                 Conoce nuestros servicios
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRight className="ml-2 h-4 w-4" />
               </a>
             </Button>
             <Button
-              size="lg"
               asChild
               variant="outline"
-              className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-6 h-auto"
+              className="border-2 border-primary text-primary hover:bg-primary/10 text-sm px-6 py-2.5 h-auto"
             >
               <a href="#contacto">Contáctanos</a>
             </Button>
@@ -52,21 +45,6 @@ export const HeroSection = () => {
         </div>
       </div>
 
-      {/* Decorative dots pattern inspired by the brand logo */}
-      <div className="absolute bottom-10 left-10 opacity-20">
-        <div className="grid grid-cols-8 gap-2">
-          {Array.from({ length: 32 }).map((_, i) => (
-            <div
-              key={i}
-              className="w-1.5 h-1.5 bg-white rounded-full"
-              style={{
-                opacity: 1 - (i / 32),
-                transform: `scale(${1 - (i / 64)})`
-              }}
-            ></div>
-          ))}
-        </div>
-      </div>
     </section>
   )
 }

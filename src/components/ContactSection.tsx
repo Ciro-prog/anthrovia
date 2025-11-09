@@ -82,12 +82,12 @@ ${formData.message}
             }`}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
-              Contáctanos
+              Conectemos
             </h2>
             <div className="h-1 w-24 bg-gradient-to-r from-accent-rose to-accent-burgundy mx-auto mb-6"></div>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Estamos aquí para ayudarte a potenciar el talento de tu organización.
-              Contáctanos y descubre cómo podemos trabajar juntos.
+              Cada vínculo comienza con una conversación. Queremos conocer tu historia, tus desafíos y acompañarte en la evolución del talento dentro de tu organización.
+              Escribinos y descubramos juntos cómo potenciar tu equipo.
             </p>
           </div>
 
@@ -167,15 +167,12 @@ ${formData.message}
                         className="mt-2 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       >
                         <option value="">Selecciona un servicio</option>
-                        <option value="Reclutamiento y Selección">Reclutamiento y Selección</option>
-                        <option value="Consultoría Organizacional">Consultoría Organizacional</option>
-                        <option value="Evaluación de Desempeño">Evaluación de Desempeño</option>
-                        <option value="Capacitación y Desarrollo">Capacitación y Desarrollo</option>
-                        <option value="Gestión del Cambio">Gestión del Cambio</option>
-                        <option value="Administración de Nómina">Administración de Nómina</option>
-                        <option value="Onboarding y Cultura">Onboarding y Cultura</option>
-                        <option value="Análisis y Métricas HR">Análisis y Métricas HR</option>
-                        <option value="Desarrollo de Liderazgo">Desarrollo de Liderazgo</option>
+                        <option value="Asesorías iniciales">Asesorías iniciales</option>
+                        <option value="Reclutamiento y Selección Estratégica">Reclutamiento y Selección Estratégica</option>
+                        <option value="Diseño y Optimización de Procesos">Diseño y Optimización de Procesos</option>
+                        <option value="Programas de Experiencia y Bienestar">Programas de Experiencia y Bienestar</option>
+                        <option value="Capacitación y Entrenamiento">Capacitación y Entrenamiento</option>
+                        <option value="Servicios complementarios">Servicios complementarios</option>
                         <option value="Otro">Otro</option>
                       </select>
                     </div>

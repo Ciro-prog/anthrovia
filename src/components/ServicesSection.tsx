@@ -3,71 +3,51 @@ import { Button } from "@/components/ui/button"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
 import {
   Users,
-  TrendingUp,
-  Award,
   BookOpen,
-  Target,
-  Briefcase,
-  UserCheck,
-  LineChart,
+  Settings,
+  Heart,
   GraduationCap,
+  Layers,
+  FileSearch,
   type LucideIcon
 } from "lucide-react"
 
 const services = [
   {
-    icon: Users,
-    title: "Reclutamiento y Selección",
-    description: "Identificamos y atraemos el mejor talento para tu organización mediante procesos estructurados y evaluaciones especializadas.",
+    icon: FileSearch,
+    title: "Asesorías iniciales",
+    description: "Diagnóstico estratégico rápido que identifica prioridades y propone una hoja de ruta práctica para gestionar talento y procesos.",
     color: "from-primary to-accent-teal"
   },
   {
-    icon: TrendingUp,
-    title: "Consultoría Organizacional",
-    description: "Optimizamos la estructura y procesos de tu empresa para mejorar la eficiencia operativa y el clima laboral.",
+    icon: Users,
+    title: "Reclutamiento y Selección Estratégica por Competencias",
+    description: "Identificamos, evaluamos y atraemos el mejor talento para tu organización mediante procesos estructurados y evaluaciones especializadas, asegurando incorporaciones alineadas a la cultura, los valores y los resultados del negocio.",
     color: "from-accent-teal to-primary-light"
   },
   {
-    icon: Award,
-    title: "Evaluación de Desempeño",
-    description: "Implementamos sistemas de evaluación que impulsan el desarrollo profesional y alinean objetivos individuales con metas organizacionales.",
+    icon: Settings,
+    title: "Diseño y Optimización de Procesos de RRHH",
+    description: "Análisis y rediseño de los procesos clave del área con foco en la eficiencia, la trazabilidad y la experiencia del colaborador. Se aplican metodologías ágiles y herramientas digitales para simplificar tareas operativas, generar control de indicadores y fortalecer la toma de decisiones.",
     color: "from-primary-light to-accent-rose"
   },
   {
-    icon: BookOpen,
-    title: "Capacitación y Desarrollo",
-    description: "Diseñamos programas de formación personalizados para potenciar las competencias de tu equipo.",
+    icon: Heart,
+    title: "Programas de Experiencia y Bienestar",
+    description: "Desarrollamos estrategias que fortalecen la conexión entre las personas y la organización, integrando acciones de reconocimiento, bienestar físico y emocional, y salario emocional adaptadas a cada cultura. Nuestro enfoque impulsa el compromiso, la motivación y una experiencia laboral significativa.",
     color: "from-accent-rose to-accent-burgundy"
   },
   {
-    icon: Target,
-    title: "Gestión del Cambio",
-    description: "Acompañamos a tu organización en procesos de transformación, asegurando una transición exitosa y sostenible.",
+    icon: GraduationCap,
+    title: "Capacitación y Entrenamiento",
+    description: "Elaboración de programas de formación personalizados para potenciar las competencias individuales y colectivas. Se desarrollan capacitaciones presenciales, virtuales o híbridas, alineadas a las necesidades reales del negocio y orientadas a resultados medibles.",
     color: "from-primary to-primary-light"
   },
   {
-    icon: Briefcase,
-    title: "Administración de Nómina",
-    description: "Gestionamos de manera eficiente y precisa todos los aspectos relacionados con la compensación de tu personal.",
+    icon: Layers,
+    title: "Servicios complementarios",
+    description: "Asesoría legal laboral, Compensaciones y beneficios, Administración de nómina, Employer Branding, y Análisis y métricas HR (People Analytics). Disponibles próximamente.",
     color: "from-accent-burgundy to-accent-teal"
-  },
-  {
-    icon: UserCheck,
-    title: "Onboarding y Cultura",
-    description: "Facilitamos la integración de nuevos colaboradores y fortalecemos la cultura organizacional.",
-    color: "from-accent-teal to-primary"
-  },
-  {
-    icon: LineChart,
-    title: "Análisis y Métricas HR",
-    description: "Transformamos datos en insights estratégicos para la toma de decisiones basada en evidencia.",
-    color: "from-primary-light to-accent-rose"
-  },
-  {
-    icon: GraduationCap,
-    title: "Desarrollo de Liderazgo",
-    description: "Formamos líderes capaces de inspirar equipos y conducir a tu organización hacia el éxito.",
-    color: "from-accent-rose to-primary"
   }
 ]
 
@@ -140,8 +120,7 @@ export const ServicesSection = () => {
           </h2>
           <div className="h-1 w-24 bg-gradient-to-r from-accent-rose to-accent-burgundy mx-auto mb-6"></div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Soluciones integrales de recursos humanos adaptadas a las necesidades
-            específicas de tu organización
+            Soluciones integrales en Recursos Humanos diseñadas para fortalecer la gestión del talento, optimizar los procesos internos y crear experiencias laborales sostenibles
           </p>
         </div>
 

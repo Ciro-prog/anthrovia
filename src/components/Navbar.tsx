@@ -5,26 +5,20 @@ import {
   X,
   ChevronDown,
   Users,
-  TrendingUp,
-  Award,
-  BookOpen,
-  Target,
-  Briefcase,
-  UserCheck,
-  LineChart,
-  GraduationCap
+  Settings,
+  Heart,
+  GraduationCap,
+  Layers,
+  FileSearch
 } from "lucide-react"
 
 const services = [
-  { name: "Reclutamiento y Selección", icon: Users },
-  { name: "Consultoría Organizacional", icon: TrendingUp },
-  { name: "Evaluación de Desempeño", icon: Award },
-  { name: "Capacitación y Desarrollo", icon: BookOpen },
-  { name: "Gestión del Cambio", icon: Target },
-  { name: "Administración de Nómina", icon: Briefcase },
-  { name: "Onboarding y Cultura", icon: UserCheck },
-  { name: "Análisis y Métricas HR", icon: LineChart },
-  { name: "Desarrollo de Liderazgo", icon: GraduationCap },
+  { name: "Asesorías iniciales", icon: FileSearch },
+  { name: "Reclutamiento y Selección Estratégica", icon: Users },
+  { name: "Diseño y Optimización de Procesos", icon: Settings },
+  { name: "Programas de Experiencia y Bienestar", icon: Heart },
+  { name: "Capacitación y Entrenamiento", icon: GraduationCap },
+  { name: "Servicios complementarios", icon: Layers },
 ]
 
 export const Navbar = () => {
@@ -38,9 +32,11 @@ export const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center">
             <a href="/" className="flex items-center space-x-2">
-              <div className="text-2xl font-bold text-primary">
-                Anthrovia<span className="text-sm align-super">HR</span>
-              </div>
+              <img
+                src="/logo.png"
+                alt="Anthrovia HR"
+                className="h-48 w-auto"
+              />
             </a>
           </div>
 

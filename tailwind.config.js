@@ -8,31 +8,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Anthrovia HR Brand Colors
+        // Anthrovia HR Brand Colors (from branding.jpeg)
         primary: {
-          DEFAULT: '#1A4C40', // Dark teal/green
-          light: '#9E5E57', // Rose/coral
-          lighter: '#E5B6A8', // Light peach
+          DEFAULT: '#2E625A', // Dark teal/green
+          light: '#B47F75', // Rose/terracota
+          lighter: '#C79F93', // Light rose/beige
         },
         accent: {
-          burgundy: '#E55E47', // Burgundy/maroon
-          rose: '#E5B8A8', // Rose
-          pink: '#E55E47', // Pink accent
-          teal: '#9E5E57', // Teal
+          burgundy: '#6B2A41', // Burgundy/wine
+          rose: '#C79F93', // Rose/beige
+          pink: '#B47F75', // Pink/terracota
+          teal: '#2E625A', // Teal
         },
         brand: {
-          dark: '#751AD', // Dark burgundy
-          medium: '#751A3D', // Medium burgundy
+          dark: '#6B2A41', // Dark burgundy
+          medium: '#B47F75', // Medium rose
+          light: '#C79F93', // Light rose
+          teal: '#2E625A', // Teal
           gradient: {
-            start: '#9E5E57',
-            middle: '#9E5657',
-            end: '#E5B6A8',
+            start: '#2E625A',
+            middle: '#B47F75',
+            end: '#C79F93',
           }
         },
         neutral: {
           white: '#FFFFFF',
-          offwhite: '#FFFFFFF',
-          dark: '#1A4C4',
+          gray: '#8A8A8A',
+          dark: '#2E625A',
         }
       },
       fontFamily: {

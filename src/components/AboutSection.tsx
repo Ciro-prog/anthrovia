@@ -1,17 +1,17 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
-import { Target, Eye, Award, Users, TrendingUp, Heart } from "lucide-react"
+import { Target, Award, Users, TrendingUp, Heart, ShieldCheck, Sparkles } from "lucide-react"
 
 const values = [
+  {
+    icon: ShieldCheck,
+    title: "Integridad",
+    description: "Actuamos con ética, respeto y coherencia en cada acción"
+  },
   {
     icon: Heart,
     title: "Compromiso",
     description: "Nos dedicamos completamente al éxito de nuestros clientes y sus equipos"
-  },
-  {
-    icon: Award,
-    title: "Excelencia",
-    description: "Buscamos la calidad en cada proyecto y solución que desarrollamos"
   },
   {
     icon: Users,
@@ -19,9 +19,14 @@ const values = [
     description: "Trabajamos en conjunto para crear soluciones innovadoras y efectivas"
   },
   {
+    icon: Sparkles,
+    title: "Sinergia",
+    description: "Conectamos personas, ideas y propósitos para lograr resultados compartidos"
+  },
+  {
     icon: TrendingUp,
     title: "Innovación",
-    description: "Adoptamos las últimas tendencias y tecnologías en gestión de talento"
+    description: "Adoptamos nuevas tendencias, tecnologías y metodologías en gestión de talento"
   }
 ]
 
@@ -64,23 +69,43 @@ export const AboutSection = () => {
           }`}
         >
           <p className="text-lg text-gray-600 text-center leading-relaxed mb-6">
-            En <span className="font-bold text-primary">Anthrovia HR</span>, somos más que una consultora de recursos humanos.
-            Somos tu aliado estratégico en la gestión y desarrollo del talento humano. Con sede en Mendoza, Argentina,
-            ofrecemos soluciones integrales que transforman organizaciones y potencian equipos.
+            En <span className="font-bold text-primary">Anthrovia HR</span> somos tu aliado estratégico en la gestión y desarrollo del talento.
+            Con sede en Argentina, diseñamos soluciones integrales y a medida que transforman organizaciones y maximizan el potencial de los equipos.
           </p>
           <p className="text-lg text-gray-600 text-center leading-relaxed">
-            Nuestra experiencia y enfoque personalizado nos permite entender las necesidades únicas de cada organización,
-            brindando servicios que van desde el reclutamiento hasta el desarrollo de liderazgo.
+            El nombre <span className="font-bold text-primary">Anthrovia</span> combina <em>"anthro"</em> (persona) y <em>"via"</em> (camino):
+            representa nuestra visión práctica y estratégica del talento — un camino claro para que las personas y las organizaciones crezcan juntas.
+            Trabajamos con metodologías probadas, entregables accionables y foco humano, para lograr resultados sostenibles y medibles.
           </p>
         </div>
 
-        {/* Mission & Vision */}
+        {/* Purpose & Mission */}
         <div className="grid md:grid-cols-2 gap-8 mb-20 max-w-6xl mx-auto">
-          {/* Mission */}
+          {/* Purpose */}
           <div
             ref={missionAnimation.ref}
             className={`transition-all duration-700 ${
               missionAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+            }`}
+          >
+            <Card className="h-full border-2 border-accent-teal/20 hover:shadow-xl transition-shadow">
+              <CardContent className="p-8">
+                <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-accent-teal to-primary-light flex items-center justify-center mb-6">
+                  <Sparkles className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-primary mb-4">Nuestro Propósito</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Ser el puente que impulsa la evolución del talento y el desarrollo integral de las organizaciones.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Mission */}
+          <div
+            ref={visionAnimation.ref}
+            className={`transition-all duration-700 ${
+              visionAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
             }`}
           >
             <Card className="h-full border-2 border-primary/20 hover:shadow-xl transition-shadow">
@@ -97,28 +122,6 @@ export const AboutSection = () => {
               </CardContent>
             </Card>
           </div>
-
-          {/* Vision */}
-          <div
-            ref={visionAnimation.ref}
-            className={`transition-all duration-700 ${
-              visionAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
-            }`}
-          >
-            <Card className="h-full border-2 border-accent-teal/20 hover:shadow-xl transition-shadow">
-              <CardContent className="p-8">
-                <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-accent-teal to-primary-light flex items-center justify-center mb-6">
-                  <Eye className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-primary mb-4">Nuestra Visión</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Ser la consultora de recursos humanos líder en Argentina, reconocida por transformar
-                  organizaciones a través de estrategias innovadoras en gestión del talento. Aspiramos a
-                  crear entornos laborales donde cada persona alcance su máximo potencial.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
         </div>
 
         {/* Values */}
@@ -131,7 +134,7 @@ export const AboutSection = () => {
           <h3 className="text-3xl font-bold text-primary text-center mb-12">
             Nuestros Valores
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
             {values.map((value, index) => {
               const Icon = value.icon
               return (
@@ -153,29 +156,6 @@ export const AboutSection = () => {
                 </Card>
               )
             })}
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div
-          ref={statsAnimation.ref}
-          className={`transition-all duration-700 ${
-            statsAnimation.isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-          }`}
-        >
-          <div className="bg-gradient-to-r from-primary via-accent-teal to-primary-light rounded-2xl p-12">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center text-white">
-                  <div className="text-4xl md:text-5xl font-bold mb-2">
-                    {stat.number}
-                  </div>
-                  <div className="text-sm md:text-base opacity-90">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>
