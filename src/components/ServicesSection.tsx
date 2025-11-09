@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
 import {
   Users,
-  BookOpen,
   Settings,
   Heart,
   GraduationCap,

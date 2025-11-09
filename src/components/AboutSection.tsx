@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
-import { Target, Award, Users, TrendingUp, Heart, ShieldCheck, Sparkles } from "lucide-react"
+import { Target, Users, TrendingUp, Heart, ShieldCheck, Sparkles } from "lucide-react"
 
 const values = [
   {
@@ -30,20 +30,12 @@ const values = [
   }
 ]
 
-const stats = [
-  { number: "500+", label: "Clientes Satisfechos" },
-  { number: "15+", label: "Años de Experiencia" },
-  { number: "50+", label: "Profesionales Certificados" },
-  { number: "98%", label: "Satisfacción del Cliente" }
-]
-
 export const AboutSection = () => {
   const headerAnimation = useScrollAnimation()
   const contentAnimation = useScrollAnimation()
   const missionAnimation = useScrollAnimation()
   const visionAnimation = useScrollAnimation()
   const valuesAnimation = useScrollAnimation()
-  const statsAnimation = useScrollAnimation()
 
   return (
     <section id="sobre-nosotros" className="py-20 bg-gradient-to-b from-white to-gray-50">
