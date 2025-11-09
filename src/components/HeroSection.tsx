@@ -6,10 +6,17 @@ export const HeroSection = () => {
     <section className="relative min-h-[700px] md:min-h-[600px] flex items-end justify-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
+        {/* Mobile image */}
+        <img
+          src="/hero-sm.png"
+          alt="Anthrovia HR Hero"
+          className="w-full h-full object-fill object-center md:hidden"
+        />
+        {/* Desktop image */}
         <img
           src="/hero.jpeg"
           alt="Anthrovia HR Hero"
-          className="w-full h-full object-fill sm:object-cover object-center"
+          className="hidden md:block w-full h-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-white/10"></div>
         {/* Gradient fade to white at bottom */}
