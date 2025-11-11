@@ -10,7 +10,6 @@ import {
   Mail,
   MapPin,
   Clock,
-  Send,
   MessageCircle
 } from "lucide-react"
 
