@@ -41,10 +41,10 @@ export const Navbar = () => {
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-2">
             <a
               href="#inicio"
-              className="text-gray-700 hover:text-primary transition-colors font-medium"
+              className="text-gray-700 hover:text-primary hover:bg-primary/5 transition-all font-medium px-3 py-2 rounded-md"
             >
               Inicio
             </a>
@@ -55,59 +55,57 @@ export const Navbar = () => {
               onMouseEnter={() => setServicesOpen(true)}
               onMouseLeave={() => setServicesOpen(false)}
             >
-              <button className="flex items-center space-x-1 text-gray-700 hover:text-primary transition-colors font-medium">
+              <button className="flex items-center space-x-1 text-gray-700 hover:text-primary hover:bg-primary/5 transition-all font-medium px-3 py-2 rounded-md">
                 <span>Servicios</span>
                 <ChevronDown className="h-4 w-4" />
               </button>
 
               {/* Dropdown Menu */}
               {servicesOpen && (
-                <div className="absolute left-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-100 py-2">
-                  {services.map((service, index) => {
-                    const Icon = service.icon
-                    return (
-                      <a
-                        key={index}
-                        href={`#servicio-${index}`}
-                        className="flex items-center space-x-3 px-4 py-3 hover:bg-gradient-to-r hover:from-primary/5 hover:to-accent-teal/5 transition-colors group/item"
-                      >
-                        <div className="w-8 h-8 rounded-md bg-gradient-to-br from-primary to-accent-teal flex items-center justify-center flex-shrink-0">
-                          <Icon className="h-4 w-4 text-white" />
-                        </div>
-                        <span className="text-sm text-gray-700 group-hover/item:text-primary">
-                          {service.name}
-                        </span>
-                      </a>
-                    )
-                  })}
+                <div className="absolute left-0 mt-0 pt-2 w-72">
+                  <div className="bg-white rounded-lg shadow-xl border border-gray-100 py-2">
+                    {services.map((service, index) => {
+                      const Icon = service.icon
+                      return (
+                        <a
+                          key={index}
+                          href={`#servicio-${index}`}
+                          className="flex items-center space-x-3 px-4 py-3 hover:bg-gradient-to-r hover:from-primary/10 hover:to-accent-teal/10 transition-colors group/item"
+                        >
+                          <div className="w-8 h-8 rounded-md bg-gradient-to-br from-primary to-accent-teal flex items-center justify-center flex-shrink-0">
+                            <Icon className="h-4 w-4 text-white" />
+                          </div>
+                          <span className="text-sm text-gray-700 group-hover/item:text-primary">
+                            {service.name}
+                          </span>
+                        </a>
+                      )
+                    })}
+                  </div>
                 </div>
               )}
             </div>
 
             <a
               href="#sobre-nosotros"
-              className="text-gray-700 hover:text-primary transition-colors font-medium"
+              className="text-gray-700 hover:text-primary hover:bg-primary/5 transition-all font-medium px-3 py-2 rounded-md"
             >
               Sobre Nosotros
             </a>
 
             <a
               href="#noticias"
-              className="text-gray-700 hover:text-primary transition-colors font-medium"
+              className="text-gray-700 hover:text-primary hover:bg-primary/5 transition-all font-medium px-3 py-2 rounded-md"
             >
               Noticias
             </a>
 
             <a
               href="#contacto"
-              className="text-gray-700 hover:text-primary transition-colors font-medium"
+              className="text-gray-700 hover:text-primary hover:bg-primary/5 transition-all font-medium px-3 py-2 rounded-md"
             >
               Contacto
             </a>
-
-            <Button className="bg-gradient-to-r from-primary to-accent-teal hover:opacity-90">
-              Consultoría Gratis
-            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -121,10 +119,10 @@ export const Navbar = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden pb-6 space-y-4">
+          <div className="md:hidden pb-6 space-y-2">
             <a
               href="#inicio"
-              className="block text-gray-700 hover:text-primary transition-colors font-medium py-2"
+              className="block text-gray-700 hover:text-primary hover:bg-primary/5 transition-all font-medium py-2 px-3 rounded-md"
               onClick={() => setIsOpen(false)}
             >
               Inicio
@@ -133,7 +131,7 @@ export const Navbar = () => {
             {/* Mobile Services */}
             <div>
               <button
-                className="flex items-center justify-between w-full text-gray-700 hover:text-primary transition-colors font-medium py-2"
+                className="flex items-center justify-between w-full text-gray-700 hover:text-primary hover:bg-primary/5 transition-all font-medium py-2 px-3 rounded-md"
                 onClick={() => setServicesOpen(!servicesOpen)}
               >
                 <span>Servicios</span>
@@ -152,7 +150,7 @@ export const Navbar = () => {
                       <a
                         key={index}
                         href={`#servicio-${index}`}
-                        className="flex items-center space-x-3 py-2 text-sm text-gray-600 hover:text-primary"
+                        className="flex items-center space-x-3 py-2 px-2 text-sm text-gray-600 hover:text-primary hover:bg-primary/5 rounded-md transition-all"
                         onClick={() => setIsOpen(false)}
                       >
                         <Icon className="h-4 w-4" />
@@ -166,7 +164,7 @@ export const Navbar = () => {
 
             <a
               href="#sobre-nosotros"
-              className="block text-gray-700 hover:text-primary transition-colors font-medium py-2"
+              className="block text-gray-700 hover:text-primary hover:bg-primary/5 transition-all font-medium py-2 px-3 rounded-md"
               onClick={() => setIsOpen(false)}
             >
               Sobre Nosotros
@@ -174,7 +172,7 @@ export const Navbar = () => {
 
             <a
               href="#noticias"
-              className="block text-gray-700 hover:text-primary transition-colors font-medium py-2"
+              className="block text-gray-700 hover:text-primary hover:bg-primary/5 transition-all font-medium py-2 px-3 rounded-md"
               onClick={() => setIsOpen(false)}
             >
               Noticias
@@ -182,15 +180,11 @@ export const Navbar = () => {
 
             <a
               href="#contacto"
-              className="block text-gray-700 hover:text-primary transition-colors font-medium py-2"
+              className="block text-gray-700 hover:text-primary hover:bg-primary/5 transition-all font-medium py-2 px-3 rounded-md"
               onClick={() => setIsOpen(false)}
             >
               Contacto
             </a>
-
-            <Button className="w-full bg-gradient-to-r from-primary to-accent-teal hover:opacity-90">
-              Consultoría Gratis
-            </Button>
           </div>
         )}
       </div>

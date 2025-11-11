@@ -115,11 +115,11 @@ export const ServicesSection = () => {
           }`}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
-            Nuestros Servicios
+            Nuestros servicios
           </h2>
           <div className="h-1 w-24 bg-gradient-to-r from-accent-rose to-accent-burgundy mx-auto mb-6"></div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Soluciones integrales en Recursos Humanos diseñadas para fortalecer la gestión del talento, optimizar los procesos internos y crear experiencias laborales sostenibles
+            Diseñamos soluciones a medida que conectan estrategia, personas y cultura. Acompañamos a las organizaciones en cada etapa de su evolución, impulsando procesos más eficientes y experiencias laborales con propósito.
           </p>
         </div>
 
@@ -150,8 +150,7 @@ export const ServicesSection = () => {
               ¿Listo para potenciar tu talento?
             </h3>
             <p className="text-lg mb-8 text-white/90 max-w-2xl mx-auto">
-              Agenda una consultoría gratuita y descubre cómo podemos ayudarte a
-              alcanzar tus objetivos organizacionales
+              Descubre cómo podemos ayudarte a alcanzar tus objetivos organizacionales
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -159,7 +158,7 @@ export const ServicesSection = () => {
                 asChild
                 className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 h-auto"
               >
-                <a href="#contacto">Agendar consultoría</a>
+                <a href="#contacto">Contáctanos</a>
               </Button>
               <Button
                 size="lg"

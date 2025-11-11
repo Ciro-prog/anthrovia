@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
-import { Target, Users, TrendingUp, Heart, ShieldCheck, Sparkles } from "lucide-react"
+import { Target, Users, TrendingUp, Heart, ShieldCheck, Sparkles, Compass } from "lucide-react"
 
 const values = [
   {
@@ -83,7 +83,7 @@ export const AboutSection = () => {
             <Card className="h-full border-2 border-accent-teal/20 hover:shadow-xl transition-shadow">
               <CardContent className="p-8">
                 <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-accent-teal to-primary-light flex items-center justify-center mb-6">
-                  <Sparkles className="h-8 w-8 text-white" />
+                  <Compass className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-2xl font-bold text-primary mb-4">Nuestro Propósito</h3>
                 <p className="text-gray-600 leading-relaxed">

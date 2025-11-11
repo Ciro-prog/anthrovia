@@ -86,7 +86,7 @@ ${formData.message}
             </h2>
             <div className="h-1 w-24 bg-gradient-to-r from-accent-rose to-accent-burgundy mx-auto mb-6"></div>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Cada vínculo comienza con una conversación. Queremos conocer tu historia, tus desafíos y acompañarte en la evolución del talento dentro de tu organización.
+              El cambio comienza con una conversación. Queremos conocer tu historia, tus desafíos y acompañarte en la evolución del talento dentro de tu organización.
               Escribinos y descubramos juntos cómo potenciar tu equipo.
             </p>
           </div>
@@ -308,31 +308,6 @@ ${formData.message}
                 </Card>
               </div>
 
-              {/* CTA para WhatsApp directo */}
-              <Card className="bg-gradient-to-r from-green-500 to-green-600 border-0 text-white">
-                <CardContent className="p-6">
-                  <div className="text-center">
-                    <MessageCircle className="h-12 w-12 mx-auto mb-4" />
-                    <h4 className="font-bold text-xl mb-2">¿Prefieres chat directo?</h4>
-                    <p className="mb-4 text-green-50">
-                      Escríbenos directamente por WhatsApp
-                    </p>
-                    <Button
-                      asChild
-                      className="bg-white text-green-600 hover:bg-green-50 w-full"
-                    >
-                      <a
-                        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hola, me gustaría obtener más información sobre los servicios de Anthrovia HR')}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Send className="mr-2 h-4 w-4" />
-                        Abrir WhatsApp
-                      </a>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>
