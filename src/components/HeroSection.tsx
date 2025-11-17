@@ -8,15 +8,16 @@ export const HeroSection = () => {
       <div className="absolute inset-0">
         {/* Mobile image */}
         <img
-          src="/hero2.jpg"
+          src="/hero2.webp"
           alt="Anthrovia HR Hero"
-          className="w-full h-full object-fill object-center md:hidden"
-        />
+          className="w-full h-full object-cover object-center md:hidden"
+          />
+
         {/* Desktop image */}
         <img
-          src="/hero.jpg"
+          src="/hero.webp"
           alt="Anthrovia HR Hero"
-          className="hidden md:block w-full h-full object-fill object-center"
+          className="hidden md:block w-full h-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-white/10"></div>
         {/* Gradient fade to white at bottom */}
