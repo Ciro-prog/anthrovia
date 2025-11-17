@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local tool settings (ignore local-only config files)
+.claude/settings.local.json
