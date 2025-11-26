@@ -1,11 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
 import {
   Users,
   Settings,
   Heart,
-  GraduationCap,
   Layers,
   FileSearch,
   type LucideIcon
@@ -62,9 +60,8 @@ const ServiceCard = ({ service, Icon, index }: ServiceCardProps) => {
   return (
     <div
       ref={animation.ref}
-      className={`transition-all duration-700 ${
-        animation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-      }`}
+      className={`transition-all duration-700 ${animation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
       <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 overflow-hidden h-full">
@@ -110,17 +107,16 @@ export const ServicesSection = () => {
         {/* Section Header */}
         <div
           ref={headerAnimation.ref}
-          className={`text-center mb-16 transition-all duration-700 ${
-            headerAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
+          className={`text-center mb-16 transition-all duration-700 ${headerAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
             Nuestros servicios
           </h2>
           <div className="h-1 w-24 bg-gradient-to-r from-accent-rose to-accent-burgundy mx-auto mb-6"></div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-Diseñamos soluciones a medida que conectan estrategia, personas y cultura.
-Acompañamos a las organizaciones en cada etapa de su evolución, impulsando procesos más eficientes y experiencias laborales con propósito.          </p>
+            Diseñamos soluciones a medida que conectan estrategia, personas y cultura.
+            Acompañamos a las organizaciones en cada etapa de su evolución, impulsando procesos más eficientes y experiencias laborales con propósito.          </p>
         </div>
 
         {/* Services Grid */}
@@ -141,9 +137,8 @@ Acompañamos a las organizaciones en cada etapa de su evolución, impulsando pro
         {/* CTA Section */}
         <div
           ref={ctaAnimation.ref}
-          className={`mt-16 text-center transition-all duration-700 ${
-            ctaAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
+          className={`mt-16 text-center transition-all duration-700 ${ctaAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
         >
           {/* <div className="bg-gradient-to-r from-primary via-accent-teal to-primary-light rounded-2xl p-12 text-white">
             <h3 className="text-3xl md:text-4xl font-bold mb-4">

@@ -6,7 +6,6 @@ import {
   Users,
   Settings,
   Heart,
-  GraduationCap,
   Layers,
   FileSearch
 } from "lucide-react"
@@ -135,9 +134,8 @@ export const Navbar = () => {
               >
                 <span>Servicios</span>
                 <ChevronDown
-                  className={`h-4 w-4 transition-transform ${
-                    servicesOpen ? "rotate-180" : ""
-                  }`}
+                  className={`h-4 w-4 transition-transform ${servicesOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
