@@ -43,7 +43,7 @@ const services = [
   {
     icon: Layers,
     title: "Servicios complementarios",
-    description: "Asesoría legal laboral, Compensaciones y beneficios, Administración de nómina, Employer Branding, y Análisis y métricas HR (People Analytics). Disponibles próximamente.",
+    description: "Asesoría legal laboral, Compensaciones y beneficios, Administración de nómina, Employer Branding y People Analytics. (Disponibles próximamente.)",
     color: "from-accent-burgundy to-accent-teal"
   }
 ]
