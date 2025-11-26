@@ -10,7 +10,7 @@ export const HeroSection = () => {
         <img
           src="/hero-mobile-v4.png"
           alt="Anthrovia HR Hero"
-          className="w-full h-full object-cover object-center md:hidden"
+          className="w-full h-full object-cover object-center md:hidden -mt-8"
         />
 
         {/* Desktop image */}
@@ -20,7 +20,7 @@ export const HeroSection = () => {
           className="hidden md:block w-full h-full object-cover object-center"
         />
         {/* Gradient fade to white at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent"></div>
       </div>
 
       <div className="container mx-auto px-4 pb-12 md:pb-20 relative z-10">
