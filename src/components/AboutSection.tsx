@@ -61,9 +61,8 @@ export const AboutSection = () => {
           }`}
         >
           <p className="text-lg text-gray-600 text-center leading-relaxed mb-6">
-            En <span className="font-bold text-primary">Anthrovia HR</span> somos tu aliado estratégico en la gestión y desarrollo del talento.
-            Con sede en Argentina, diseñamos soluciones integrales y a medida que transforman organizaciones y maximizan el potencial de los equipos.
-          </p>
+            En <span className="font-bold text-primary">Anthrovia HR</span> somos tu aliado estratégico en la gestión y desarrollo del talento. Diseñamos soluciones integrales y a medida que transforman organizaciones y maximizan el potencial de los equipos. Como consultora digital, acompañamos a personas y organizaciones sin límites geográficos, adaptándonos a cada cultura y necesidad.
+            </p>
           <p className="text-lg text-gray-600 text-center leading-relaxed">
             El nombre <span className="font-bold text-primary">Anthrovia</span> combina <em>"anthro"</em> (persona) y <em>"via"</em> (camino):
             representa nuestra visión práctica y estratégica del talento — un camino claro para que las personas y las organizaciones crezcan juntas.

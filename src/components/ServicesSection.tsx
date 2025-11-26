@@ -33,15 +33,15 @@ const services = [
   {
     icon: Heart,
     title: "Programas de Experiencia y Bienestar",
-    description: "Desarrollamos estrategias que fortalecen la conexión entre las personas y la organización, integrando acciones de reconocimiento, bienestar físico y emocional, y salario emocional adaptadas a cada cultura. Nuestro enfoque impulsa el compromiso, la motivación y una experiencia laboral significativa.",
+    description: "Desarrollamos programas que fortalecen la conexión entre las personas y su entorno laboral, integrando acciones de reconocimiento, bienestar integral y propuestas de salario emocional adaptadas a cada cultura organizacional. Nuestro enfoque impulsa el compromiso, promueve la motivación y genera experiencias laborales más significativas.",
     color: "from-accent-rose to-accent-burgundy"
   },
-  {
-    icon: GraduationCap,
-    title: "Capacitación y Entrenamiento",
-    description: "Elaboración de programas de formación personalizados para potenciar las competencias individuales y colectivas. Se desarrollan capacitaciones presenciales, virtuales o híbridas, alineadas a las necesidades reales del negocio y orientadas a resultados medibles.",
-    color: "from-primary to-primary-light"
-  },
+  // {
+  //   icon: GraduationCap,
+  //   title: "Capacitación y Entrenamiento",
+  //   description: "Elaboración de programas de formación personalizados para potenciar las competencias individuales y colectivas. Se desarrollan capacitaciones presenciales, virtuales o híbridas, alineadas a las necesidades reales del negocio y orientadas a resultados medibles.",
+  //   color: "from-primary to-primary-light"
+  // },
   {
     icon: Layers,
     title: "Servicios complementarios",
@@ -87,13 +87,13 @@ const ServiceCard = ({ service, Icon, index }: ServiceCardProps) => {
             {service.description}
           </CardDescription>
 
-          <Button
+          {/* <Button
             variant="ghost"
             className="mt-4 text-primary hover:text-accent-burgundy p-0 h-auto font-semibold group/btn"
           >
             Conoce más
             <span className="ml-2 group-hover/btn:translate-x-1 transition-transform inline-block">→</span>
-          </Button>
+          </Button> */}
         </CardContent>
       </Card>
     </div>
@@ -119,8 +119,8 @@ export const ServicesSection = () => {
           </h2>
           <div className="h-1 w-24 bg-gradient-to-r from-accent-rose to-accent-burgundy mx-auto mb-6"></div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Diseñamos soluciones a medida que conectan estrategia, personas y cultura. Acompañamos a las organizaciones en cada etapa de su evolución, impulsando procesos más eficientes y experiencias laborales con propósito.
-          </p>
+Diseñamos soluciones a medida que conectan estrategia, personas y cultura.
+Acompañamos a las organizaciones en cada etapa de su evolución, impulsando procesos más eficientes y experiencias laborales con propósito.          </p>
         </div>
 
         {/* Services Grid */}
@@ -145,7 +145,7 @@ export const ServicesSection = () => {
             ctaAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
         >
-          <div className="bg-gradient-to-r from-primary via-accent-teal to-primary-light rounded-2xl p-12 text-white">
+          {/* <div className="bg-gradient-to-r from-primary via-accent-teal to-primary-light rounded-2xl p-12 text-white">
             <h3 className="text-3xl md:text-4xl font-bold mb-4">
               ¿Listo para potenciar tu talento?
             </h3>
@@ -168,7 +168,7 @@ export const ServicesSection = () => {
                 Descargar brochure
               </Button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

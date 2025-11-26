@@ -2,7 +2,7 @@ import { Navbar } from "./components/Navbar"
 import { HeroSection } from "./components/HeroSection"
 import { ServicesSection } from "./components/ServicesSection"
 import { AboutSection } from "./components/AboutSection"
-import { NewsSection } from "./components/NewsSection"
+// import { NewsSection } from "./components/NewsSection"
 import { ContactSection } from "./components/ContactSection"
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
       <HeroSection />
       <ServicesSection />
       <AboutSection />
-      <NewsSection />
+      {/* <NewsSection /> */}
       <ContactSection />
     </div>
   )

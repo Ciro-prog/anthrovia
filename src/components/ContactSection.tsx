@@ -76,16 +76,15 @@ ${formData.message}
           {/* Header */}
           <div
             ref={headerAnimation.ref}
-            className={`text-center mb-16 transition-all duration-700 ${
-              headerAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
+            className={`text-center mb-16 transition-all duration-700 ${headerAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
               Conectemos
             </h2>
             <div className="h-1 w-24 bg-gradient-to-r from-accent-rose to-accent-burgundy mx-auto mb-6"></div>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              El cambio comienza con una conversación. Queremos conocer tu historia, tus desafíos y acompañarte en la evolución del talento dentro de tu organización.
+              "El cambio comienza con una conversación". Queremos conocer tu historia, tus desafíos y acompañarte en la evolución del talento dentro de tu organización.
               Escribinos y descubramos juntos cómo potenciar tu equipo.
             </p>
           </div>
@@ -94,9 +93,8 @@ ${formData.message}
             {/* Contact Form */}
             <div
               ref={formAnimation.ref}
-              className={`transition-all duration-700 ${
-                formAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
-              }`}
+              className={`transition-all duration-700 ${formAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+                }`}
             >
               <Card className="border-2">
                 <CardContent className="p-6">
@@ -170,7 +168,7 @@ ${formData.message}
                         <option value="Reclutamiento y Selección Estratégica">Reclutamiento y Selección Estratégica</option>
                         <option value="Diseño y Optimización de Procesos">Diseño y Optimización de Procesos</option>
                         <option value="Programas de Experiencia y Bienestar">Programas de Experiencia y Bienestar</option>
-                        <option value="Capacitación y Entrenamiento">Capacitación y Entrenamiento</option>
+                        {/* <option value="Capacitación y Entrenamiento"></option> */}
                         <option value="Servicios complementarios">Servicios complementarios</option>
                         <option value="Otro">Otro</option>
                       </select>
@@ -208,9 +206,8 @@ ${formData.message}
             {/* Contact Info */}
             <div
               ref={infoAnimation.ref}
-              className={`space-y-6 transition-all duration-700 ${
-                infoAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
-              }`}
+              className={`space-y-6 transition-all duration-700 ${infoAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+                }`}
             >
               <div>
                 <h3 className="text-2xl font-bold text-primary mb-6">

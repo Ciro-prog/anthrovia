@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<body>
+<img id="img1" src="./hero-1.jpeg">
+<img id="img2" src="./hero-2.jpeg">
+<div id="results">Loading...</div>
+<script>
+    window.onload = () => {
+        const i1 = document.getElementById('img1');
+        const i2 = document.getElementById('img2');
+        document.getElementById('results').innerText = `hero-1: ${i1.naturalWidth}x${i1.naturalHeight} | hero-2: ${i2.naturalWidth}x${i2.naturalHeight}`;
+    }
+</script>
+</body>
+</html>

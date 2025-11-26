@@ -16,7 +16,7 @@ const services = [
   { name: "Reclutamiento y Selección Estratégica", icon: Users },
   { name: "Diseño y Optimización de Procesos", icon: Settings },
   { name: "Programas de Experiencia y Bienestar", icon: Heart },
-  { name: "Capacitación y Entrenamiento", icon: GraduationCap },
+  // { name: "Capacitación y Entrenamiento", icon: GraduationCap },
   { name: "Servicios complementarios", icon: Layers },
 ]
 
