@@ -10,10 +10,12 @@ import {
   Mail,
   MapPin,
   Clock,
-  MessageCircle
+  MessageCircle,
+  Linkedin,
+  Instagram
 } from "lucide-react"
 
-const WHATSAPP_NUMBER = "5492625435328"
+const WHATSAPP_NUMBER = "5492604085501"
 
 export const ContactSection = () => {
   const headerAnimation = useScrollAnimation()
@@ -96,11 +98,12 @@ ${formData.message}
               className={`transition-all duration-700 ${formAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
                 }`}
             >
-              <Card className="border-2">
-                <CardContent className="p-6">
+              <Card className="border-0 shadow-xl overflow-hidden">
+                <div className="h-2 bg-gradient-to-r from-primary via-accent-teal to-accent-rose"></div>
+                <CardContent className="p-8 bg-white">
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                      <Label htmlFor="name">Nombre completo *</Label>
+                      <Label htmlFor="name" className="text-gray-700 font-medium">Nombre completo *</Label>
                       <Input
                         id="name"
                         name="name"
@@ -108,13 +111,13 @@ ${formData.message}
                         onChange={handleChange}
                         placeholder="Juan Pérez"
                         required
-                        className="mt-2"
+                        className="mt-2 border-gray-200 focus:border-primary focus:ring-primary transition-all duration-300"
                       />
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="email">Email *</Label>
+                        <Label htmlFor="email" className="text-gray-700 font-medium">Email *</Label>
                         <Input
                           id="email"
                           name="email"
@@ -123,12 +126,12 @@ ${formData.message}
                           onChange={handleChange}
                           placeholder="juan@empresa.com"
                           required
-                          className="mt-2"
+                          className="mt-2 border-gray-200 focus:border-primary focus:ring-primary transition-all duration-300"
                         />
                       </div>
 
                       <div>
-                        <Label htmlFor="phone">Teléfono *</Label>
+                        <Label htmlFor="phone" className="text-gray-700 font-medium">Teléfono *</Label>
                         <Input
                           id="phone"
                           name="phone"
@@ -137,31 +140,31 @@ ${formData.message}
                           onChange={handleChange}
                           placeholder="+54 9 11 1234-5678"
                           required
-                          className="mt-2"
+                          className="mt-2 border-gray-200 focus:border-primary focus:ring-primary transition-all duration-300"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <Label htmlFor="company">Empresa</Label>
+                      <Label htmlFor="company" className="text-gray-700 font-medium">Empresa</Label>
                       <Input
                         id="company"
                         name="company"
                         value={formData.company}
                         onChange={handleChange}
                         placeholder="Nombre de tu empresa"
-                        className="mt-2"
+                        className="mt-2 border-gray-200 focus:border-primary focus:ring-primary transition-all duration-300"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="service">Servicio de interés</Label>
+                      <Label htmlFor="service" className="text-gray-700 font-medium">Servicio de interés</Label>
                       <select
                         id="service"
                         name="service"
                         value={formData.service}
                         onChange={handleChange}
-                        className="mt-2 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        className="mt-2 flex h-10 w-full rounded-md border border-gray-200 bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all duration-300"
                       >
                         <option value="">Selecciona un servicio</option>
                         <option value="Asesorías iniciales">Asesorías iniciales</option>
@@ -175,7 +178,7 @@ ${formData.message}
                     </div>
 
                     <div>
-                      <Label htmlFor="message">Mensaje *</Label>
+                      <Label htmlFor="message" className="text-gray-700 font-medium">Mensaje *</Label>
                       <Textarea
                         id="message"
                         name="message"
@@ -183,13 +186,13 @@ ${formData.message}
                         onChange={handleChange}
                         placeholder="Cuéntanos sobre tu proyecto o consulta..."
                         required
-                        className="mt-2 min-h-[120px]"
+                        className="mt-2 min-h-[120px] border-gray-200 focus:border-primary focus:ring-primary transition-all duration-300"
                       />
                     </div>
 
                     <Button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-primary to-accent-teal hover:opacity-90 text-lg py-6"
+                      className="w-full bg-gradient-to-r from-primary to-accent-teal hover:opacity-90 text-lg py-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                     >
                       <MessageCircle className="mr-2 h-5 w-5" />
                       Enviar por WhatsApp
@@ -219,10 +222,10 @@ ${formData.message}
               </div>
 
               <div className="space-y-4">
-                <Card className="border-l-4 border-l-primary hover:shadow-lg transition-shadow">
+                <Card className="border-l-4 border-l-primary hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent-teal flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent-teal flex items-center justify-center flex-shrink-0 shadow-md">
                         <Phone className="h-6 w-6 text-white" />
                       </div>
                       <div>
@@ -231,9 +234,9 @@ ${formData.message}
                           href={`https://wa.me/${WHATSAPP_NUMBER}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-primary hover:underline"
+                          className="text-primary hover:underline font-medium"
                         >
-                          +54 9 2625 43-5328
+                          +54 9 2604 08-5501
                         </a>
                         <p className="text-sm text-gray-500 mt-1">
                           También disponible en WhatsApp
@@ -243,17 +246,17 @@ ${formData.message}
                   </CardContent>
                 </Card>
 
-                <Card className="border-l-4 border-l-accent-teal hover:shadow-lg transition-shadow">
+                <Card className="border-l-4 border-l-accent-teal hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-teal to-primary-light flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-teal to-primary-light flex items-center justify-center flex-shrink-0 shadow-md">
                         <Mail className="h-6 w-6 text-white" />
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-1">Email</h4>
                         <a
                           href="mailto:anthroviahr@gmail.com"
-                          className="text-primary hover:underline"
+                          className="text-primary hover:underline font-medium"
                         >
                           anthroviahr@gmail.com
                         </a>
@@ -265,10 +268,10 @@ ${formData.message}
                   </CardContent>
                 </Card>
 
-                <Card className="border-l-4 border-l-accent-rose hover:shadow-lg transition-shadow">
+                <Card className="border-l-4 border-l-accent-rose hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-rose to-accent-burgundy flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-rose to-accent-burgundy flex items-center justify-center flex-shrink-0 shadow-md">
                         <MapPin className="h-6 w-6 text-white" />
                       </div>
                       <div>
@@ -284,10 +287,10 @@ ${formData.message}
                   </CardContent>
                 </Card>
 
-                <Card className="border-l-4 border-l-accent-burgundy hover:shadow-lg transition-shadow">
+                <Card className="border-l-4 border-l-accent-burgundy hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-burgundy to-primary flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-burgundy to-primary flex items-center justify-center flex-shrink-0 shadow-md">
                         <Clock className="h-6 w-6 text-white" />
                       </div>
                       <div>
@@ -302,6 +305,37 @@ ${formData.message}
                     </div>
                   </CardContent>
                 </Card>
+              </div>
+
+              {/* Social Media Links */}
+              <div className="pt-6 border-t border-gray-200">
+                <h4 className="font-semibold text-gray-900 mb-4">Síguenos en redes</h4>
+                <div className="flex space-x-4">
+                  <a
+                    href="https://www.linkedin.com/company/anthrovia-hr/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-300"
+                  >
+                    <Linkedin className="h-5 w-5" />
+                  </a>
+                  <a
+                    href="https://www.instagram.com/anthrovia.hr/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-accent-rose/10 flex items-center justify-center text-accent-rose hover:bg-accent-rose hover:text-white transition-all duration-300"
+                  >
+                    <Instagram className="h-5 w-5" />
+                  </a>
+                  <a
+                    href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 hover:bg-green-600 hover:text-white transition-all duration-300"
+                  >
+                    <MessageCircle className="h-5 w-5" />
+                  </a>
+                </div>
               </div>
 
             </div>

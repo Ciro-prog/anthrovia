@@ -6,6 +6,7 @@ import {
   Heart,
   Layers,
   FileSearch,
+  GraduationCap,
   type LucideIcon
 } from "lucide-react"
 
@@ -34,12 +35,12 @@ const services = [
     description: "Desarrollamos programas que fortalecen la conexión entre las personas y su entorno laboral, integrando acciones de reconocimiento, bienestar integral y propuestas de salario emocional adaptadas a cada cultura organizacional. Nuestro enfoque impulsa el compromiso, promueve la motivación y genera experiencias laborales más significativas.",
     color: "from-accent-rose to-accent-burgundy"
   },
-  // {
-  //   icon: GraduationCap,
-  //   title: "Capacitación y Entrenamiento",
-  //   description: "Elaboración de programas de formación personalizados para potenciar las competencias individuales y colectivas. Se desarrollan capacitaciones presenciales, virtuales o híbridas, alineadas a las necesidades reales del negocio y orientadas a resultados medibles.",
-  //   color: "from-primary to-primary-light"
-  // },
+   {
+     icon: GraduationCap,
+     title: "Career Coaching & Desarrollo Profesional",
+     description: "Brindamos acompañamiento personalizado para impulsar tu empleabilidad: optimizamos tu CV, potenciamos tu perfil de LinkedIn y te preparamos para entrevistas laborales con técnicas y estrategias actuales del mercado. Un enfoque práctico, claro y orientado a que te postules con seguridad y destaques en cada proceso.",
+     color: "from-primary to-primary-light"
+   },
   {
     icon: Layers,
     title: "Servicios complementarios",
