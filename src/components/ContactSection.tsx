@@ -268,13 +268,13 @@ ${formData.message}
                   </CardContent>
                 </Card>
 
-                <Card className="border-l-4 border-l-accent-rose hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
+                {/* <Card className="border-l-4 border-l-accent-rose hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
                       <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-rose to-accent-burgundy flex items-center justify-center flex-shrink-0 shadow-md">
                         <MapPin className="h-6 w-6 text-white" />
                       </div>
-                      {/* <div>
+                       <div>
                         <h4 className="font-semibold text-gray-900 mb-1">Ubicación</h4>
                         <p className="text-gray-600">
                           Mendoza, Argentina
@@ -282,10 +282,10 @@ ${formData.message}
                         <p className="text-sm text-gray-500 mt-1">
                           Servicios a nivel nacional
                         </p>
-                      </div> */}
+                      </div> 
                     </div>
                   </CardContent>
-                </Card>
+                </Card> */}
 
                 <Card className="border-l-4 border-l-accent-burgundy hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
                   <CardContent className="p-6">
