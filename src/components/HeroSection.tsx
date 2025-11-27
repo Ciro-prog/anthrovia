@@ -5,20 +5,19 @@ export const HeroSection = () => {
   return (
     <section className="relative min-h-[700px] md:min-h-[600px] flex items-end justify-center overflow-hidden">
       {/* Background Image */}
+      {/* Background Video */}
       <div className="absolute inset-0">
-        {/* Mobile image */}
-        <img
-          src="/hero-mobile-v4.png"
-          alt="Anthrovia HR Hero"
-          className="w-full h-full object-cover object-center md:hidden -mt-8"
-        />
-
-        {/* Desktop image */}
-        <img
-          src="/hero-new.png"
-          alt="Anthrovia HR Hero"
-          className="hidden md:block w-full h-full object-cover object-center"
-        />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover object-center"
+        >
+          <source src="/video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        
         {/* Gradient fade to white at bottom */}
         <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent"></div>
       </div>
@@ -32,7 +31,7 @@ export const HeroSection = () => {
             Evolucionando el talento.
           </h2>
 
-          <p className="text-base md:text-lg mb-4 text-primary max-w-2xl mx-auto leading-relaxed animate-fade-in-up drop-shadow-lg font-semibold" style={{ animationDelay: '0.4s', opacity: 0 }}>
+          <p className="text-base md:text-lg mb-4 text-transparent max-w-2xl mx-auto leading-relaxed animate-fade-in-up drop-shadow-lg font-semibold" style={{ animationDelay: '0.4s', opacity: 0 }}>
             Soluciones integrales de Recursos Humanos diseñadas para transformar tu organización y maximizar el potencial de tu equipo.
             Impulsamos culturas más humanas, procesos más eficientes y equipos que crecen con propósito.
           </p>

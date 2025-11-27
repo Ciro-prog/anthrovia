@@ -166,7 +166,7 @@ ${formData.message}
                         onChange={handleChange}
                         className="mt-2 flex h-10 w-full rounded-md border border-gray-200 bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all duration-300"
                       >
-                        <option value="">Selecciona un servicio</option>
+                        <option value="" disabled>Selecciona un servicio</option>
                         <option value="Asesorías iniciales">Asesorías iniciales</option>
                         <option value="Reclutamiento y Selección Estratégica por Competencias">Reclutamiento y Selección Estratégica por Competencias</option>
                         <option value="Diseño y Optimización de Procesos de RRHH">Diseño y Optimización de Procesos de RRHH</option>
