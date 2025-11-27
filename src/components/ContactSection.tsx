@@ -168,10 +168,10 @@ ${formData.message}
                       >
                         <option value="">Selecciona un servicio</option>
                         <option value="Asesorías iniciales">Asesorías iniciales</option>
-                        <option value="Reclutamiento y Selección Estratégica">Reclutamiento y Selección Estratégica</option>
-                        <option value="Diseño y Optimización de Procesos">Diseño y Optimización de Procesos</option>
+                        <option value="Reclutamiento y Selección Estratégica por Competencias">Reclutamiento y Selección Estratégica por Competencias</option>
+                        <option value="Diseño y Optimización de Procesos de RRHH">Diseño y Optimización de Procesos de RRHH</option>
                         <option value="Programas de Experiencia y Bienestar">Programas de Experiencia y Bienestar</option>
-                        {/* <option value="Capacitación y Entrenamiento"></option> */}
+                        <option value="Career Coaching & Desarrollo Profesional">Career Coaching & Desarrollo Profesional</option>
                         <option value="Servicios complementarios">Servicios complementarios</option>
                         <option value="Otro">Otro</option>
                       </select>
