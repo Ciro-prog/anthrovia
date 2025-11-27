@@ -274,7 +274,7 @@ ${formData.message}
                       <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-rose to-accent-burgundy flex items-center justify-center flex-shrink-0 shadow-md">
                         <MapPin className="h-6 w-6 text-white" />
                       </div>
-                      <div>
+                      {/* <div>
                         <h4 className="font-semibold text-gray-900 mb-1">Ubicación</h4>
                         <p className="text-gray-600">
                           Mendoza, Argentina
@@ -282,7 +282,7 @@ ${formData.message}
                         <p className="text-sm text-gray-500 mt-1">
                           Servicios a nivel nacional
                         </p>
-                      </div>
+                      </div> */}
                     </div>
                   </CardContent>
                 </Card>
