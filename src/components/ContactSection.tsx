@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
-import { useScrollAnimation } from "@/hooks/useScrollAnimation"
+import { motion } from "framer-motion"
 import {
   MessageCircle,
   Linkedin,
@@ -14,9 +14,6 @@ import {
 const WHATSAPP_NUMBER = "5492604085501"
 
 export const ContactSection = () => {
-  const headerAnimation = useScrollAnimation()
-  const formAnimation = useScrollAnimation()
-  const infoAnimation = useScrollAnimation()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -68,31 +65,43 @@ ${formData.message}
   }
 
   return (
-    <section id="contacto" className="py-20 bg-gradient-to-b from-gray-50 to-white">
-      <div className="container mx-auto px-4">
+    <section id="contacto" className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+      {/* Image Background */}
+      <img
+        src="/image.png"
+        alt="Background"
+        className="absolute inset-0 w-full h-full object-cover -z-20"
+      />
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-white/90 -z-10"></div>
+
+      <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div
-            ref={headerAnimation.ref}
-            className={`text-center mb-16 transition-all duration-700 ${headerAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16 bg-gradient-to-r from-primary to-accent-rose py-8 rounded-2xl shadow-lg"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Conectemos
             </h2>
-            <div className="h-1 w-24 bg-gradient-to-r from-accent-rose to-accent-burgundy mx-auto mb-6"></div>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <div className="h-1 w-24 bg-white/50 mx-auto mb-6"></div>
+            <p className="text-lg text-gray-100 max-w-2xl mx-auto px-4">
               "El cambio comienza con una conversación". Queremos conocer tu historia, tus desafíos y acompañarte en la evolución del talento dentro de tu organización.
               Escribinos y descubramos juntos cómo potenciar tu equipo.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid md:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <div
-              ref={formAnimation.ref}
-              className={`transition-all duration-700 ${formAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
-                }`}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
             >
               <Card className="border-0 shadow-xl overflow-hidden">
                 <div className="h-2 bg-gradient-to-r from-primary via-accent-teal to-accent-rose"></div>
@@ -200,13 +209,15 @@ ${formData.message}
                   </form>
                 </CardContent>
               </Card>
-            </div>
+            </motion.div>
 
             {/* Contact Info */}
-            <div
-              ref={infoAnimation.ref}
-              className={`space-y-6 transition-all duration-700 ${infoAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
-                }`}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="space-y-6"
             >
               <div>
                 <h3 className="text-2xl font-bold text-primary mb-6">
@@ -218,92 +229,7 @@ ${formData.message}
               </div>
 
               <div className="space-y-4">
-                {/* <Card className="border-l-4 border-l-primary hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent-teal flex items-center justify-center flex-shrink-0 shadow-md">
-                        <Phone className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">Teléfono</h4>
-                        <a
-                          href={`https://wa.me/${WHATSAPP_NUMBER}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary hover:underline font-medium"
-                        >
-                          +54 9 2604 08-5501
-                        </a>
-                        <p className="text-sm text-gray-500 mt-1">
-                          También disponible en WhatsApp
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card> */}
-
-                {/* <Card className="border-l-4 border-l-accent-teal hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-teal to-primary-light flex items-center justify-center flex-shrink-0 shadow-md">
-                        <Mail className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">Email</h4>
-                        <a
-                          href="mailto:anthroviahr@gmail.com"
-                          className="text-primary hover:underline font-medium"
-                        >
-                          anthroviahr@gmail.com
-                        </a>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Respuesta en 24 horas
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card> */}
-
-                {/* <Card className="border-l-4 border-l-accent-rose hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-rose to-accent-burgundy flex items-center justify-center flex-shrink-0 shadow-md">
-                        <MapPin className="h-6 w-6 text-white" />
-                      </div>
-                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">Ubicación</h4>
-                        <p className="text-gray-600">
-                          Mendoza, Argentina
-                        </p>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Servicios a nivel nacional
-                        </p>
-                      </div> 
-                    </div>
-                  </CardContent>
-                </Card> */}
-
-                {/* <Card className="border-l-4 border-l-accent-burgundy hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-burgundy to-primary flex items-center justify-center flex-shrink-0 shadow-md">
-                        <Clock className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">Horario</h4>
-                        <p className="text-gray-600">
-                          Lunes a Viernes: 9:00 - 18:00
-                        </p>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Consultas por WhatsApp 24/7
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card> */}
-              
-
-              {/* Social Media Links */}
+                {/* Social Media Links */}
                 <Card className="border-l-4 border-l-green-500 hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
@@ -375,8 +301,8 @@ ${formData.message}
                     </div>
                   </CardContent>
                 </Card>
-                </div>
-            </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>

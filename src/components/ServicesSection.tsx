@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useScrollAnimation } from "@/hooks/useScrollAnimation"
+import { motion } from "framer-motion"
 import {
   Users,
   Settings,
@@ -56,14 +56,12 @@ interface ServiceCardProps {
 }
 
 const ServiceCard = ({ service, Icon, index }: ServiceCardProps) => {
-  const animation = useScrollAnimation()
-
   return (
-    <div
-      ref={animation.ref}
-      className={`transition-all duration-700 ${animation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}
-      style={{ transitionDelay: `${index * 100}ms` }}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
     >
       <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 overflow-hidden h-full">
         {/* Gradient header */}
@@ -84,41 +82,45 @@ const ServiceCard = ({ service, Icon, index }: ServiceCardProps) => {
           <CardDescription className="text-gray-600 leading-relaxed">
             {service.description}
           </CardDescription>
-
-          {/* <Button
-            variant="ghost"
-            className="mt-4 text-primary hover:text-accent-burgundy p-0 h-auto font-semibold group/btn"
-          >
-            Conoce más
-            <span className="ml-2 group-hover/btn:translate-x-1 transition-transform inline-block">→</span>
-          </Button> */}
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   )
 }
 
 export const ServicesSection = () => {
-  const headerAnimation = useScrollAnimation()
-  const ctaAnimation = useScrollAnimation()
-
   return (
-    <section id="servicios" className="py-20 bg-gradient-to-b from-white to-gray-50">
-      <div className="container mx-auto px-4">
+    <section id="servicios" className="py-20 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover -z-20"
+      >
+        <source src="/bg-mov.mp4" type="video/mp4" />
+      </video>
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-white/90 -z-10"></div>
+      
+      <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
-        <div
-          ref={headerAnimation.ref}
-          className={`text-center mb-16 transition-all duration-700 ${headerAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16 bg-accent-burgundy py-8 rounded-2xl shadow-lg max-w-full"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Nuestros servicios
           </h2>
-          <div className="h-1 w-24 bg-gradient-to-r from-accent-rose to-accent-burgundy mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <div className="h-1 w-24 bg-white/50 mx-auto mb-6"></div>
+          <p className="text-lg text-gray-100 max-w-2xl mx-auto px-4">
             Diseñamos soluciones a medida que conectan estrategia, personas y cultura.
             Acompañamos a las organizaciones en cada etapa de su evolución, impulsando procesos más eficientes y experiencias laborales con propósito.          </p>
-        </div>
+        </motion.div>
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
@@ -133,38 +135,6 @@ export const ServicesSection = () => {
               />
             )
           })}
-        </div>
-
-        {/* CTA Section */}
-        <div
-          ref={ctaAnimation.ref}
-          className={`mt-16 text-center transition-all duration-700 ${ctaAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-        >
-          {/* <div className="bg-gradient-to-r from-primary via-accent-teal to-primary-light rounded-2xl p-12 text-white">
-            <h3 className="text-3xl md:text-4xl font-bold mb-4">
-              ¿Listo para potenciar tu talento?
-            </h3>
-            <p className="text-lg mb-8 text-white/90 max-w-2xl mx-auto">
-              Descubre cómo podemos ayudarte a alcanzar tus objetivos organizacionales
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                asChild
-                className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 h-auto"
-              >
-                <a href="#contacto">Contáctanos</a>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-6 h-auto"
-              >
-                Descargar brochure
-              </Button>
-            </div>
-          </div> */}
         </div>
       </div>
     </section>

@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { useScrollAnimation } from "@/hooks/useScrollAnimation"
+import { motion } from "framer-motion"
 import { Target, Users, TrendingUp, Heart, ShieldCheck, Sparkles, Compass } from "lucide-react"
 
 const values = [
@@ -31,34 +31,43 @@ const values = [
 ]
 
 export const AboutSection = () => {
-  const headerAnimation = useScrollAnimation()
-  const contentAnimation = useScrollAnimation()
-  const missionAnimation = useScrollAnimation()
-  const visionAnimation = useScrollAnimation()
-  const valuesAnimation = useScrollAnimation()
-
   return (
-    <section id="sobre-nosotros" className="py-20 bg-gradient-to-b from-white to-gray-50">
-      <div className="container mx-auto px-4">
+    <section id="sobre-nosotros" className="py-20 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover -z-20"
+      >
+        <source src="/bg-mov-1.mp4" type="video/mp4" />
+      </video>
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-white/90 -z-10"></div>
+
+      <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div
-          ref={headerAnimation.ref}
-          className={`text-center mb-16 transition-all duration-700 ${
-            headerAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16 bg-primary py-8 rounded-2xl shadow-lg max-w-full"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Sobre Nosotros
           </h2>
-          <div className="h-1 w-24 bg-gradient-to-r from-accent-rose to-accent-burgundy mx-auto mb-6"></div>
-        </div>
+          <div className="h-1 w-24 bg-white/50 mx-auto mb-6"></div>
+        </motion.div>
 
         {/* Introduction */}
-        <div
-          ref={contentAnimation.ref}
-          className={`max-w-4xl mx-auto mb-20 transition-all duration-700 ${
-            contentAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="max-w-4xl mx-auto mb-20"
         >
           <p className="text-lg text-gray-600 text-center leading-relaxed mb-6">
             En <span className="font-bold text-primary">Anthrovia HR</span> somos tu aliado estratégico en la gestión y desarrollo del talento. Diseñamos soluciones integrales y a medida que transforman organizaciones y maximizan el potencial de los equipos. Como consultora digital, acompañamos a personas y organizaciones sin límites geográficos, adaptándonos a cada cultura y necesidad.
@@ -68,16 +77,16 @@ export const AboutSection = () => {
             representa nuestra visión práctica y estratégica del talento — un camino claro para que las personas y las organizaciones crezcan juntas.
             Trabajamos con metodologías probadas, entregables accionables y foco humano, para lograr resultados sostenibles y medibles.
           </p>
-        </div>
+        </motion.div>
 
         {/* Purpose & Mission */}
         <div className="grid md:grid-cols-2 gap-8 mb-20 max-w-6xl mx-auto">
           {/* Purpose */}
-          <div
-            ref={missionAnimation.ref}
-            className={`transition-all duration-700 ${
-              missionAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
-            }`}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
           >
             <Card className="h-full border-2 border-accent-teal/20 hover:shadow-xl transition-shadow">
               <CardContent className="p-8">
@@ -90,14 +99,14 @@ export const AboutSection = () => {
                 </p>
               </CardContent>
             </Card>
-          </div>
+          </motion.div>
 
           {/* Mission */}
-          <div
-            ref={visionAnimation.ref}
-            className={`transition-all duration-700 ${
-              visionAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
-            }`}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
           >
             <Card className="h-full border-2 border-primary/20 hover:shadow-xl transition-shadow">
               <CardContent className="p-8">
@@ -112,15 +121,16 @@ export const AboutSection = () => {
                 </p>
               </CardContent>
             </Card>
-          </div>
+          </motion.div>
         </div>
 
         {/* Values */}
-        <div
-          ref={valuesAnimation.ref}
-          className={`mb-20 transition-all duration-700 ${
-            valuesAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-20"
         >
           <h3 className="text-3xl font-bold text-primary text-center mb-12">
             Nuestros Valores
@@ -148,7 +158,7 @@ export const AboutSection = () => {
               )
             })}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )
