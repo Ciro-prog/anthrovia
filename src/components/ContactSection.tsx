@@ -308,35 +308,77 @@ ${formData.message}
               </div>
 
               {/* Social Media Links */}
-              <div className="pt-6 border-t border-gray-200">
-                <h4 className="font-semibold text-gray-900 mb-4">Síguenos en redes</h4>
-                <div className="flex space-x-4">
-                  <a
-                    href="https://www.linkedin.com/company/anthrovia-hr/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-300"
-                  >
-                    <Linkedin className="h-5 w-5" />
-                  </a>
-                  <a
-                    href="https://www.instagram.com/anthrovia.hr/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-accent-rose/10 flex items-center justify-center text-accent-rose hover:bg-accent-rose hover:text-white transition-all duration-300"
-                  >
-                    <Instagram className="h-5 w-5" />
-                  </a>
-                  <a
-                    href={`https://wa.me/${WHATSAPP_NUMBER}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 hover:bg-green-600 hover:text-white transition-all duration-300"
-                  >
-                    <MessageCircle className="h-5 w-5" />
-                  </a>
-                </div>
-              </div>
+                <Card className="border-l-4 border-l-green-500 hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-start space-x-4">
+                      <div className="w-12 h-12 rounded-lg bg-green-500 flex items-center justify-center flex-shrink-0 shadow-md">
+                        <MessageCircle className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-1">WhatsApp</h4>
+                        <a
+                          href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline font-medium"
+                        >
+                          Chatea con nosotros
+                        </a>
+                        <p className="text-sm text-gray-500 mt-1">
+                          Respuesta inmediata
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-l-4 border-l-[#0077b5] hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-start space-x-4">
+                      <div className="w-12 h-12 rounded-lg bg-[#0077b5] flex items-center justify-center flex-shrink-0 shadow-md">
+                        <Linkedin className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-1">LinkedIn</h4>
+                        <a
+                          href="https://www.linkedin.com/company/anthrovia-hr/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline font-medium"
+                        >
+                          Anthrovia HR
+                        </a>
+                        <p className="text-sm text-gray-500 mt-1">
+                          Síguenos para novedades
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-l-4 border-l-[#E1306C] hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-start space-x-4">
+                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] flex items-center justify-center flex-shrink-0 shadow-md">
+                        <Instagram className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-1">Instagram</h4>
+                        <a
+                          href="https://www.instagram.com/anthrovia.hr/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline font-medium"
+                        >
+                          @anthrovia.hr
+                        </a>
+                        <p className="text-sm text-gray-500 mt-1">
+                          Nuestra cultura en imágenes
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
             </div>
           </div>
