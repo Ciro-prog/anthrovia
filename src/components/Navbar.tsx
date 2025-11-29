@@ -7,7 +7,8 @@ import {
   Settings,
   Heart,
   Layers,
-  FileSearch
+  FileSearch,
+  GraduationCap
 } from "lucide-react"
 
 const services = [
@@ -15,7 +16,7 @@ const services = [
   { name: "Reclutamiento y Selección Estratégica", icon: Users },
   { name: "Diseño y Optimización de Procesos", icon: Settings },
   { name: "Programas de Experiencia y Bienestar", icon: Heart },
-  // { name: "Capacitación y Entrenamiento", icon: GraduationCap },
+  { name: "Career Coaching & Desarrollo Profesional", icon: GraduationCap },
   { name: "Servicios complementarios", icon: Layers },
 ]
 
@@ -67,7 +68,7 @@ export const Navbar = () => {
                       return (
                         <a
                           key={index}
-                          href={`#servicio-${index}`}
+                          href="#servicios"
                           className="flex items-center space-x-3 px-4 py-3 hover:bg-gradient-to-r hover:from-primary/10 hover:to-accent-teal/10 transition-colors group/item"
                         >
                           <div className="w-8 h-8 rounded-md bg-gradient-to-br from-primary to-accent-teal flex items-center justify-center flex-shrink-0">
@@ -146,7 +147,7 @@ export const Navbar = () => {
                     return (
                       <a
                         key={index}
-                        href={`#servicio-${index}`}
+                        href="#servicios"
                         className="flex items-center space-x-3 py-2 px-2 text-sm text-gray-600 hover:text-primary hover:bg-primary/5 rounded-md transition-all"
                         onClick={() => setIsOpen(false)}
                       >

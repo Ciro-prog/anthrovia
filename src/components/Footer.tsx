@@ -9,10 +9,13 @@ export const Footer = () => {
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           {/* Brand Column */}
           <div className="col-span-1 md:col-span-1">
-            <h3 className="text-2xl font-bold mb-6">Anthrovia HR</h3>
+            <div className="flex items-center mb-6">
+              <img src="/favicon.png" alt="Anthrovia Logo" className="h-10 w-10 mr-3" />
+              <h3 className="text-2xl font-bold">Anthrovia HR</h3>
+            </div>
             <p className="text-gray-300 mb-6 leading-relaxed">
-Soluciones integrales de Recursos Humanos diseñadas para transformar tu organización y maximizar el potencial de tu equipo.
-            Impulsamos culturas más humanas, procesos más eficientes y equipos que crecen con propósito.
+              Soluciones integrales de Recursos Humanos diseñadas para transformar tu organización y maximizar el potencial de tu equipo.
+              Impulsamos culturas más humanas, procesos más eficientes y equipos que crecen con propósito.
             </p>
            
           </div>
@@ -22,7 +25,7 @@ Soluciones integrales de Recursos Humanos diseñadas para transformar tu organiz
             <h4 className="text-lg font-semibold mb-6 border-b border-white/20 pb-2 inline-block">Enlaces Rápidos</h4>
             <ul className="space-y-3">
               <li>
-                <a href="#inicio" className="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+                <a href="#" className="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
                   Inicio
                 </a>
               </li>
@@ -32,7 +35,7 @@ Soluciones integrales de Recursos Humanos diseñadas para transformar tu organiz
                 </a>
               </li>
               <li>
-                <a href="#nosotros" className="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+                <a href="#sobre-nosotros" className="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
                   Nosotros
                 </a>
               </li>
