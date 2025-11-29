@@ -6,10 +6,6 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
 import {
-  Phone,
-  Mail,
-  MapPin,
-  Clock,
   MessageCircle,
   Linkedin,
   Instagram

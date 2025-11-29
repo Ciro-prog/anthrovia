@@ -1,7 +1,7 @@
 import { Linkedin, Instagram, MessageCircle, Mail, Phone, MapPin } from "lucide-react"
 
 export const Footer = () => {
-  const currentYear = new Date().getFullYear()
+  // const currentYear = new Date().getFullYear()
 
   return (
     <footer className="bg-primary text-white pt-16 pb-8">
