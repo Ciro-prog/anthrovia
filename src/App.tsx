@@ -4,6 +4,7 @@ import { ServicesSection } from "./components/ServicesSection"
 import { AboutSection } from "./components/AboutSection"
 // import { NewsSection } from "./components/NewsSection"
 import { ContactSection } from "./components/ContactSection"
+import { Footer } from "./components/Footer"
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <AboutSection />
       {/* <NewsSection /> */}
       <ContactSection />
+      <Footer />
     </div>
   )
 }

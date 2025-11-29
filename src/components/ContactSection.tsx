@@ -222,7 +222,7 @@ ${formData.message}
               </div>
 
               <div className="space-y-4">
-                <Card className="border-l-4 border-l-primary hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
+                {/* <Card className="border-l-4 border-l-primary hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
                       <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent-teal flex items-center justify-center flex-shrink-0 shadow-md">
@@ -244,9 +244,9 @@ ${formData.message}
                       </div>
                     </div>
                   </CardContent>
-                </Card>
+                </Card> */}
 
-                <Card className="border-l-4 border-l-accent-teal hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
+                {/* <Card className="border-l-4 border-l-accent-teal hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
                       <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-teal to-primary-light flex items-center justify-center flex-shrink-0 shadow-md">
@@ -266,7 +266,7 @@ ${formData.message}
                       </div>
                     </div>
                   </CardContent>
-                </Card>
+                </Card> */}
 
                 {/* <Card className="border-l-4 border-l-accent-rose hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
                   <CardContent className="p-6">
@@ -287,7 +287,7 @@ ${formData.message}
                   </CardContent>
                 </Card> */}
 
-                <Card className="border-l-4 border-l-accent-burgundy hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
+                {/* <Card className="border-l-4 border-l-accent-burgundy hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
                       <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-burgundy to-primary flex items-center justify-center flex-shrink-0 shadow-md">
@@ -304,8 +304,8 @@ ${formData.message}
                       </div>
                     </div>
                   </CardContent>
-                </Card>
-              </div>
+                </Card> */}
+              
 
               {/* Social Media Links */}
                 <Card className="border-l-4 border-l-green-500 hover:shadow-lg transition-shadow bg-white/50 backdrop-blur-sm">
@@ -379,7 +379,7 @@ ${formData.message}
                     </div>
                   </CardContent>
                 </Card>
-
+                </div>
             </div>
           </div>
         </div>
