@@ -12,9 +12,9 @@ export const HeroSection = () => {
           loop
           muted
           playsInline
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-fill object-center md:object-cover md:scale-[0.85] transition-transform duration-700 rounded-2xl"
         >
-          <source src="/video-2.mp4" type="video/mp4" />
+          <source src="/video.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         
