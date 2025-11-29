@@ -51,9 +51,11 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-6 border-b border-white/20 pb-2 inline-block">Servicios</h4>
             <ul className="space-y-3">
-              <li className="text-gray-300">Reclutamiento y Selección</li>
-              <li className="text-gray-300">Consultoría de RRHH</li>
-              <li className="text-gray-300">Desarrollo Organizacional</li>
+              <li className="text-gray-300">Consultoría en RRHH</li>
+              <li className="text-gray-300">Talent Acquisition</li>
+              <li className="text-gray-300">Diseño y Optimización de Procesos</li>
+              <li className="text-gray-300">Employee Experience</li>
+              <li className="text-gray-300">Career Coaching</li>
             </ul>
           </div>
 
