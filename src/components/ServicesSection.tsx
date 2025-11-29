@@ -56,6 +56,26 @@ interface ServiceCardProps {
 }
 
 const ServiceCard = ({ service, Icon, index }: ServiceCardProps) => {
+  const handleCardClick = () => {
+    // Set the service parameter in the URL
+    const serviceParam = encodeURIComponent(service.title)
+    window.location.hash = `#contacto?service=${serviceParam}`
+    
+    // Scroll to contact section with offset for desktop
+    setTimeout(() => {
+      const contactSection = document.getElementById('contacto')
+      if (contactSection) {
+        const elementPosition = contactSection.getBoundingClientRect().top + window.pageYOffset
+        const offsetPosition = elementPosition + 260 // 240px offset to scroll up
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        })
+      }
+    }, 100)
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -63,7 +83,10 @@ const ServiceCard = ({ service, Icon, index }: ServiceCardProps) => {
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
-      <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 overflow-hidden h-full">
+      <Card 
+        className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 overflow-hidden h-full cursor-pointer"
+        onClick={handleCardClick}
+      >
         {/* Gradient header */}
         <div className={`h-2 bg-gradient-to-r ${service.color}`}></div>
 

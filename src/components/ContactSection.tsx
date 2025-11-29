@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -22,6 +22,28 @@ export const ContactSection = () => {
     service: "",
     message: ""
   })
+
+  // Read service from URL parameter on mount and on hash change
+  useEffect(() => {
+    const readServiceFromUrl = () => {
+      const hash = window.location.hash // e.g., "#contacto?service=..."
+      if (hash.includes('?service=')) {
+        const searchParams = new URLSearchParams(hash.split('?')[1])
+        const serviceParam = searchParams.get('service')
+        if (serviceParam) {
+          const decodedService = decodeURIComponent(serviceParam)
+          setFormData(prev => ({ ...prev, service: decodedService }))
+        }
+      }
+    }
+
+    // Read on mount
+    readServiceFromUrl()
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', readServiceFromUrl)
+    return () => window.removeEventListener('hashchange', readServiceFromUrl)
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
