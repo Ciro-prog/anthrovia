@@ -132,9 +132,12 @@ export const AboutSection = () => {
           transition={{ duration: 0.6 }}
           className="mb-20"
         >
-          <h3 className="text-3xl font-bold text-primary text-center mb-12">
-            Nuestros Valores
-          </h3>
+          <div className="mb-12">
+            <h3 className="text-3xl font-bold text-primary text-center mb-4">
+              Nuestros Valores
+            </h3>
+            <div className="w-full h-1 bg-primary rounded-full opacity-80"></div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
             {values.map((value, index) => {
               const Icon = value.icon
