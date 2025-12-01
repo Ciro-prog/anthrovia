@@ -1,10 +1,17 @@
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
+import { useCMS } from "@/context/CMSContext"
+import { HeroSectionContent } from "@/types/cms"
+import { motion } from "framer-motion"
 
 export const HeroSection = () => {
+  const { content } = useCMS();
+  const heroData = content.sections.find(s => s.id === 'hero') as HeroSectionContent;
+
+  if (!heroData || !heroData.isVisible) return null;
+
   return (
     <section className="relative min-h-[700px] md:min-h-[600px] flex items-end justify-center overflow-hidden">
-      {/* Background Image */}
       {/* Background Video */}
       <div className="absolute inset-0">
         <video
@@ -12,8 +19,9 @@ export const HeroSection = () => {
           loop
           muted
           playsInline
-          className="w-full h-full object-fill object-center md:object-cover md:scale-[0.85] transition-transform duration-700 rounded-2xl"
+          className="w-full h-full object-fill object-center md:object-cover md:scale-[0.97] scale-95 transition-transform duration-700 rounded-2xl"
         >
+          {heroData.videoUrl && <source src={heroData.videoUrl} type="video/mp4" />}
           <source src="/video.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
@@ -24,35 +32,59 @@ export const HeroSection = () => {
 
       <div className="container mx-auto px-4 pb-12 md:pb-20 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-transparent mb-2 animate-fade-in-up drop-shadow-lg -z-10 relative" style={{ animationDelay: '0.2s', opacity: 0 }}>
-            Anthrovia HR
-          </h1>
-          <h2 className="text-2xl md:text-3xl text-transparent mb-6 animate-fade-in-up drop-shadow-lg -z-10 relative" style={{ animationDelay: '0.3s', opacity: 0 }}>
-            Evolucionando el talento.
-          </h2>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight"
+            style={{ color: heroData.titleColor || '#ffffff' }}
+          >
+            {heroData.title}
+          </motion.h1>
 
-          <p className="text-base md:text-lg mb-4 text-transparent max-w-2xl mx-auto leading-relaxed animate-fade-in-up drop-shadow-lg font-semibold" style={{ animationDelay: '0.4s', opacity: 0 }}>
-            Soluciones integrales de Recursos Humanos diseñadas para transformar tu organización y maximizar el potencial de tu equipo.
-            Impulsamos culturas más humanas, procesos más eficientes y equipos que crecen con propósito.
-          </p>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto font-light"
+            style={{ color: heroData.subtitleColor || '#e2e8f0' }}
+          >
+            {heroData.subtitle}
+          </motion.p>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center animate-fade-in-up" style={{ animationDelay: '0.6s', opacity: 0 }}>
-            <Button
-              asChild
-              className="bg-white text-primary hover:bg-white/90 text-sm px-6 py-2.5 h-auto"
-            >
-              <a href="#servicios" className="flex items-center">
-                Conoce nuestros servicios
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </a>
-            </Button>
-            <Button
-              asChild
-              className="bg-primary text-white hover:bg-accent-rose hover:border-accent-burgundy border-2 border-primary text-sm px-6 py-2.5 h-auto"
-            >
-              <a href="#contacto">Contáctanos</a>
-            </Button>
-          </div>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-lg mb-10 max-w-2xl mx-auto leading-relaxed"
+            style={{ color: heroData.descriptionColor || '#cbd5e1' }}
+          >
+            {heroData.description}
+          </motion.p>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="flex flex-col sm:flex-row gap-3 justify-center items-center"
+          >
+            {heroData.buttons.map((button, index) => (
+              <Button
+                key={index}
+                asChild
+                className={
+                  button.variant === 'secondary' 
+                    ? "bg-white text-primary hover:bg-white/90 text-sm px-6 py-2.5 h-auto"
+                    : "bg-primary text-white hover:bg-accent-rose hover:border-accent-burgundy border-2 border-primary text-sm px-6 py-2.5 h-auto"
+                }
+              >
+                <a href={button.link} className={button.variant === 'secondary' ? "flex items-center" : ""}>
+                  {button.text}
+                  {button.variant === 'secondary' && <ArrowRight className="ml-2 h-4 w-4" />}
+                </a>
+              </Button>
+            ))}
+          </motion.div>
         </div>
       </div>
 

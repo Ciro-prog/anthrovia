@@ -1,36 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { motion } from "framer-motion"
-import { Target, Users, TrendingUp, Heart, ShieldCheck, Sparkles, Compass } from "lucide-react"
-
-const values = [
-  {
-    icon: ShieldCheck,
-    title: "Integridad",
-    description: "Actuamos con ética, respeto y coherencia en cada acción"
-  },
-  {
-    icon: Heart,
-    title: "Compromiso",
-    description: "Nos dedicamos completamente al éxito de nuestros clientes y sus equipos"
-  },
-  {
-    icon: Users,
-    title: "Colaboración",
-    description: "Trabajamos en conjunto para crear soluciones innovadoras y efectivas"
-  },
-  {
-    icon: Sparkles,
-    title: "Sinergia",
-    description: "Conectamos personas, ideas y propósitos para lograr resultados compartidos"
-  },
-  {
-    icon: TrendingUp,
-    title: "Innovación",
-    description: "Adoptamos nuevas tendencias, tecnologías y metodologías en gestión de talento"
-  }
-]
+import { useCMS } from "@/context/CMSContext"
+import { AboutSectionContent } from "@/types/cms"
+import { getIcon } from "@/lib/iconMap"
 
 export const AboutSection = () => {
+  const { content } = useCMS();
+  const aboutData = content.sections.find(s => s.id === 'about') as AboutSectionContent;
+
+  if (!aboutData || !aboutData.isVisible) return null;
+
   return (
     <section id="sobre-nosotros" className="py-20 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
       {/* Video Background */}
@@ -41,43 +20,35 @@ export const AboutSection = () => {
         playsInline
         className="absolute inset-0 w-full h-full object-cover -z-20"
       >
-        <source src="/bg-mov-1.mp4" type="video/mp4" />
+        <source src={aboutData.videoUrl} type="video/mp4" />
       </video>
       {/* Overlay */}
       <div className="absolute inset-0 bg-white/90 -z-10"></div>
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16 bg-primary py-8 rounded-2xl shadow-lg max-w-full"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Sobre Nosotros
-          </h2>
-          <div className="h-1 w-24 bg-white/50 mx-auto mb-6"></div>
-        </motion.div>
-
-        {/* Introduction */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="max-w-4xl mx-auto mb-20"
-        >
-          <p className="text-lg text-gray-600 text-center leading-relaxed mb-6">
-            En <span className="font-bold text-primary">Anthrovia HR</span> somos tu aliado estratégico en la gestión y desarrollo del talento. Diseñamos soluciones integrales y a medida que transforman organizaciones y maximizan el potencial de los equipos. Como consultora digital, acompañamos a personas y organizaciones sin límites geográficos, adaptándonos a cada cultura y necesidad.
-            </p>
-          <p className="text-lg text-gray-600 text-center leading-relaxed">
-            El nombre <span className="font-bold text-primary">Anthrovia</span> combina <em>"anthro"</em> (persona) y <em>"via"</em> (camino):
-            representa nuestra visión práctica y estratégica del talento — un camino claro para que las personas y las organizaciones crezcan juntas.
-            Trabajamos con metodologías probadas, entregables accionables y foco humano, para lograr resultados sostenibles y medibles.
-          </p>
-        </motion.div>
+        <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-block mb-6 px-8 py-3 rounded-full shadow-lg backdrop-blur-sm"
+            style={{ backgroundColor: aboutData.headerBgColor || 'hsl(172 44% 19%)' }}
+          >
+            <h2 
+              className="text-3xl md:text-4xl font-bold tracking-tight"
+              style={{ color: aboutData.titleColor || '#ffffff' }}
+            >
+              {aboutData.title}
+            </h2>
+          </motion.div>
+          
+          <div className="max-w-3xl mx-auto space-y-6 text-lg text-gray-700 leading-relaxed bg-white/80 p-8 rounded-2xl shadow-sm backdrop-blur-sm">
+            {aboutData.introText.map((paragraph, index) => (
+              <p key={index} dangerouslySetInnerHTML={{ __html: paragraph }} />
+            ))}
+          </div>
+        </div>
 
         {/* Purpose & Mission */}
         <div className="grid md:grid-cols-2 gap-8 mb-20 max-w-6xl mx-auto">
@@ -91,11 +62,14 @@ export const AboutSection = () => {
             <Card className="h-full border-2 border-accent-teal/20 hover:shadow-xl transition-shadow">
               <CardContent className="p-8">
                 <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-accent-teal to-primary-light flex items-center justify-center mb-6">
-                  <Compass className="h-8 w-8 text-white" />
+                  {(() => {
+                    const Icon = getIcon('Compass');
+                    return <Icon className="h-8 w-8 text-white" />
+                  })()}
                 </div>
-                <h3 className="text-2xl font-bold text-primary mb-4">Nuestro Propósito</h3>
+                <h3 className="text-2xl font-bold text-primary mb-4">{aboutData.purpose.title}</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Ser el puente que impulsa la evolución del talento y el desarrollo integral de las organizaciones.
+                  {aboutData.purpose.description}
                 </p>
               </CardContent>
             </Card>
@@ -111,13 +85,14 @@ export const AboutSection = () => {
             <Card className="h-full border-2 border-primary/20 hover:shadow-xl transition-shadow">
               <CardContent className="p-8">
                 <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-primary to-accent-teal flex items-center justify-center mb-6">
-                  <Target className="h-8 w-8 text-white" />
+                  {(() => {
+                    const Icon = getIcon('Target');
+                    return <Icon className="h-8 w-8 text-white" />
+                  })()}
                 </div>
-                <h3 className="text-2xl font-bold text-primary mb-4">Nuestra Misión</h3>
+                <h3 className="text-2xl font-bold text-primary mb-4">{aboutData.mission.title}</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Potenciar el talento humano de las organizaciones mediante soluciones innovadoras
-                  y personalizadas que generen impacto real en su cultura, productividad y crecimiento.
-                  Nos comprometemos a ser el puente entre las empresas y el éxito de sus equipos.
+                  {aboutData.mission.description}
                 </p>
               </CardContent>
             </Card>
@@ -139,8 +114,8 @@ export const AboutSection = () => {
             <div className="w-full h-1 bg-primary rounded-full opacity-80"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
-            {values.map((value, index) => {
-              const Icon = value.icon
+            {aboutData.values.map((value, index) => {
+              const Icon = getIcon(value.iconName);
               return (
                 <Card
                   key={index}

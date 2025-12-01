@@ -1,22 +1,21 @@
-import { Navbar } from "./components/Navbar"
-import { HeroSection } from "./components/HeroSection"
-import { ServicesSection } from "./components/ServicesSection"
-import { AboutSection } from "./components/AboutSection"
-// import { NewsSection } from "./components/NewsSection"
-import { ContactSection } from "./components/ContactSection"
-import { Footer } from "./components/Footer"
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { HomePage } from './pages/HomePage'
+import { AdminPage } from './pages/AdminPage'
+import { LoginPage } from './pages/LoginPage'
+import { ProtectedRoute } from './components/ProtectedRoute'
 
 function App() {
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <HeroSection />
-      <ServicesSection />
-      <AboutSection />
-      {/* <NewsSection /> */}
-      <ContactSection />
-      <Footer />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin" element={<AdminPage />} />
+        </Route>
+      </Routes>
+    </Router>
   )
 }
 

@@ -1,56 +1,12 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { motion } from "framer-motion"
-import {
-  Users,
-  Settings,
-  Heart,
-  Layers,
-  FileSearch,
-  GraduationCap,
-  type LucideIcon
-} from "lucide-react"
-
-const services = [
-  {
-    icon: FileSearch,
-    title: "Asesorías iniciales",
-    description: "Diagnóstico estratégico rápido que identifica prioridades y propone una hoja de ruta práctica para gestionar talento y procesos.",
-    color: "from-primary to-accent-teal"
-  },
-  {
-    icon: Users,
-    title: "Reclutamiento y Selección Estratégica por Competencias",
-    description: "Identificamos, evaluamos y atraemos el mejor talento para tu organización mediante procesos estructurados y evaluaciones especializadas, asegurando incorporaciones alineadas a la cultura, los valores y los resultados del negocio.",
-    color: "from-accent-teal to-primary-light"
-  },
-  {
-    icon: Settings,
-    title: "Diseño y Optimización de Procesos de RRHH",
-    description: "Análisis y rediseño de los procesos clave del área con foco en la eficiencia, la trazabilidad y la experiencia del colaborador. Se aplican metodologías ágiles y herramientas digitales para simplificar tareas operativas, generar control de indicadores y fortalecer la toma de decisiones.",
-    color: "from-primary-light to-accent-rose"
-  },
-  {
-    icon: Heart,
-    title: "Programas de Experiencia y Bienestar",
-    description: "Desarrollamos programas que fortalecen la conexión entre las personas y su entorno laboral, integrando acciones de reconocimiento, bienestar integral y propuestas de salario emocional adaptadas a cada cultura organizacional. Nuestro enfoque impulsa el compromiso, promueve la motivación y genera experiencias laborales más significativas.",
-    color: "from-accent-rose to-accent-burgundy"
-  },
-   {
-     icon: GraduationCap,
-     title: "Career Coaching & Desarrollo Profesional",
-     description: "Brindamos acompañamiento personalizado para impulsar tu empleabilidad: optimizamos tu CV, potenciamos tu perfil de LinkedIn y te preparamos para entrevistas laborales con técnicas y estrategias actuales del mercado. Un enfoque práctico, claro y orientado a que te postules con seguridad y destaques en cada proceso.",
-     color: "from-primary to-primary-light"
-   },
-  {
-    icon: Layers,
-    title: "Servicios complementarios",
-    description: "Asesoría legal laboral, Compensaciones y beneficios, Administración de nómina, Employer Branding y People Analytics. (Disponibles próximamente.)",
-    color: "from-accent-burgundy to-accent-teal"
-  }
-]
+import { type LucideIcon } from "lucide-react"
+import { useCMS } from "@/context/CMSContext"
+import { ServicesSectionContent } from "@/types/cms"
+import { getIcon } from "@/lib/iconMap"
 
 interface ServiceCardProps {
-  service: typeof services[0]
+  service: ServicesSectionContent['services'][0]
   Icon: LucideIcon
   index: number
 }
@@ -112,6 +68,11 @@ const ServiceCard = ({ service, Icon, index }: ServiceCardProps) => {
 }
 
 export const ServicesSection = () => {
+  const { content } = useCMS();
+  const servicesData = content.sections.find(s => s.id === 'services') as ServicesSectionContent;
+
+  if (!servicesData || !servicesData.isVisible) return null;
+
   return (
     <section id="servicios" className="py-20 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
       {/* Video Background */}
@@ -122,33 +83,44 @@ export const ServicesSection = () => {
         playsInline
         className="absolute inset-0 w-full h-full object-cover -z-20"
       >
-        <source src="/bg-mov.mp4" type="video/mp4" />
+        <source src={servicesData.videoUrl} type="video/mp4" />
       </video>
       {/* Overlay */}
       <div className="absolute inset-0 bg-white/90 -z-10"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16 bg-accent-burgundy py-8 rounded-2xl shadow-lg max-w-full"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Nuestros servicios
-          </h2>
-          <div className="h-1 w-24 bg-white/50 mx-auto mb-6"></div>
-          <p className="text-lg text-gray-100 max-w-2xl mx-auto px-4">
-            Diseñamos soluciones a medida que conectan estrategia, personas y cultura.
-            Acompañamos a las organizaciones en cada etapa de su evolución, impulsando procesos más eficientes y experiencias laborales con propósito.          </p>
-        </motion.div>
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-block mb-4 px-6 py-2 rounded-full shadow-lg backdrop-blur-sm"
+            style={{ backgroundColor: servicesData.headerBgColor || 'hsl(345 60% 35%)' }}
+          >
+            <h2 
+              className="text-3xl md:text-4xl font-bold tracking-tight"
+              style={{ color: servicesData.titleColor || '#ffffff' }}
+            >
+              {servicesData.title}
+            </h2>
+          </motion.div>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-lg md:text-xl font-medium drop-shadow-md"
+            style={{ color: servicesData.descriptionColor || '#ffffff' }}
+          >
+            {servicesData.description}
+          </motion.p>
+        </div>
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {services.map((service, index) => {
-            const Icon = service.icon
+          {servicesData.services.map((service, index) => {
+            const Icon = getIcon(service.iconName);
             return (
               <ServiceCard
                 key={index}
