@@ -3,9 +3,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import * as LucideIcons from "lucide-react"
-import { Search, ChevronDown } from "lucide-react"
+import { Search, ChevronDown, X } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { iconMap } from "@/lib/iconMap"
 
 interface IconPickerProps {
   label: string;
@@ -19,27 +19,29 @@ export const IconPicker = ({ label, value, onChange }: IconPickerProps) => {
 
   // Filter icons based on search
   const filteredIcons = useMemo(() => {
-    const iconNames = Object.keys(LucideIcons).filter(key => 
-      // Filter out non-icon exports if any (though usually they are all components)
-      // and match search
+    const iconNames = Object.keys(iconMap).filter(key => 
       key !== "icons" && 
       key !== "createLucideIcon" &&
+      key !== "default" &&
+      // Ensure it starts with uppercase (components)
+      /^[A-Z]/.test(key) &&
       key.toLowerCase().includes(search.toLowerCase())
     );
-    return iconNames.slice(0, 100); // Limit to 100 results for performance
+    return iconNames.slice(0, 200); // Increased limit
   }, [search]);
 
-  const SelectedIcon = (LucideIcons as any)[value] || LucideIcons.HelpCircle;
+  // @ts-ignore
+  const SelectedIcon = iconMap[value] || iconMap.HelpCircle;
 
   return (
     <div className="grid gap-2">
       <Label>{label}</Label>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="w-full justify-between font-normal px-3">
+          <Button variant="outline" className="w-full justify-between font-normal px-3" type="button">
             <div className="flex items-center gap-2">
               <SelectedIcon className="h-4 w-4" />
-              <span>{value}</span>
+              <span>{value || 'Seleccionar icono'}</span>
             </div>
             <ChevronDown className="h-4 w-4 opacity-50" />
           </Button>
@@ -59,12 +61,14 @@ export const IconPicker = ({ label, value, onChange }: IconPickerProps) => {
           <ScrollArea className="h-[300px] p-4">
             <div className="grid grid-cols-4 gap-2">
               {filteredIcons.map((iconName) => {
-                const Icon = (LucideIcons as any)[iconName];
+                // @ts-ignore
+                const Icon = iconMap[iconName];
                 if (!Icon) return null;
                 
                 return (
                   <button
                     key={iconName}
+                    type="button"
                     className={`flex flex-col items-center justify-center gap-1 p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors ${
                       value === iconName ? "bg-primary/10 text-primary" : ""
                     }`}
@@ -85,6 +89,21 @@ export const IconPicker = ({ label, value, onChange }: IconPickerProps) => {
               )}
             </div>
           </ScrollArea>
+          <div className="p-2 border-t">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              type="button"
+              className="w-full text-red-500 hover:text-red-600 hover:bg-red-50"
+              onClick={() => {
+                onChange("");
+                setIsOpen(false);
+              }}
+            >
+              <X className="w-4 h-4 mr-2" />
+              Quitar Icono
+            </Button>
+          </div>
         </PopoverContent>
       </Popover>
     </div>

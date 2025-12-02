@@ -4,6 +4,7 @@ import { type LucideIcon } from "lucide-react"
 import { useCMS } from "@/context/CMSContext"
 import { ServicesSectionContent } from "@/types/cms"
 import { getIcon } from "@/lib/iconMap"
+import { getTextStyle } from "@/lib/utils"
 
 interface ServiceCardProps {
   service: ServicesSectionContent['services'][0]
@@ -75,18 +76,38 @@ export const ServicesSection = () => {
 
   return (
     <section id="servicios" className="py-20 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
-      {/* Video Background */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover -z-20"
-      >
-        <source src={servicesData.videoUrl} type="video/mp4" />
-      </video>
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-white/90 -z-10"></div>
+      {/* Background Media */}
+      {/* Background Media */}
+      <div className="absolute inset-0">
+        {servicesData.backgroundType === 'color' ? (
+          <div 
+            className="w-full h-full"
+            style={{ background: servicesData.backgroundColor || 'transparent' }}
+          />
+        ) : (
+          <>
+            {servicesData.videoUrl && !servicesData.videoUrl.match(/\.(mp4|webm|ogg)$/i) ? (
+              <img 
+                src={servicesData.videoUrl} 
+                alt="Services Background" 
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+              >
+                {servicesData.videoUrl && <source src={servicesData.videoUrl} type="video/mp4" />}
+                <source src="/video.mp4" type="video/mp4" />
+              </video>
+            )}
+            <div className="absolute inset-0 bg-white/90"></div>
+          </>
+        )}
+      </div>
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
@@ -95,12 +116,12 @@ export const ServicesSection = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-block mb-4 px-6 py-2 rounded-full shadow-lg backdrop-blur-sm"
-            style={{ backgroundColor: servicesData.headerBgColor || 'hsl(345 60% 35%)' }}
+            className="block w-full mb-4 px-6 py-2 shadow-lg backdrop-blur-sm rounded-xl"
+            style={{ background: servicesData.headerBgColor || 'hsl(345 60% 35%)' }}
           >
             <h2 
               className="text-3xl md:text-4xl font-bold tracking-tight"
-              style={{ color: servicesData.titleColor || '#ffffff' }}
+              style={getTextStyle(servicesData.titleColor || '#1f2937')}
             >
               {servicesData.title}
             </h2>
@@ -111,7 +132,7 @@ export const ServicesSection = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl font-medium drop-shadow-md"
-            style={{ color: servicesData.descriptionColor || '#ffffff' }}
+            style={getTextStyle(servicesData.descriptionColor || '#4b5563')}
           >
             {servicesData.description}
           </motion.p>

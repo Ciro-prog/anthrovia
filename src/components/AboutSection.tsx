@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 import { useCMS } from "@/context/CMSContext"
 import { AboutSectionContent } from "@/types/cms"
 import { getIcon } from "@/lib/iconMap"
+import { getTextStyle } from "@/lib/utils"
 
 export const AboutSection = () => {
   const { content } = useCMS();
@@ -12,18 +13,39 @@ export const AboutSection = () => {
 
   return (
     <section id="sobre-nosotros" className="py-20 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
-      {/* Video Background */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover -z-20"
-      >
-        <source src={aboutData.videoUrl} type="video/mp4" />
-      </video>
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-white/90 -z-10"></div>
+      {/* Background Media */}
+      {/* Background Media */}
+      <div className="absolute inset-0 -z-20">
+        {aboutData.backgroundType === 'color' ? (
+          <div 
+            className="w-full h-full"
+            style={{ background: aboutData.backgroundColor || 'transparent' }}
+          />
+        ) : (
+          <>
+            {aboutData.videoUrl && !aboutData.videoUrl.match(/\.(mp4|webm|ogg)$/i) ? (
+              <img 
+                src={aboutData.videoUrl} 
+                alt="About Background" 
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+              >
+                {aboutData.videoUrl && <source src={aboutData.videoUrl} type="video/mp4" />}
+                <source src="/video.mp4" type="video/mp4" />
+              </video>
+            )}
+             {/* Overlay */}
+            <div className="absolute inset-0 bg-white/90 -z-10"></div>
+          </>
+        )}
+      </div>
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
@@ -32,12 +54,12 @@ export const AboutSection = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-block mb-6 px-8 py-3 rounded-full shadow-lg backdrop-blur-sm"
-            style={{ backgroundColor: aboutData.headerBgColor || 'hsl(172 44% 19%)' }}
+            className="block w-full mb-6 px-6 py-2 shadow-lg backdrop-blur-sm rounded-xl"
+            style={{ background: aboutData.headerBgColor || 'hsl(172 44% 19%)' }}
           >
             <h2 
               className="text-3xl md:text-4xl font-bold tracking-tight"
-              style={{ color: aboutData.titleColor || '#ffffff' }}
+              style={getTextStyle(aboutData.titleColor || '#1f2937')}
             >
               {aboutData.title}
             </h2>

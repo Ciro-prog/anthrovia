@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import { useCMS } from "@/context/CMSContext"
 import { ContactSectionContent } from "@/types/cms"
 import { MessageCircle, Linkedin, Instagram, Link as LinkIcon } from "lucide-react"
+import { getTextStyle } from "@/lib/utils"
 
 export const ContactSection = () => {
   const { content } = useCMS();
@@ -58,13 +59,43 @@ export const ContactSection = () => {
   return (
     <section id="contacto" className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
       {/* Background Image */}
+      {/* Background Image */}
       <div className="absolute inset-0">
-        <img 
-          src="/image.png" 
-          alt="Contact Background" 
-          className="w-full h-full object-cover -z-20"
-        />
-        <div className="absolute inset-0 bg-white/90 -z-10"></div>
+        {contactData.backgroundType === 'color' ? (
+          <div 
+            className="w-full h-full"
+            style={{ background: contactData.backgroundColor || 'transparent' }}
+          />
+        ) : (
+          <>
+            {contactData.videoUrl ? (
+              contactData.videoUrl.match(/\.(mp4|webm|ogg)$/i) ? (
+                 <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover -z-20"
+                >
+                  <source src={contactData.videoUrl} type="video/mp4" />
+                </video>
+              ) : (
+                <img 
+                  src={contactData.videoUrl} 
+                  alt="Contact Background" 
+                  className="w-full h-full object-cover -z-20"
+                />
+              )
+            ) : (
+              <img 
+                src="/image.png" 
+                alt="Contact Background" 
+                className="w-full h-full object-cover -z-20"
+              />
+            )}
+            <div className="absolute inset-0 bg-white/90 -z-10"></div>
+          </>
+        )}
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
@@ -73,12 +104,12 @@ export const ContactSection = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-block mb-4 px-6 py-2 rounded-full shadow-lg backdrop-blur-sm"
-            style={{ backgroundColor: contactData.headerBgColor || 'linear-gradient(to right, hsl(172 44% 19%), hsl(345 80% 90%))' }}
+            className="block w-full mb-4 px-6 py-2 shadow-lg backdrop-blur-sm rounded-xl"
+            style={{ background: contactData.headerBgColor || 'linear-gradient(to right, hsl(172 44% 19%), hsl(345 80% 90%))' }}
           >
              <h2 
               className="text-3xl md:text-4xl font-bold tracking-tight"
-              style={{ color: contactData.titleColor || '#ffffff' }}
+              style={getTextStyle(contactData.titleColor || '#1f2937')}
             >
               {contactData.title}
             </h2>
@@ -89,7 +120,7 @@ export const ContactSection = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl font-medium drop-shadow-md"
-            style={{ color: contactData.descriptionColor || '#4b5563' }}
+            style={getTextStyle(contactData.descriptionColor || '#4b5563')}
           >
             {contactData.description}
           </motion.p>

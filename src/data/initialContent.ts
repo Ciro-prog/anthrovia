@@ -116,6 +116,105 @@ export const initialContent: SiteContent = {
       ]
     },
     {
+      id: "news",
+      type: "news",
+      isVisible: true,
+      title: "Noticias y Recursos",
+      subtitle: "Mantente actualizado con las últimas tendencias, mejores prácticas y consejos expertos en gestión de recursos humanos",
+      backgroundType: 'color',
+      backgroundColor: '#ffffff',
+      headerBgColor: 'transparent',
+      titleColor: '#1f2937',
+      subtitleColor: '#4b5563',
+      descriptionColor: '#4b5563',
+      newsItems: [
+        {
+          id: "1",
+          title: "Tendencias de RRHH para 2025",
+          excerpt: "Descubre las principales tendencias que transformarán la gestión del talento en el próximo año.",
+          content: "La inteligencia artificial, el trabajo híbrido y el bienestar emocional serán los pilares fundamentales...",
+          media: [
+            {
+              type: 'image',
+              url: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1000&auto=format&fit=crop",
+              isMain: true
+            }
+          ],
+          date: new Date().toISOString(),
+          author: "Anthrovia HR",
+          category: "Tendencias",
+          attachments: []
+        },
+        {
+          id: "2",
+          title: "La importancia del Salario Emocional",
+          excerpt: "Más allá de la retribución económica, el salario emocional es clave para la fidelización del talento.",
+          content: "El salario emocional comprende todos aquellos beneficios no monetarios que la empresa ofrece a sus empleados...",
+          media: [
+            {
+              type: 'image',
+              url: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1000&auto=format&fit=crop",
+              isMain: true
+            }
+          ],
+          date: new Date().toISOString(),
+          author: "Anthrovia HR",
+          category: "Cultura",
+          attachments: []
+        },
+        {
+          id: "3",
+          title: "Liderazgo en tiempos de cambio",
+          excerpt: "Cómo los líderes pueden gestionar la incertidumbre y guiar a sus equipos hacia el éxito.",
+          content: "El liderazgo adaptativo es una competencia crucial en el entorno actual...",
+          media: [
+            {
+              type: 'image',
+              url: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop",
+              isMain: true
+            }
+          ],
+          date: new Date().toISOString(),
+          author: "Anthrovia HR",
+          category: "Liderazgo",
+          attachments: []
+        }
+      ]
+    },
+    {
+      id: "posts",
+      type: "posts",
+      isVisible: true,
+      title: "Últimas Novedades",
+      subtitle: "Síguenos en redes",
+      backgroundType: 'color',
+      backgroundColor: 'linear-gradient(to right, #f8fafc, #e2e8f0)',
+      videoUrl: "",
+      posts: [
+        {
+          id: "1",
+          imageUrl: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1000&auto=format&fit=crop",
+          description: "Compartimos nuestra visión sobre el futuro del trabajo y cómo las organizaciones pueden adaptarse a los nuevos desafíos.",
+          postUrl: "https://www.instagram.com/anthrovia.hr/",
+          platform: "instagram"
+        },
+        {
+          id: "2",
+          imageUrl: "https://images.unsplash.com/photo-1616469829581-73993eb86b02?q=80&w=1000&auto=format&fit=crop",
+          description: "Nuevas estrategias para la gestión del talento en entornos híbridos. Descubre más en nuestro último artículo.",
+          postUrl: "https://www.linkedin.com/company/anthrovia-hr/",
+          platform: "linkedin"
+        },
+        {
+          id: "3",
+          imageUrl: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1000&auto=format&fit=crop",
+          description: "Celebrando un nuevo hito con nuestro equipo. Gracias a todos por ser parte de este camino.",
+          postUrl: "https://www.instagram.com/anthrovia.hr/",
+          platform: "instagram"
+        }
+      ]
+    },
+    {
       id: "contact",
       type: "contact",
       isVisible: true,

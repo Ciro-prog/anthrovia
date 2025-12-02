@@ -6,11 +6,11 @@ import { supabase } from '../lib/supabase';
 interface CMSContextType {
   content: SiteContent;
   updateSection: (sectionId: string, newContent: Partial<SectionContent>) => void;
-  saveContent: () => void;
+  saveContent: () => Promise<void>;
   isLoading: boolean;
 }
 
-const CMSContext = createContext<CMSContextType | undefined>(undefined);
+export const CMSContext = createContext<CMSContextType | undefined>(undefined);
 
 export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [content, setContent] = useState<SiteContent>(initialContent);

@@ -2,7 +2,8 @@ import { Navbar } from "../components/Navbar"
 import { HeroSection } from "../components/HeroSection"
 import { ServicesSection } from "../components/ServicesSection"
 import { AboutSection } from "../components/AboutSection"
-// import { NewsSection } from "../components/NewsSection"
+import { NewsSection } from "../components/NewsSection"
+import { PostsSection } from "../components/PostsSection"
 import { ContactSection } from "../components/ContactSection"
 import { Footer } from "../components/Footer"
 
@@ -13,7 +14,8 @@ export const HomePage = () => {
       <HeroSection />
       <ServicesSection />
       <AboutSection />
-      {/* <NewsSection /> */}
+      <NewsSection /> 
+      <PostsSection />
       <ContactSection />
       <Footer />
     </div>

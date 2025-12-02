@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useNavigate } from 'react-router-dom'
 import { useCMS } from "@/context/CMSContext"
 import { supabase } from '@/lib/supabase'
@@ -7,22 +7,23 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Save, Layout, Type, Image as ImageIcon, Link as LinkIcon, Eye, Edit, Monitor, Smartphone, Trash2, Plus, LogOut } from "lucide-react"
-import { HeroSectionContent, ServicesSectionContent, AboutSectionContent, ContactSectionContent } from "@/types/cms"
-import { HeroSection } from "@/components/HeroSection"
-import { ServicesSection } from "@/components/ServicesSection"
-import { AboutSection } from "@/components/AboutSection"
-import { ContactSection } from "@/components/ContactSection"
-import { iconMap } from "@/lib/iconMap"
+import { Save, Layout, Type, Image as ImageIcon, Link as LinkIcon, Eye, Edit, Monitor, Smartphone, Trash2, Plus, LogOut, ChevronLeft, ChevronRight } from "lucide-react"
+import { HeroSectionContent, ServicesSectionContent, AboutSectionContent, ContactSectionContent, PostsSectionContent, NewsSectionContent, NewsItem } from "@/types/cms"
 import { ColorPicker } from "@/components/admin/ColorPicker"
 import { IconPicker } from "@/components/admin/IconPicker"
+import { ImageUpload } from "@/components/admin/ImageUpload"
+import { GradientPicker } from "@/components/admin/GradientPicker"
+import { FileUpload } from "@/components/admin/FileUpload"
 
 export const AdminPage = () => {
   const { content, updateSection, saveContent, isLoading } = useCMS();
   const [selectedSectionId, setSelectedSectionId] = useState<string>(content.sections[0].id);
+  const [activeTab, setActiveTab] = useState('home');
+  const [previewArticleId, setPreviewArticleId] = useState<string | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
   const navigate = useNavigate();
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -35,14 +36,53 @@ export const AdminPage = () => {
     saveContent();
   };
 
-  const renderPreview = () => {
-    switch (selectedSectionId) {
-      case 'hero': return <HeroSection />;
-      case 'services': return <ServicesSection />;
-      case 'about': return <AboutSection />;
-      case 'contact': return <ContactSection />;
-      default: return <div>Preview not available</div>;
+  // Send updates to iframe when content changes
+  useEffect(() => {
+    if (isPreviewMode && iframeRef.current) {
+      iframeRef.current.contentWindow?.postMessage({
+        type: 'cms-update',
+        content
+      }, '*');
     }
+  }, [content, isPreviewMode]);
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.type === 'preview-ready' && iframeRef.current) {
+        iframeRef.current.contentWindow?.postMessage({
+          type: 'cms-update',
+          content
+        }, '*');
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [content]); // Add content dependency to ensure fresh content is sent
+
+  const renderPreview = () => {
+    let url = `/preview?section=${selectedSectionId}`;
+    if (selectedSection?.type === 'news') {
+      url += `&view=${activeTab}`;
+      if (activeTab === 'items' && previewArticleId) {
+        url += `&articleId=${previewArticleId}`;
+      }
+    }
+
+    return (
+      <iframe
+        ref={iframeRef}
+        src={url}
+        className="w-full h-full border-0"
+        title="Preview"
+        onLoad={() => {
+           // Send initial content when iframe loads
+           iframeRef.current?.contentWindow?.postMessage({
+             type: 'cms-update',
+             content
+           }, '*');
+        }}
+      />
+    );
   };
 
   const renderEditor = () => {
@@ -63,7 +103,7 @@ export const AdminPage = () => {
                 />
                 <ColorPicker 
                   label="Color del Título" 
-                  value={heroData.titleColor} 
+                  value={heroData.titleColor || '#ffffff'} 
                   onChange={(color) => updateSection(heroData.id, { titleColor: color })} 
                 />
               </div>
@@ -77,7 +117,7 @@ export const AdminPage = () => {
                 />
                 <ColorPicker 
                   label="Color del Subtítulo" 
-                  value={heroData.subtitleColor} 
+                  value={heroData.subtitleColor || '#e2e8f0'} 
                   onChange={(color) => updateSection(heroData.id, { subtitleColor: color })} 
                 />
               </div>
@@ -92,19 +132,52 @@ export const AdminPage = () => {
                 />
                 <ColorPicker 
                   label="Color de la Descripción" 
-                  value={heroData.descriptionColor} 
+                  value={heroData.descriptionColor || '#cbd5e1'} 
                   onChange={(color) => updateSection(heroData.id, { descriptionColor: color })} 
                 />
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="videoUrl">URL del Video de Fondo</Label>
-                <Input 
-                  id="videoUrl" 
-                  value={heroData.videoUrl} 
-                  onChange={(e) => updateSection(heroData.id, { videoUrl: e.target.value })}
-                />
+                <Label>Tipo de Fondo</Label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="heroBackgroundType"
+                      checked={heroData.backgroundType !== 'color'} 
+                      onChange={() => updateSection(heroData.id, { backgroundType: 'media' })}
+                    />
+                    Multimedia (Imagen/Video)
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="heroBackgroundType"
+                      checked={heroData.backgroundType === 'color'} 
+                      onChange={() => updateSection(heroData.id, { backgroundType: 'color' })}
+                    />
+                    Color/Gradiente
+                  </label>
+                </div>
               </div>
+
+              {heroData.backgroundType === 'color' ? (
+                <div className="grid gap-2">
+                  <GradientPicker 
+                    label="Color de Fondo" 
+                    value={heroData.backgroundColor || ''} 
+                    onChange={(color) => updateSection(heroData.id, { backgroundColor: color })} 
+                  />
+                </div>
+              ) : (
+                <div className="grid gap-2">
+                  <ImageUpload 
+                    label="Fondo (Imagen o Video)" 
+                    value={heroData.videoUrl} 
+                    onChange={(url) => updateSection(heroData.id, { videoUrl: url })} 
+                  />
+                </div>
+              )}
             </div>
 
             <div className="border-t pt-6">
@@ -175,12 +248,12 @@ export const AdminPage = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <ColorPicker 
                     label="Color del Título" 
-                    value={servicesData.titleColor} 
+                    value={servicesData.titleColor || '#1f2937'} 
                     onChange={(color) => updateSection(servicesData.id, { titleColor: color })} 
                   />
                   <ColorPicker 
                     label="Fondo del Título" 
-                    value={servicesData.headerBgColor} 
+                    value={servicesData.headerBgColor || 'hsl(345 60% 35%)'} 
                     onChange={(color) => updateSection(servicesData.id, { headerBgColor: color })} 
                   />
                 </div>
@@ -195,18 +268,51 @@ export const AdminPage = () => {
                 />
                 <ColorPicker 
                   label="Color de la Descripción" 
-                  value={servicesData.descriptionColor} 
+                  value={servicesData.descriptionColor || '#4b5563'} 
                   onChange={(color) => updateSection(servicesData.id, { descriptionColor: color })} 
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="videoUrl">URL del Video de Fondo</Label>
-                <Input 
-                  id="videoUrl" 
-                  value={servicesData.videoUrl} 
-                  onChange={(e) => updateSection(servicesData.id, { videoUrl: e.target.value })}
-                />
+                <Label>Tipo de Fondo</Label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="servicesBackgroundType"
+                      checked={servicesData.backgroundType !== 'color'} 
+                      onChange={() => updateSection(servicesData.id, { backgroundType: 'media' })}
+                    />
+                    Multimedia (Imagen/Video)
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="servicesBackgroundType"
+                      checked={servicesData.backgroundType === 'color'} 
+                      onChange={() => updateSection(servicesData.id, { backgroundType: 'color' })}
+                    />
+                    Color/Gradiente
+                  </label>
+                </div>
               </div>
+
+              {servicesData.backgroundType === 'color' ? (
+                <div className="grid gap-2">
+                  <GradientPicker 
+                    label="Color de Fondo" 
+                    value={servicesData.backgroundColor || ''} 
+                    onChange={(color) => updateSection(servicesData.id, { backgroundColor: color })} 
+                  />
+                </div>
+              ) : (
+                <div className="grid gap-2">
+                  <ImageUpload 
+                    label="Fondo (Imagen o Video)" 
+                    value={servicesData.videoUrl} 
+                    onChange={(url) => updateSection(servicesData.id, { videoUrl: url })} 
+                  />
+                </div>
+              )}
             </div>
             
             <div className="border-t pt-6">
@@ -258,6 +364,17 @@ export const AdminPage = () => {
                           />
                         </div>
                         <div className="grid gap-2">
+                          <GradientPicker 
+                            label="Color/Gradiente (Icono y Borde)"
+                            value={service.color}
+                            onChange={(color) => {
+                              const newServices = [...servicesData.services];
+                              newServices[index] = { ...service, color };
+                              updateSection(servicesData.id, { services: newServices });
+                            }}
+                          />
+                        </div>
+                        <div className="grid gap-2">
                           <IconPicker 
                             label="Icono"
                             value={service.iconName}
@@ -304,43 +421,51 @@ export const AdminPage = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <ColorPicker 
                     label="Color del Título" 
-                    value={aboutData.titleColor} 
+                    value={aboutData.titleColor || '#1f2937'} 
                     onChange={(color) => updateSection(aboutData.id, { titleColor: color })} 
                   />
                   <ColorPicker 
                     label="Fondo del Título" 
-                    value={aboutData.headerBgColor} 
+                    value={aboutData.headerBgColor || 'hsl(172 44% 19%)'} 
                     onChange={(color) => updateSection(aboutData.id, { headerBgColor: color })} 
                   />
                 </div>
               </div>
+              
               <div className="grid gap-2">
-                <Label>Introducción (Párrafos)</Label>
+                <Label>Texto de Introducción (Párrafos)</Label>
                 {aboutData.introText.map((text, index) => (
-                  <Textarea 
-                    key={index}
-                    value={text} 
-                    onChange={(e) => {
-                      const newIntro = [...aboutData.introText];
-                      newIntro[index] = e.target.value;
-                      updateSection(aboutData.id, { introText: newIntro });
-                    }}
-                    className="min-h-[100px]"
-                  />
+                  <div key={index} className="flex gap-2">
+                    <Textarea 
+                      value={text}
+                      onChange={(e) => {
+                        const newIntro = [...aboutData.introText];
+                        newIntro[index] = e.target.value;
+                        updateSection(aboutData.id, { introText: newIntro });
+                      }}
+                      className="min-h-[100px]"
+                    />
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => {
+                        const newIntro = aboutData.introText.filter((_, i) => i !== index);
+                        updateSection(aboutData.id, { introText: newIntro });
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
                 ))}
+                <Button
+                  variant="outline"
+                  onClick={() => updateSection(aboutData.id, { introText: [...aboutData.introText, "Nuevo párrafo"] })}
+                >
+                  <Plus className="w-4 h-4 mr-2" /> Agregar Párrafo
+                </Button>
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="videoUrl">URL del Video de Fondo</Label>
-                <Input 
-                  id="videoUrl" 
-                  value={aboutData.videoUrl} 
-                  onChange={(e) => updateSection(aboutData.id, { videoUrl: e.target.value })}
-                />
-              </div>
-            </div>
 
-            <div className="grid md:grid-cols-2 gap-6 border-t pt-6">
-              <div className="space-y-4">
+              <div className="space-y-4 border-t pt-4">
                 <h3 className="font-semibold">Propósito</h3>
                 <Input 
                   value={aboutData.purpose.title}
@@ -351,7 +476,8 @@ export const AdminPage = () => {
                   onChange={(e) => updateSection(aboutData.id, { purpose: { ...aboutData.purpose, description: e.target.value } })}
                 />
               </div>
-              <div className="space-y-4">
+
+              <div className="space-y-4 border-t pt-4">
                 <h3 className="font-semibold">Misión</h3>
                 <Input 
                   value={aboutData.mission.title}
@@ -361,6 +487,48 @@ export const AdminPage = () => {
                   value={aboutData.mission.description}
                   onChange={(e) => updateSection(aboutData.id, { mission: { ...aboutData.mission, description: e.target.value } })}
                 />
+              </div>
+
+              <div className="grid gap-2 border-t pt-4">
+                <Label>Tipo de Fondo</Label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="aboutBackgroundType"
+                      checked={aboutData.backgroundType !== 'color'} 
+                      onChange={() => updateSection(aboutData.id, { backgroundType: 'media' })}
+                    />
+                    Multimedia (Imagen/Video)
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="aboutBackgroundType"
+                      checked={aboutData.backgroundType === 'color'} 
+                      onChange={() => updateSection(aboutData.id, { backgroundType: 'color' })}
+                    />
+                    Color/Gradiente
+                  </label>
+                </div>
+
+                {aboutData.backgroundType === 'color' ? (
+                  <div className="grid gap-2 mt-2">
+                    <GradientPicker 
+                      label="Color de Fondo" 
+                      value={aboutData.backgroundColor || ''} 
+                      onChange={(color) => updateSection(aboutData.id, { backgroundColor: color })} 
+                    />
+                  </div>
+                ) : (
+                  <div className="grid gap-2 mt-2">
+                    <ImageUpload 
+                      label="Fondo (Imagen o Video)" 
+                      value={aboutData.videoUrl} 
+                      onChange={(url) => updateSection(aboutData.id, { videoUrl: url })} 
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -381,12 +549,12 @@ export const AdminPage = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <ColorPicker 
                     label="Color del Título" 
-                    value={contactData.titleColor} 
+                    value={contactData.titleColor || '#1f2937'} 
                     onChange={(color) => updateSection(contactData.id, { titleColor: color })} 
                   />
                   <ColorPicker 
                     label="Fondo del Título" 
-                    value={contactData.headerBgColor} 
+                    value={contactData.headerBgColor || 'linear-gradient(to right, hsl(172 44% 19%), hsl(345 80% 90%))'} 
                     onChange={(color) => updateSection(contactData.id, { headerBgColor: color })} 
                   />
                 </div>
@@ -401,7 +569,7 @@ export const AdminPage = () => {
                 />
                 <ColorPicker 
                   label="Color de la Descripción" 
-                  value={contactData.descriptionColor} 
+                  value={contactData.descriptionColor || '#4b5563'} 
                   onChange={(color) => updateSection(contactData.id, { descriptionColor: color })} 
                 />
               </div>
@@ -413,9 +581,605 @@ export const AdminPage = () => {
                   onChange={(e) => updateSection(contactData.id, { whatsappNumber: e.target.value })}
                 />
               </div>
+
+              <div className="grid gap-2 border-t pt-4">
+                <Label>Tipo de Fondo</Label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="contactBackgroundType"
+                      checked={contactData.backgroundType !== 'color'} 
+                      onChange={() => updateSection(contactData.id, { backgroundType: 'media' })}
+                    />
+                    Multimedia (Imagen/Video)
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="contactBackgroundType"
+                      checked={contactData.backgroundType === 'color'} 
+                      onChange={() => updateSection(contactData.id, { backgroundType: 'color' })}
+                    />
+                    Color/Gradiente
+                  </label>
+                </div>
+
+                {contactData.backgroundType === 'color' ? (
+                  <div className="grid gap-2 mt-2">
+                    <GradientPicker 
+                      label="Color de Fondo" 
+                      value={contactData.backgroundColor || ''} 
+                      onChange={(color) => updateSection(contactData.id, { backgroundColor: color })} 
+                    />
+                  </div>
+                ) : (
+                  <div className="grid gap-2 mt-2">
+                    <ImageUpload 
+                      label="Fondo (Imagen o Video)" 
+                      value={contactData.videoUrl || ''} 
+                      onChange={(url) => updateSection(contactData.id, { videoUrl: url })} 
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         );
+
+      case 'posts':
+        const postsData = selectedSection as PostsSectionContent;
+        return (
+          <div className="space-y-6">
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="title">Título</Label>
+                <Input 
+                  id="title" 
+                  value={postsData.title} 
+                  onChange={(e) => updateSection(postsData.id, { title: e.target.value })}
+                />
+                <div className="grid grid-cols-2 gap-4">
+                  <ColorPicker 
+                    label="Color del Título" 
+                    value={postsData.titleColor || '#1f2937'} 
+                    onChange={(color) => updateSection(postsData.id, { titleColor: color })} 
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="subtitle">Subtítulo</Label>
+                <Input 
+                  id="subtitle" 
+                  value={postsData.subtitle} 
+                  onChange={(e) => updateSection(postsData.id, { subtitle: e.target.value })}
+                />
+                <ColorPicker 
+                  label="Color del Subtítulo" 
+                  value={postsData.subtitleColor || '#64748b'} 
+                  onChange={(color) => updateSection(postsData.id, { subtitleColor: color })} 
+                />
+              </div>
+
+              <div className="space-y-4 border-t pt-4">
+                <h3 className="font-semibold flex items-center justify-between">
+                  Publicaciones
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      const newPost = {
+                        id: Date.now().toString(),
+                        imageUrl: "",
+                        description: "",
+                        postUrl: "",
+                        platform: "instagram" as const
+                      };
+                      updateSection(postsData.id, { posts: [...postsData.posts, newPost] });
+                    }}
+                  >
+                    <Plus className="w-4 h-4 mr-2" /> Nueva Publicación
+                  </Button>
+                </h3>
+                
+                <div className="grid gap-6">
+                  {postsData.posts.map((post, index) => (
+                    <Card key={post.id} className="relative">
+                      <div className="absolute top-2 right-2 z-10 flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          disabled={index === 0}
+                          onClick={() => {
+                            const newPosts = [...postsData.posts];
+                            [newPosts[index - 1], newPosts[index]] = [newPosts[index], newPosts[index - 1]];
+                            updateSection(postsData.id, { posts: newPosts });
+                          }}
+                          title="Mover Arriba"
+                        >
+                          <ChevronLeft className="w-4 h-4 rotate-90" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          disabled={index === postsData.posts.length - 1}
+                          onClick={() => {
+                            const newPosts = [...postsData.posts];
+                            [newPosts[index + 1], newPosts[index]] = [newPosts[index], newPosts[index + 1]];
+                            updateSection(postsData.id, { posts: newPosts });
+                          }}
+                          title="Mover Abajo"
+                        >
+                          <ChevronRight className="w-4 h-4 rotate-90" />
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => {
+                            const newPosts = postsData.posts.filter(p => p.id !== post.id);
+                            updateSection(postsData.id, { posts: newPosts });
+                          }}
+                          title="Eliminar"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      <CardContent className="p-4 grid gap-4">
+                        <div className="grid gap-2">
+                          <ImageUpload 
+                            label="Imagen de Portada" 
+                            value={post.imageUrl} 
+                            onChange={(url) => {
+                              const newPosts = [...postsData.posts];
+                              newPosts[index] = { ...post, imageUrl: url };
+                              updateSection(postsData.id, { posts: newPosts });
+                            }} 
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label>Plataforma</Label>
+                          <select 
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            value={post.platform}
+                            onChange={(e) => {
+                              const newPosts = [...postsData.posts];
+                              newPosts[index] = { ...post, platform: e.target.value as 'instagram' | 'linkedin' };
+                              updateSection(postsData.id, { posts: newPosts });
+                            }}
+                          >
+                            <option value="instagram">Instagram</option>
+                            <option value="linkedin">LinkedIn</option>
+                          </select>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label>Enlace a la Publicación</Label>
+                          <Input 
+                            value={post.postUrl}
+                            onChange={(e) => {
+                              const newPosts = [...postsData.posts];
+                              newPosts[index] = { ...post, postUrl: e.target.value };
+                              updateSection(postsData.id, { posts: newPosts });
+                            }}
+                            placeholder="https://..."
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label>Descripción</Label>
+                          <Textarea 
+                            value={post.description}
+                            onChange={(e) => {
+                              const newPosts = [...postsData.posts];
+                              newPosts[index] = { ...post, description: e.target.value };
+                              updateSection(postsData.id, { posts: newPosts });
+                            }}
+                            className="min-h-[80px]"
+                          />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid gap-2 border-t pt-4">
+                <Label>Tipo de Fondo</Label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="postsBackgroundType"
+                      checked={postsData.backgroundType !== 'color'} 
+                      onChange={() => updateSection(postsData.id, { backgroundType: 'media' })}
+                    />
+                    Multimedia (Imagen/Video)
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="postsBackgroundType"
+                      checked={postsData.backgroundType === 'color'} 
+                      onChange={() => updateSection(postsData.id, { backgroundType: 'color' })}
+                    />
+                    Color/Gradiente
+                  </label>
+                </div>
+
+                {postsData.backgroundType === 'color' ? (
+                  <div className="grid gap-2 mt-2">
+                    <GradientPicker 
+                      label="Color de Fondo" 
+                      value={postsData.backgroundColor || ''} 
+                      onChange={(color) => updateSection(postsData.id, { backgroundColor: color })} 
+                    />
+                  </div>
+                ) : (
+                  <div className="grid gap-2 mt-2">
+                    <ImageUpload 
+                      label="Fondo (Imagen o Video)" 
+                      value={postsData.videoUrl || ''} 
+                      onChange={(url) => updateSection(postsData.id, { videoUrl: url })} 
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'news':
+        const newsData = selectedSection as NewsSectionContent
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle>Editar Sección de Noticias</CardTitle>
+              <div className="flex gap-2 mt-4 border-b">
+                <button
+                  onClick={() => setActiveTab('home')}
+                  className={`px-4 py-2 font-medium text-sm transition-colors border-b-2 ${
+                    activeTab === 'home' 
+                      ? 'border-primary text-primary' 
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Sección Home
+                </button>
+                <button
+                  onClick={() => setActiveTab('page')}
+                  className={`px-4 py-2 font-medium text-sm transition-colors border-b-2 ${
+                    activeTab === 'page' 
+                      ? 'border-primary text-primary' 
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Página de Noticias
+                </button>
+                <button
+                  onClick={() => setActiveTab('items')}
+                  className={`px-4 py-2 font-medium text-sm transition-colors border-b-2 ${
+                    activeTab === 'items' 
+                      ? 'border-primary text-primary' 
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Artículos ({newsData.newsItems.length})
+                </button>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-6">
+              {activeTab === 'home' && (
+                <div className="grid gap-4">
+                  <div className="grid gap-2">
+                    <Label>Título de la Sección (Home)</Label>
+                    <Input 
+                      value={newsData.title} 
+                      onChange={(e) => updateSection(newsData.id, { title: e.target.value })}
+                    />
+                    <GradientPicker
+                      value={newsData.titleColor || '#1f2937'}
+                      onChange={(color) => updateSection(newsData.id, { titleColor: color })}
+                      label="Color del Título"
+                    />
+                  </div>
+                  
+                  <div className="grid gap-2">
+                    <Label>Subtítulo (Home)</Label>
+                    <Textarea 
+                      value={newsData.subtitle} 
+                      onChange={(e) => updateSection(newsData.id, { subtitle: e.target.value })}
+                    />
+                    <GradientPicker
+                      value={newsData.descriptionColor || '#4b5563'}
+                      onChange={(color) => updateSection(newsData.id, { descriptionColor: color })}
+                      label="Color del Subtítulo"
+                    />
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label>Fondo del Título</Label>
+                    <GradientPicker
+                      value={newsData.headerBgColor || 'transparent'}
+                      onChange={(color) => updateSection(newsData.id, { headerBgColor: color })}
+                      label="Fondo del Título"
+                    />
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label>Tipo de Fondo de Sección</Label>
+                    <div className="flex gap-4">
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          checked={newsData.backgroundType === 'media'}
+                          onChange={() => updateSection(newsData.id, { backgroundType: 'media' })}
+                        />
+                        Imagen/Video
+                      </label>
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          checked={newsData.backgroundType === 'color'}
+                          onChange={() => updateSection(newsData.id, { backgroundType: 'color' })}
+                        />
+                        Color/Gradiente
+                      </label>
+                    </div>
+                  </div>
+
+                  {newsData.backgroundType === 'media' ? (
+                    <ImageUpload
+                      label="Imagen/Video de Fondo"
+                      value={newsData.videoUrl || ''}
+                      onChange={(url) => updateSection(newsData.id, { videoUrl: url })}
+                    />
+                  ) : (
+                    <GradientPicker
+                      value={newsData.backgroundColor || '#ffffff'}
+                      onChange={(color) => updateSection(newsData.id, { backgroundColor: color })}
+                      label="Color de Fondo"
+                    />
+                  )}
+                </div>
+              )}
+
+              {activeTab === 'page' && (
+                <div className="grid gap-4">
+                  <div className="grid gap-2">
+                    <Label>Título de la Página (/news)</Label>
+                    <Input 
+                      value={newsData.newsPageTitle || newsData.title} 
+                      onChange={(e) => updateSection(newsData.id, { newsPageTitle: e.target.value })}
+                      placeholder="Ej: Nuestro Blog"
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Subtítulo de la Página</Label>
+                    <Textarea 
+                      value={newsData.newsPageSubtitle || newsData.subtitle} 
+                      onChange={(e) => updateSection(newsData.id, { newsPageSubtitle: e.target.value })}
+                      placeholder="Ej: Explora nuestras últimas publicaciones..."
+                    />
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'items' && (
+                <div className="space-y-6">
+                  <div className="flex justify-end">
+                    <Button onClick={() => {
+                      const newNews: NewsItem = {
+                        id: Math.random().toString(36).substr(2, 9),
+                        title: "Nueva Noticia",
+                        excerpt: "Breve descripción...",
+                        content: "Contenido completo...",
+                        media: [],
+                        date: new Date().toISOString(),
+                        author: "Admin",
+                        category: "General",
+                        attachments: []
+                      }
+                      updateSection(newsData.id, { newsItems: [...newsData.newsItems, newNews] })
+                    }}>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Agregar Noticia
+                    </Button>
+                  </div>
+
+                  <div className="grid gap-6">
+                    {newsData.newsItems.map((item, index) => (
+                      <Card 
+                        key={item.id} 
+                        className={`relative border-2 transition-colors ${previewArticleId === item.id ? 'border-primary' : 'hover:border-primary/20'}`}
+                        onClick={() => setPreviewArticleId(item.id)}
+                      >
+                        <div className="absolute top-2 right-2 z-10 flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            title="Previsualizar"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPreviewArticleId(item.id);
+                            }}
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const newItems = newsData.newsItems.filter(i => i.id !== item.id);
+                              updateSection(newsData.id, { newsItems: newItems });
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                        <CardContent className="p-4 grid gap-4">
+                          <div className="space-y-2">
+                            <Label>Galería Multimedia (Imágenes y Videos)</Label>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-2">
+                              {item.media?.map((media, mIndex) => (
+                                <div key={mIndex} className="relative group aspect-video bg-gray-100 rounded-lg overflow-hidden border">
+                                  {media.type === 'video' ? (
+                                    <video src={media.url} className="w-full h-full object-cover" />
+                                  ) : (
+                                    <img src={media.url} alt="" className="w-full h-full object-cover" />
+                                  )}
+                                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                    <Button
+                                      size="icon"
+                                      variant={media.isMain ? "default" : "secondary"}
+                                      className="h-8 w-8"
+                                      title={media.isMain ? "Es Principal" : "Hacer Principal"}
+                                      onClick={() => {
+                                        const newMedia = item.media.map((m, i) => ({
+                                          ...m,
+                                          isMain: i === mIndex
+                                        }));
+                                        const newItems = [...newsData.newsItems];
+                                        newItems[index] = { ...item, media: newMedia };
+                                        updateSection(newsData.id, { newsItems: newItems });
+                                      }}
+                                    >
+                                      <Eye className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                      size="icon"
+                                      variant="destructive"
+                                      className="h-8 w-8"
+                                      onClick={() => {
+                                        const newMedia = item.media.filter((_, i) => i !== mIndex);
+                                        // If we deleted the main one, make the first one main
+                                        if (media.isMain && newMedia.length > 0) {
+                                          newMedia[0].isMain = true;
+                                        }
+                                        const newItems = [...newsData.newsItems];
+                                        newItems[index] = { ...item, media: newMedia };
+                                        updateSection(newsData.id, { newsItems: newItems });
+                                      }}
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </div>
+                                  {media.isMain && (
+                                    <div className="absolute top-1 left-1 bg-primary text-white text-[10px] px-2 py-0.5 rounded-full">
+                                      Principal
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                              <div className="aspect-video bg-gray-50 border-2 border-dashed rounded-lg flex items-center justify-center">
+                                <ImageUpload 
+                                  label="Agregar"
+                                  value=""
+                                  onChange={(url) => {
+                                    if (!url) return;
+                                    const isVideo = url.match(/\.(mp4|webm|ogg)$/i);
+                                    const newMediaItem = {
+                                      type: isVideo ? 'video' : 'image',
+                                      url,
+                                      isMain: item.media?.length === 0 // First one is main by default
+                                    };
+                                    // @ts-ignore
+                                    const newMedia = [...(item.media || []), newMediaItem];
+                                    const newItems = [...newsData.newsItems];
+                                    newItems[index] = { ...item, media: newMedia };
+                                    updateSection(newsData.id, { newsItems: newItems });
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="grid md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label>Título</Label>
+                              <Input 
+                                value={item.title}
+                                onChange={(e) => {
+                                  const newItems = [...newsData.newsItems];
+                                  newItems[index] = { ...item, title: e.target.value };
+                                  updateSection(newsData.id, { newsItems: newItems });
+                                }}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Categoría</Label>
+                              <Input 
+                                value={item.category}
+                                onChange={(e) => {
+                                  const newItems = [...newsData.newsItems];
+                                  newItems[index] = { ...item, category: e.target.value };
+                                  updateSection(newsData.id, { newsItems: newItems });
+                                }}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Autor</Label>
+                              <Input 
+                                value={item.author}
+                                onChange={(e) => {
+                                  const newItems = [...newsData.newsItems];
+                                  newItems[index] = { ...item, author: e.target.value };
+                                  updateSection(newsData.id, { newsItems: newItems });
+                                }}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Fecha</Label>
+                              <Input 
+                                type="date"
+                                value={item.date.split('T')[0]}
+                                onChange={(e) => {
+                                  const newItems = [...newsData.newsItems];
+                                  newItems[index] = { ...item, date: new Date(e.target.value).toISOString() };
+                                  updateSection(newsData.id, { newsItems: newItems });
+                                }}
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Extracto (Resumen)</Label>
+                            <Textarea 
+                              value={item.excerpt}
+                              onChange={(e) => {
+                                const newItems = [...newsData.newsItems];
+                                newItems[index] = { ...item, excerpt: e.target.value };
+                                updateSection(newsData.id, { newsItems: newItems });
+                              }}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Contenido Completo</Label>
+                            <Textarea 
+                              className="min-h-[200px]"
+                              value={item.content}
+                              onChange={(e) => {
+                                const newItems = [...newsData.newsItems];
+                                newItems[index] = { ...item, content: e.target.value };
+                                updateSection(newsData.id, { newsItems: newItems });
+                              }}
+                            />
+                          </div>
+                          <FileUpload
+                            label="Archivos Adjuntos (PDF, Excel, Imágenes)"
+                            attachments={item.attachments || []}
+                            onChange={(attachments) => {
+                              const newItems = [...newsData.newsItems];
+                              newItems[index] = { ...item, attachments };
+                              updateSection(newsData.id, { newsItems: newItems });
+                            }}
+                          />
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )
 
       default:
         return (
@@ -451,6 +1215,7 @@ export const AdminPage = () => {
               {section.type === 'services' && <Layout className="w-4 h-4" />}
               {section.type === 'about' && <Type className="w-4 h-4" />}
               {section.type === 'contact' && <LinkIcon className="w-4 h-4" />}
+              {section.type === 'posts' && <Monitor className="w-4 h-4" />}
               <span className="capitalize">{section.id}</span>
             </button>
           ))}
@@ -528,12 +1293,12 @@ export const AdminPage = () => {
             <div className={`transition-all duration-300 ease-in-out ${
               previewDevice === 'mobile' 
                 ? 'w-[375px] mx-auto border-x-8 border-y-[60px] border-gray-800 rounded-[3rem] shadow-2xl overflow-hidden h-[812px] bg-white relative' 
-                : 'w-full border rounded-xl overflow-hidden shadow-2xl bg-white'
+                : 'w-full border rounded-xl overflow-hidden shadow-2xl bg-white h-[800px]'
             }`}>
               {previewDevice === 'mobile' && (
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 h-6 w-40 bg-gray-800 rounded-b-xl z-50"></div>
               )}
-              <div className={`h-full overflow-y-auto ${previewDevice === 'mobile' ? 'scrollbar-hide' : ''}`}>
+              <div className={`h-full ${previewDevice === 'mobile' ? 'scrollbar-hide' : ''}`}>
                 {renderPreview()}
               </div>
             </div>

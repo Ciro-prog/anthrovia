@@ -2,24 +2,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
 import { Calendar, User, ArrowRight } from "lucide-react"
-import newsData from "@/data/news.json"
 import { useState } from "react"
-import AllNews from "@/components/AllNews"
+import { useNavigate } from "react-router-dom"
+import { useCMS } from "@/context/CMSContext"
+import { NewsSectionContent, NewsItem } from "@/types/cms"
 
-export interface NewsArticle {
-  id: number
-  title: string
-  excerpt: string
-  content: string
-  image: string
-  category: string
-  date: string
-  author: string
-}
-
-const NewsCard = ({ article, index }: { article: NewsArticle; index: number }) => {
+const NewsCard = ({ article, index }: { article: NewsItem; index: number }) => {
   const animation = useScrollAnimation()
-  const [expanded, setExpanded] = useState(false)
+  const navigate = useNavigate()
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -38,11 +28,11 @@ const NewsCard = ({ article, index }: { article: NewsArticle; index: number }) =
       }`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
-      <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
+      <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col cursor-pointer" onClick={() => navigate(`/news/${article.id}`)}>
         {/* Image */}
         <div className="relative h-48 overflow-hidden">
           <img
-            src={article.image}
+            src={article.media?.find(m => m.isMain)?.url || article.media?.[0]?.url || '/placeholder.png'}
             alt={article.title}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           />
@@ -58,12 +48,7 @@ const NewsCard = ({ article, index }: { article: NewsArticle; index: number }) =
             {article.title}
           </CardTitle>
           <CardDescription className="text-gray-600 leading-relaxed">
-            {/* Show excerpt when collapsed, full content when expanded */}
-            {!expanded ? (
-              <p className="line-clamp-3">{article.excerpt}</p>
-            ) : (
-              <p className="whitespace-pre-line">{article.content || article.excerpt}</p>
-            )}
+            <p className="line-clamp-3">{article.excerpt}</p>
           </CardDescription>
         </CardHeader>
 
@@ -82,11 +67,9 @@ const NewsCard = ({ article, index }: { article: NewsArticle; index: number }) =
 
           <Button
             variant="ghost"
-            onClick={() => setExpanded((s) => !s)}
-            aria-expanded={expanded}
             className="text-primary hover:text-accent-burgundy p-0 h-auto font-semibold group/btn w-full justify-start"
           >
-            {expanded ? "Ver menos" : "Leer más"}
+            Leer más
             <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
           </Button>
         </CardContent>
@@ -97,14 +80,47 @@ const NewsCard = ({ article, index }: { article: NewsArticle; index: number }) =
 
 export const NewsSection = () => {
   const headerAnimation = useScrollAnimation()
-  const articles = newsData as NewsArticle[]
-  // Mostrar solo las 3 noticias más recientes
+  const navigate = useNavigate()
+  const { content } = useCMS()
+  
+  const newsSection = content.sections.find(s => s.id === 'news') as NewsSectionContent
+  
+  if (!newsSection || !newsSection.isVisible) return null
+
+  const articles = newsSection.newsItems || []
   const latestArticles = articles.slice(0, 3)
-  const [showAll, setShowAll] = useState(false)
 
   return (
-    <section id="noticias" className="py-20 bg-white">
-      <div className="container mx-auto px-4">
+    <section id="noticias" className="py-20 relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 z-0">
+        {newsSection.backgroundType === 'media' && newsSection.videoUrl ? (
+          newsSection.videoUrl.match(/\.(mp4|webm|ogg)$/i) ? (
+            <video
+              className="w-full h-full object-cover opacity-20"
+              autoPlay
+              loop
+              muted
+              playsInline
+            >
+              <source src={newsSection.videoUrl} type="video/mp4" />
+            </video>
+          ) : (
+            <img 
+              src={newsSection.videoUrl} 
+              alt="Background" 
+              className="w-full h-full object-cover opacity-20"
+            />
+          )
+        ) : (
+          <div 
+            className="w-full h-full"
+            style={{ background: newsSection.backgroundColor || '#ffffff' }}
+          />
+        )}
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <div
           ref={headerAnimation.ref}
@@ -112,14 +128,24 @@ export const NewsSection = () => {
             headerAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
-            Noticias y Recursos
-          </h2>
-          <div className="h-1 w-24 bg-gradient-to-r from-accent-rose to-accent-burgundy mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Mantente actualizado con las últimas tendencias, mejores prácticas y
-            consejos expertos en gestión de recursos humanos
-          </p>
+          <div 
+            className="block w-full mb-4 px-6 py-2 shadow-lg backdrop-blur-sm rounded-xl"
+            style={{ background: newsSection.headerBgColor || 'transparent' }}
+          >
+            <h2 
+              className="text-4xl md:text-5xl font-bold mb-4"
+              style={{ color: newsSection.titleColor || '#1f2937' }}
+            >
+              {newsSection.title}
+            </h2>
+            <div className="h-1 w-24 bg-gradient-to-r from-accent-rose to-accent-burgundy mx-auto mb-6"></div>
+            <p 
+              className="text-lg max-w-2xl mx-auto"
+              style={{ color: newsSection.descriptionColor || '#4b5563' }}
+            >
+              {newsSection.subtitle}
+            </p>
+          </div>
         </div>
 
         {/* News Grid */}
@@ -134,16 +160,13 @@ export const NewsSection = () => {
           <Button
             size="lg"
             variant="outline"
-            onClick={() => setShowAll(true)}
+            onClick={() => navigate('/news')}
             className="border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all"
           >
             Ver todas las noticias
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
-
-        {/* All news modal/overlay */}
-        {showAll && <AllNews articles={articles} onClose={() => setShowAll(false)} />}
       </div>
     </section>
   )

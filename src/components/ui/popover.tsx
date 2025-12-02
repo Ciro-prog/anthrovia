@@ -36,13 +36,19 @@ const Popover = ({ children, open, onOpenChange }: { children: React.ReactNode, 
 const PopoverTrigger = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }
->(({ className, asChild, ...props }, ref) => {
-  const Comp = asChild ? React.Fragment : "button"
+>(({ className, asChild, children, ...props }, ref) => {
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children as React.ReactElement, {
+      ...props,
+      className: cn((children as React.ReactElement).props.className, className),
+      ref,
+    })
+  }
+
   return (
-    // @ts-ignore
-    <Comp ref={ref} {...props}>
-      {props.children}
-    </Comp>
+    <button ref={ref} className={className} {...props}>
+      {children}
+    </button>
   )
 })
 PopoverTrigger.displayName = "PopoverTrigger"
@@ -56,6 +62,9 @@ const PopoverContent = React.forwardRef<
       ref={ref}
       className={cn(
         "absolute z-50 mt-2 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-white",
+        align === "start" && "left-0",
+        align === "end" && "right-0",
+        align === "center" && "left-1/2 -translate-x-1/2",
         className
       )}
       {...props}
