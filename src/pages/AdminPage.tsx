@@ -7,13 +7,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Save, Layout, Type, Image as ImageIcon, Link as LinkIcon, Eye, Edit, Monitor, Smartphone, Trash2, Plus, LogOut, ChevronLeft, ChevronRight } from "lucide-react"
+import { Save, Layout, Type, Image as ImageIcon, Link as LinkIcon, Eye, Edit, Monitor, Smartphone, Trash2, Plus, LogOut, ChevronLeft, ChevronRight, FileText } from "lucide-react"
 import { HeroSectionContent, ServicesSectionContent, AboutSectionContent, ContactSectionContent, PostsSectionContent, NewsSectionContent, NewsItem, NewsMedia } from "@/types/cms"
 import { ColorPicker } from "@/components/admin/ColorPicker"
 import { IconPicker } from "@/components/admin/IconPicker"
 import { ImageUpload } from "@/components/admin/ImageUpload"
 import { GradientPicker } from "@/components/admin/GradientPicker"
 import { FileUpload } from "@/components/admin/FileUpload"
+import { Switch } from "@/components/ui/switch"
 
 export const AdminPage = () => {
   const { content, updateSection, saveContent, isLoading } = useCMS();
@@ -631,8 +632,21 @@ export const AdminPage = () => {
         const postsData = selectedSection as PostsSectionContent;
         return (
           <div className="space-y-6">
-            <div className="grid gap-4">
-              <div className="grid gap-2">
+              <div className="grid gap-4">
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border">
+                  <div className="space-y-0.5">
+                    <Label className="text-base">Mostrar Sección de Publicaciones</Label>
+                    <p className="text-sm text-gray-500">
+                      Activa o desactiva la visibilidad de esta sección en el sitio público
+                    </p>
+                  </div>
+                  <Switch
+                    checked={postsData.isVisible}
+                    onChange={(e) => updateSection(postsData.id, { isVisible: e.target.checked })}
+                  />
+                </div>
+
+                <div className="grid gap-2">
                 <Label htmlFor="title">Título</Label>
                 <Input 
                   id="title" 
@@ -868,6 +882,19 @@ export const AdminPage = () => {
             <CardContent className="pt-6">
               {activeTab === 'home' && (
                 <div className="grid gap-4">
+                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border">
+                    <div className="space-y-0.5">
+                      <Label className="text-base">Mostrar Sección de Noticias</Label>
+                      <p className="text-sm text-gray-500">
+                        Activa o desactiva la visibilidad de esta sección en el sitio público
+                      </p>
+                    </div>
+                    <Switch
+                      checked={newsData.isVisible}
+                      onChange={(e) => updateSection(newsData.id, { isVisible: e.target.checked })}
+                    />
+                  </div>
+
                   <div className="grid gap-2">
                     <Label>Título de la Sección (Home)</Label>
                     <Input 
@@ -1224,6 +1251,7 @@ export const AdminPage = () => {
               {section.type === 'about' && <Type className="w-4 h-4" />}
               {section.type === 'contact' && <LinkIcon className="w-4 h-4" />}
               {section.type === 'posts' && <Monitor className="w-4 h-4" />}
+              {section.type === 'news' && <FileText className="w-4 h-4" />}
               <span className="capitalize">{section.id}</span>
             </button>
           ))}
