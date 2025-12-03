@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { motion, useAnimation, useMotionValue, animate } from "framer-motion"
+import { motion, useAnimation, useMotionValue } from "framer-motion"
 import { useCMS } from "@/context/CMSContext"
 import { PostsSectionContent } from "@/types/cms"
 import { getTextStyle } from "@/lib/utils"

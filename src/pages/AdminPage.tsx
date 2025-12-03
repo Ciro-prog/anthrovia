@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Save, Layout, Type, Image as ImageIcon, Link as LinkIcon, Eye, Edit, Monitor, Smartphone, Trash2, Plus, LogOut, ChevronLeft, ChevronRight } from "lucide-react"
-import { HeroSectionContent, ServicesSectionContent, AboutSectionContent, ContactSectionContent, PostsSectionContent, NewsSectionContent, NewsItem } from "@/types/cms"
+import { HeroSectionContent, ServicesSectionContent, AboutSectionContent, ContactSectionContent, PostsSectionContent, NewsSectionContent, NewsItem, NewsMedia } from "@/types/cms"
 import { ColorPicker } from "@/components/admin/ColorPicker"
 import { IconPicker } from "@/components/admin/IconPicker"
 import { ImageUpload } from "@/components/admin/ImageUpload"
@@ -1076,12 +1076,11 @@ export const AdminPage = () => {
                                   onChange={(url) => {
                                     if (!url) return;
                                     const isVideo = url.match(/\.(mp4|webm|ogg)$/i);
-                                    const newMediaItem = {
+                                    const newMediaItem: NewsMedia = {
                                       type: isVideo ? 'video' : 'image',
                                       url,
                                       isMain: item.media?.length === 0 // First one is main by default
                                     };
-                                    // @ts-ignore
                                     const newMedia = [...(item.media || []), newMediaItem];
                                     const newItems = [...newsData.newsItems];
                                     newItems[index] = { ...item, media: newMedia };

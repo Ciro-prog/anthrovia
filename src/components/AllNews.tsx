@@ -2,10 +2,10 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar, User, X } from "lucide-react"
-import type { NewsArticle } from "./NewsSection"
+import { NewsItem } from "@/types/cms"
 
 interface AllNewsProps {
-  articles: NewsArticle[]
+  articles: NewsItem[]
   onClose: () => void
 }
 
@@ -19,7 +19,7 @@ const formatDate = (dateString: string) => {
 }
 
 export default function AllNews({ articles, onClose }: AllNewsProps) {
-  const [expandedId, setExpandedId] = useState<number | null>(null)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center p-6 bg-black/40">
@@ -37,7 +37,11 @@ export default function AllNews({ articles, onClose }: AllNewsProps) {
             return (
               <Card key={article.id} className="flex flex-col">
                 <div className="relative h-44 overflow-hidden">
-                  <img src={article.image} alt={article.title} className="w-full h-full object-cover" />
+                  <img 
+                    src={article.media?.[0]?.url || ''} 
+                    alt={article.title} 
+                    className="w-full h-full object-cover" 
+                  />
                   <div className="absolute top-4 left-4">
                     <span className="bg-gradient-to-r from-primary to-accent-teal text-white px-3 py-1 rounded-full text-xs font-semibold">
                       {article.category}

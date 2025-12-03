@@ -2,7 +2,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
 import { Calendar, User, ArrowRight } from "lucide-react"
-import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useCMS } from "@/context/CMSContext"
 import { NewsSectionContent, NewsItem } from "@/types/cms"
