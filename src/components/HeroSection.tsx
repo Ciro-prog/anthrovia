@@ -27,7 +27,7 @@ export const HeroSection = () => {
               <img 
                 src={heroData.videoUrl} 
                 alt="Hero Background" 
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-none md:rounded-2xl"
               />
             ) : (
               <video
@@ -35,7 +35,7 @@ export const HeroSection = () => {
                 loop
                 muted
                 playsInline
-                className="w-full h-full object-fill object-center md:object-cover md:scale-[0.97] scale-95 transition-transform duration-700 rounded-2xl"
+                className="w-full h-full object-fill object-center md:object-cover md:scale-[0.85] transition-transform duration-700 rounded-none md:rounded-2xl"
               >
                 {heroData.videoUrl && <source src={heroData.videoUrl} type="video/mp4" />}
                 <source src="/video.mp4" type="video/mp4" />
