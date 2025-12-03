@@ -895,11 +895,20 @@ export const AdminPage = () => {
                   </div>
 
                   <div className="grid gap-2">
-                    <Label>Fondo del Título</Label>
+                   
                     <GradientPicker
                       value={newsData.headerBgColor || 'transparent'}
                       onChange={(color) => updateSection(newsData.id, { headerBgColor: color })}
-                      label="Fondo del Título"
+                      label="Fondo del Encabezado"
+                    />
+                  </div>
+
+                  <div className="grid gap-2">
+                    
+                    <GradientPicker
+                      value={newsData.underlineColor || 'linear-gradient(to right, #e11d48, #9f1239)'}
+                      onChange={(color) => updateSection(newsData.id, { underlineColor: color })}
+                      label="Color del Subrayado"
                     />
                   </div>
 

@@ -6,6 +6,7 @@ import { Calendar, User, ArrowRight, ArrowLeft } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { Navbar } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
+import { getTextStyle } from "@/lib/utils"
 
 const NewsCard = ({ article }: { article: NewsItem }) => {
   const navigate = useNavigate()
@@ -89,11 +90,20 @@ export const NewsPage = () => {
         </Button>
 
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+          <h1 
+            className="text-4xl md:text-5xl font-bold mb-4"
+            style={getTextStyle(newsSection?.titleColor || '#1f2937')}
+          >
             {newsSection?.newsPageTitle || newsSection?.title || 'Noticias y Recursos'}
           </h1>
-          <div className="h-1 w-24 bg-gradient-to-r from-accent-rose to-accent-burgundy mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <div 
+            className="h-1 w-24 mx-auto mb-6 rounded-full"
+            style={{ background: newsSection?.underlineColor || 'linear-gradient(to right, #e11d48, #9f1239)' }}
+          ></div>
+          <p 
+            className="text-lg max-w-2xl mx-auto"
+            style={getTextStyle(newsSection?.descriptionColor || '#4b5563')}
+          >
             {newsSection?.newsPageSubtitle || newsSection?.subtitle || 'Explora todas nuestras publicaciones y recursos'}
           </p>
         </div>

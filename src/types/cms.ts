@@ -146,6 +146,7 @@ export interface NewsSectionContent extends BaseSection {
   titleColor?: string;
   subtitleColor?: string;
   descriptionColor?: string;
+  underlineColor?: string;
   
   // News Page specific settings
   newsPageTitle?: string;

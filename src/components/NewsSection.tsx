@@ -5,6 +5,7 @@ import { Calendar, User, ArrowRight } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { useCMS } from "@/context/CMSContext"
 import { NewsSectionContent, NewsItem } from "@/types/cms"
+import { getTextStyle } from "@/lib/utils"
 
 const NewsCard = ({ article, index }: { article: NewsItem; index: number }) => {
   const animation = useScrollAnimation()
@@ -133,14 +134,17 @@ export const NewsSection = () => {
           >
             <h2 
               className="text-4xl md:text-5xl font-bold mb-4"
-              style={{ color: newsSection.titleColor || '#1f2937' }}
+              style={getTextStyle(newsSection.titleColor || '#1f2937')}
             >
               {newsSection.title}
             </h2>
-            <div className="h-1 w-24 bg-gradient-to-r from-accent-rose to-accent-burgundy mx-auto mb-6"></div>
+            <div 
+              className="h-1 w-24 mx-auto mb-6 rounded-full"
+              style={{ background: newsSection.underlineColor || 'linear-gradient(to right, #e11d48, #9f1239)' }}
+            ></div>
             <p 
               className="text-lg max-w-2xl mx-auto"
-              style={{ color: newsSection.descriptionColor || '#4b5563' }}
+              style={getTextStyle(newsSection.descriptionColor || '#4b5563')}
             >
               {newsSection.subtitle}
             </p>
