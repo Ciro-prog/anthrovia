@@ -1,53 +1,62 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: ["class"],
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  theme: {
-    extend: {
-      colors: {
-        // Anthrovia HR Brand Colors (from branding.jpeg)
-        primary: {
-          DEFAULT: '#2E625A', // Dark teal/green
-          light: '#B47F75', // Rose/terracota
-          lighter: '#C79F93', // Light rose/beige
-        },
-        accent: {
-          burgundy: '#6B2A41', // Burgundy/wine
-          rose: '#C79F93', // Rose/beige
-          pink: '#B47F75', // Pink/terracota
-          teal: '#2E625A', // Teal
-        },
-        brand: {
-          dark: '#6B2A41', // Dark burgundy
-          medium: '#B47F75', // Medium rose
-          light: '#C79F93', // Light rose
-          teal: '#2E625A', // Teal
-          gradient: {
-            start: '#2E625A',
-            middle: '#B47F75',
-            end: '#C79F93',
+    darkMode: ["class"],
+    content: [
+      "./index.html",
+      "./src/**/*.{js,ts,jsx,tsx}",
+    ],
+    theme: {
+      extend: {
+        colors: {
+          // Anthrovia HR Brand Colors (from datos.md)
+          primary: {
+            DEFAULT: '#2E625A', // Verde Profundo
+            light: '#66B2A1', // Soft Teal
+            dark: '#2E625A', // Base
+          },
+          secondary: {
+            DEFAULT: '#C79F93', // Durazno Suave
+            light: '#E6C9A8', // Warm Sand
+            dark: '#B47F75', // Terracota
+          },
+          accent: {
+            terracotta: '#B47F75',
+            wine: '#6B2A41',
+            gold: '#D4A74A',
+            blue: '#6EA8D8',
+            lavender: '#BCA5D6',
+          },
+          neutral: {
+            white: '#FFFFFF',
+            cream: '#FAF8F5',
+            gray: '#8A8A8A',
+          },
+          // Legacy support mappings
+          brand: {
+            dark: '#6B2A41',
+            medium: '#B47F75',
+            light: '#C79F93',
+            teal: '#2E625A',
+            gradient: {
+                start: '#2E625A',
+                middle: '#B47F75',
+                end: '#C79F93',
+              }
           }
         },
-        neutral: {
-          white: '#FFFFFF',
-          gray: '#8A8A8A',
-          dark: '#2E625A',
-        }
-      },
-      fontFamily: {
-        // Based on the brand board typography
-        sans: ['ui-sans-serif', 'system-ui', 'sans-serif'],
-        serif: ['ui-serif', 'Georgia', 'serif'],
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        fontFamily: {
+          heading: ['"Playfair Display"', 'serif'],
+          body: ['"Lora"', 'serif'],
+          cta: ['"Montserrat"', 'sans-serif'],
+          sans: ['"Montserrat"', 'ui-sans-serif', 'system-ui'],
+          serif: ['"Playfair Display"', 'Georgia', 'serif'],
+        },
+        borderRadius: {
+            lg: "var(--radius)",
+            md: "calc(var(--radius) - 2px)",
+            sm: "calc(var(--radius) - 4px)",
+          },
       },
     },
-  },
-  plugins: [require("tailwindcss-animate")],
-}
+    plugins: [require("tailwindcss-animate")],
+  }

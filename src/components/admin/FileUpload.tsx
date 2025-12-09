@@ -15,6 +15,8 @@ interface FileUploadProps {
 
 export const FileUpload = ({ label, attachments, onChange, bucketName = 'media' }: FileUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
+  const [isLinkInputOpen, setIsLinkInputOpen] = useState(false);
+  const [linkUrl, setLinkUrl] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,6 +60,21 @@ export const FileUpload = ({ label, attachments, onChange, bucketName = 'media' 
     }
   };
 
+  const handleAddLink = () => {
+    if (!linkUrl) return;
+    
+    const newAttachment: Attachment = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: linkUrl, // Use URL as name for links initially
+      url: linkUrl,
+      type: 'link'
+    };
+
+    onChange([...attachments, newAttachment]);
+    setLinkUrl('');
+    setIsLinkInputOpen(false);
+  };
+
   const removeAttachment = (id: string) => {
     onChange(attachments.filter(a => a.id !== id));
   };
@@ -75,28 +92,58 @@ export const FileUpload = ({ label, attachments, onChange, bucketName = 'media' 
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <Label>{label}</Label>
-        <div className="relative">
-          <Input
-            ref={inputRef}
-            type="file"
-            className="hidden"
-            onChange={handleUpload}
-            // accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.webp"
-          />
-          <Button 
-            type="button" 
-            variant="outline" 
-            size="sm"
-            disabled={isUploading}
-            onClick={() => inputRef.current?.click()}
-          >
-            {isUploading ? (
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            ) : (
-              <Upload className="w-4 h-4 mr-2" />
+        <div className="flex gap-2">
+          <div className="relative">
+            <Input
+              ref={inputRef}
+              type="file"
+              className="hidden"
+              onChange={handleUpload}
+              // accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.webp"
+            />
+            <Button 
+              type="button" 
+              variant="outline" 
+              size="sm"
+              disabled={isUploading}
+              onClick={() => inputRef.current?.click()}
+            >
+              {isUploading ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Upload className="w-4 h-4 mr-2" />
+              )}
+              {isUploading ? "Subiendo..." : "Subir Archivo"}
+            </Button>
+          </div>
+          
+          <div className="relative">
+            <Button 
+              type="button" 
+              variant="outline" 
+              size="sm"
+              onClick={() => setIsLinkInputOpen(!isLinkInputOpen)}
+            >
+              <LinkIcon className="w-4 h-4 mr-2" />
+              Agregar Link
+            </Button>
+            
+            {isLinkInputOpen && (
+              <div className="absolute top-full right-0 mt-2 w-64 p-2 bg-white rounded-lg shadow-lg border border-slate-200 z-50">
+                <div className="flex gap-2">
+                  <Input 
+                    placeholder="https://..." 
+                    value={linkUrl}
+                    onChange={(e) => setLinkUrl(e.target.value)}
+                    className="h-8 text-sm"
+                  />
+                  <Button size="sm" onClick={handleAddLink} disabled={!linkUrl}>
+                    OK
+                  </Button>
+                </div>
+              </div>
             )}
-            {isUploading ? "Subiendo..." : "Agregar Archivo"}
-          </Button>
+          </div>
         </div>
       </div>
 
@@ -110,15 +157,25 @@ export const FileUpload = ({ label, attachments, onChange, bucketName = 'media' 
                   {attachment.name}
                 </span>
               </div>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6 text-red-500 hover:text-red-700 hover:bg-red-50"
-                onClick={() => removeAttachment(attachment.id)}
-              >
-                <X className="w-3 h-3" />
-              </Button>
+              <div className="flex items-center gap-2">
+                <a 
+                  href={attachment.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-xs text-blue-500 hover:underline"
+                >
+                  Ver
+                </a>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 text-red-500 hover:text-red-700 hover:bg-red-50"
+                  onClick={() => removeAttachment(attachment.id)}
+                >
+                  <X className="w-3 h-3" />
+                </Button>
+              </div>
             </div>
           ))}
         </div>
