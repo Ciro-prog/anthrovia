@@ -1,172 +1,157 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { motion } from "framer-motion"
+
+import { motion, AnimatePresence } from "framer-motion"
 import { useCMS } from "@/context/CMSContext"
 import { AboutSectionContent } from "@/types/cms"
 import { getIcon } from "@/lib/iconMap"
+import { useState } from "react"
 
 export const AboutSection = () => {
   const { content } = useCMS();
   const aboutData = content.sections.find(s => s.id === 'about') as AboutSectionContent;
+  const [expandedValue, setExpandedValue] = useState<number | null>(null)
 
   if (!aboutData || !aboutData.isVisible) return null;
 
   return (
-    <section id="sobre-nosotros" className="py-24 bg-white relative overflow-hidden">
-       {/* Background Elements - Wave & Geometry */}
-       <div className="absolute top-0 left-0 w-full h-1/2 bg-[#FBF9F6] -z-10 transform -skew-y-2 origin-top-left scale-110"></div>
-       
-       {/* Floating Colored Squares */}
-       <div className="absolute top-10 left-10 opacity-60 hidden lg:block">
-          <div className="w-12 h-12 bg-accent-wine/10 rounded-lg transform -rotate-12 mb-4"></div>
-          <div className="w-8 h-8 bg-accent-gold/20 rounded-md transform rotate-45 ml-8"></div>
-       </div>
-
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="inline-block mb-8"
+    <section id="sobre-nosotros" className="py-24 md:py-32 bg-white relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col-reverse md:flex-row gap-16 md:gap-24">
+        
+        {/* Left Column: Image + Values */}
+        <div className="flex-1 relative w-full flex flex-col gap-10 items-center md:items-start">
+          {/* Founder Image */}
+          <motion.div 
+            className="relative z-10 w-3/4 md:w-2/3 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl group"
+            initial={{ filter: 'grayscale(100%)' }}
+            whileInView={{ filter: 'grayscale(0%)' }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1 }}
           >
-             <h2 className="text-4xl md:text-5xl font-heading font-bold text-primary mb-6 relative inline-block">
-              {aboutData.title}
-              {/* Organic Underline */}
-              <svg className="absolute -bottom-3 left-0 w-full h-3 text-secondary opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
-                 <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="3" fill="none" />
-              </svg>
-            </h2>
+            <img 
+              src="/images/founder.jpg" 
+              alt="Betsabé Sánchez - Fundadora Anthrovia HR" 
+              className="w-full h-full object-cover md:grayscale md:group-hover:grayscale-0 transition-all duration-700"
+            />
+            
+            {/* Name/Title Overlay */}
+            <motion.div 
+               initial={{ opacity: 0, y: 10 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true, margin: "-50px" }}
+               transition={{ duration: 0.5, delay: 0.5 }}
+               className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-primary/90 to-transparent p-6 pt-12 flex flex-col items-center text-center md:opacity-0 md:group-hover:opacity-100 md:transition-opacity md:duration-500 md:transform md:translate-y-2 md:group-hover:translate-y-0"
+            >
+               <h3 className="font-heading text-white text-xl font-bold">Betsabé Sánchez</h3>
+               <p className="font-body text-white/90 text-sm uppercase tracking-wider">Lic. RRHH • Founder</p>
+            </motion.div>
+
+             {/* Decorative blob behind */}
+            <div className="absolute -bottom-10 -left-10 w-full h-48 bg-secondary/10 rounded-full blur-3xl -z-10" />
           </motion.div>
-          
-          <div className="max-w-3xl mx-auto space-y-6 text-lg md:text-xl font-body text-neutral-gray leading-relaxed">
+
+          {/* Values Section (Moved below image) */}
+          <div className="w-full mt-2">
+             <h3 className="font-heading text-xl text-primary mb-4 border-b border-secondary/20 pb-2 inline-block">
+               Nuestros Valores
+             </h3>
+             <div className="grid grid-cols-3 gap-3">
+               {aboutData.values.map((value, index) => {
+                 const Icon = getIcon(value.iconName);
+                 const isHovered = expandedValue === index;
+                 const isAnyHovered = expandedValue !== null;
+                 
+                 return (
+                   <div 
+                     key={index}
+                     className={`
+                       relative transition-all duration-300 ease-in-out cursor-pointer rounded-xl border flex flex-col items-center justify-center p-2 text-center group/card
+                       ${isHovered 
+                         ? 'bg-primary text-white border-primary shadow-xl z-50 scale-110 md:scale-125' 
+                         : 'bg-white border-neutral-gray/10 hover:border-accent-terracotta/30 z-0'
+                       }
+                       ${isAnyHovered && !isHovered ? 'opacity-40 blur-[1px]' : 'opacity-100'}
+                       aspect-square
+                     `}
+                     onMouseEnter={() => window.innerWidth >= 768 && setExpandedValue(index)}
+                     onMouseLeave={() => window.innerWidth >= 768 && setExpandedValue(null)}
+                     onClick={() => setExpandedValue(expandedValue === index ? null : index)}
+                   >
+                     {/* Icon */}
+                     <div className={`
+                       transition-all duration-300
+                       ${isHovered ? 'scale-75 mb-1' : 'mb-2'}
+                     `}>
+                        <Icon className={`w-6 h-6 transition-colors ${isHovered ? 'text-accent-gold' : 'text-accent-terracotta'}`} />
+                     </div>
+
+                     {/* Title (Hidden on Hover) */}
+                     {!isHovered && (
+                       <motion.h4 
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="font-heading font-semibold text-[10px] md:text-xs text-primary leading-tight"
+                        >
+                          {value.title}
+                        </motion.h4>
+                     )}
+
+                     {/* Description (Visible ONLY on Hover/Click) */}
+                     <AnimatePresence>
+                       {isHovered && (
+                         <motion.div
+                           initial={{ opacity: 0 }}
+                           animate={{ opacity: 1 }}
+                           exit={{ opacity: 0 }}
+                           transition={{ duration: 0.2 }}
+                           className="absolute inset-0 p-3 md:p-4 flex items-center justify-center bg-primary rounded-xl"
+                         >
+                           <p className="text-[10px] md:text-xs font-body leading-tight text-white text-center">
+                             {value.description}
+                           </p>
+                         </motion.div>
+                       )}
+                     </AnimatePresence>
+                   </div>
+                 )
+               })}
+             </div>
+          </div>
+        </div>
+        
+        {/* Right Column: Content */}
+        <div className="flex-1 w-full pt-0">
+          <span className="font-cta text-accent-wine text-xs uppercase tracking-[0.4em] font-bold mb-6 block">Sobre Nosotros</span>
+          <h2 className="font-heading text-4xl md:text-5xl text-primary mb-10 leading-tight">
+            {aboutData.title}
+          </h2>
+          <div className="font-body text-lg text-neutral-gray mb-12 leading-relaxed italic border-l-4 border-secondary pl-8 py-2">
             {aboutData.introText.map((paragraph, index) => (
-              <motion.p 
-                key={index} 
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                dangerouslySetInnerHTML={{ __html: paragraph }} 
-              />
+              <p key={index} className="mb-4 last:mb-0" dangerouslySetInnerHTML={{ __html: paragraph }} />
             ))}
+          </div>
+          
+          <div className="space-y-12">
+            <div className="group">
+              <h4 className="font-heading text-2xl text-primary mb-4 flex items-center gap-4">
+                <span className="w-10 h-px bg-accent-terracotta group-hover:w-16 transition-all" />
+                {aboutData.mission.title || "Misión"}
+              </h4>
+              <p className="font-body text-neutral-gray pl-14 text-base leading-relaxed">
+                {aboutData.mission.description}
+              </p>
+            </div>
+            
+            <div className="group">
+              <h4 className="font-heading text-2xl text-primary mb-4 flex items-center gap-4">
+                <span className="w-10 h-px bg-accent-terracotta group-hover:w-16 transition-all" />
+                {aboutData.purpose.title || "Nuestra Filosofía"}
+              </h4>
+              <p className="font-body text-neutral-gray pl-14 text-base leading-relaxed">
+                {aboutData.purpose.description}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Purpose & Mission */}
-        <div className="grid md:grid-cols-2 gap-12 mb-32 max-w-6xl mx-auto relative">
-             {/* Center decorative element */}
-             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-secondary/5 rounded-full blur-3xl -z-10"></div>
-             
-          {/* Purpose */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <Card className="h-full border-none shadow-lg hover:shadow-2xl transition-all duration-300 bg-white rounded-2xl overflow-hidden group">
-              <div className="h-2 bg-gradient-to-r from-secondary to-accent-wine"></div>
-              <CardContent className="p-10 relative overflow-hidden">
-                 {/* Card Background Pattern */}
-                 <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
-                 
-                <div className="w-16 h-16 rounded-full bg-secondary/15 flex items-center justify-center mb-8 group-hover:bg-secondary group-hover:scale-110 transition-all duration-300 relative z-10">
-                  {(() => {
-                    const Icon = getIcon('Compass');
-                    return <Icon className="h-8 w-8 text-secondary-dark group-hover:text-white transition-colors" />
-                  })()}
-                </div>
-                <h3 className="text-3xl font-heading font-semibold text-primary mb-4 relative z-10">{aboutData.purpose.title}</h3>
-                <p className="font-body text-neutral-gray text-lg leading-relaxed group-hover:text-primary transition-colors relative z-10">
-                  {aboutData.purpose.description}
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Mission */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <Card className="h-full border-none shadow-lg hover:shadow-2xl transition-all duration-300 bg-white rounded-2xl overflow-hidden group">
-               <div className="h-2 bg-gradient-to-r from-primary to-primary-light"></div>
-              <CardContent className="p-10 relative overflow-hidden">
-                {/* Card Background Pattern */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
-
-                <div className="w-16 h-16 rounded-full bg-primary/15 flex items-center justify-center mb-8 group-hover:bg-primary group-hover:scale-110 transition-all duration-300 relative z-10">
-                  {(() => {
-                    const Icon = getIcon('Target');
-                    return <Icon className="h-8 w-8 text-primary group-hover:text-white transition-colors" />
-                  })()}
-                </div>
-                <h3 className="text-3xl font-heading font-semibold text-primary mb-4 relative z-10">{aboutData.mission.title}</h3>
-                <p className="font-body text-neutral-gray text-lg leading-relaxed group-hover:text-primary transition-colors relative z-10">
-                  {aboutData.mission.description}
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-
-        {/* Values - High Contrast Section */}
-        <div className="relative -mx-6 md:-mx-20 px-6 md:px-20 py-24 bg-primary text-white overflow-hidden rounded-3xl">
-           {/* Decorative Background for Values */}
-           <div className="absolute top-0 right-0 w-full h-full opacity-10 pointer-events-none">
-              <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-secondary-light rounded-full blur-[100px]"></div>
-              <div className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-accent-wine rounded-full blur-[100px]"></div>
-           </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-10 relative z-10"
-          >
-            <div className="text-center mb-16">
-              <span className="text-accent-gold font-cta font-bold tracking-widest uppercase text-sm mb-4 block">Nuestra Esencia</span>
-              <h3 className="text-3xl md:text-4xl font-heading font-bold text-white mb-6">
-                Nuestros Valores
-              </h3>
-              <p className="max-w-2xl mx-auto text-white/80 font-body text-lg">
-                  Los pilares que sostienen nuestra cultura y guían cada una de nuestras acciones.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto">
-              {aboutData.values.map((value, index) => {
-                const Icon = getIcon(value.iconName);
-                return (
-                  <Card
-                    key={index}
-                    className="text-center group hover:bg-white/10 hover:backdrop-blur-md transition-all duration-300 cursor-default border border-white/10 shadow-lg bg-white/5 rounded-xl relative overflow-hidden"
-                  >
-                     {/* Hover corner decoration */}
-                     <div className="absolute top-0 right-0 w-8 h-8 bg-accent-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-bl-xl"></div>
-
-                    <CardContent className="p-8 flex flex-col items-center h-full relative z-10">
-                      <div className="w-14 h-14 rounded-full bg-white/10 mb-6 flex items-center justify-center group-hover:bg-accent-gold group-hover:text-primary transition-all duration-300 text-white">
-                        <Icon className="h-7 w-7 transition-colors" />
-                      </div>
-                      <h4 className="font-heading font-bold text-xl text-white mb-3">
-                        {value.title}
-                      </h4>
-                      <p className="font-body text-sm text-white/70 leading-relaxed group-hover:text-white transition-colors">
-                        {value.description}
-                      </p>
-                    </CardContent>
-                  </Card>
-                )
-              })}
-            </div>
-          </motion.div>
-        </div>
       </div>
     </section>
   )

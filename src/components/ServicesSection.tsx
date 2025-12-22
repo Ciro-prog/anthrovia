@@ -1,4 +1,3 @@
-import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { motion } from "framer-motion"
 import { type LucideIcon } from "lucide-react"
 import { useCMS } from "@/context/CMSContext"
@@ -12,65 +11,62 @@ interface ServiceCardProps {
 }
 
 const ServiceCard = ({ service, Icon, index }: ServiceCardProps) => {
-  const handleCardClick = () => {
-    // Set the service parameter in the URL
-    const serviceParam = encodeURIComponent(service.title)
-    window.location.hash = `#contacto?service=${serviceParam}`
-    
-    // Scroll to contact section with offset for desktop
-    setTimeout(() => {
-      const contactSection = document.getElementById('contacto')
-      if (contactSection) {
-        const elementPosition = contactSection.getBoundingClientRect().top + window.pageYOffset
-        const offsetPosition = elementPosition + 260 // 240px offset to scroll up
-        
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        })
-      }
-    }, 100)
+  // Determine style based on index (0=Cream, 1=Green, 2=Wine)
+  const isCream = index % 3 === 0;
+  const isGreen = index % 3 === 1;
+  const isWine = index % 3 === 2;
+
+  const baseClasses = "relative p-6 md:p-8 transition-all duration-1000 group h-full";
+  
+  // Mosaic shapes and colors
+  let styleClasses = "";
+  if (isCream) {
+    styleClasses = "bg-neutral-cream text-primary rounded-tr-[40px] md:rounded-tr-[80px] rounded-bl-[40px] md:rounded-bl-[80px] hover:rounded-tr-[20px] hover:rounded-bl-[20px]";
+  } else if (isGreen) {
+    styleClasses = "bg-primary text-white rounded-tl-[40px] md:rounded-tl-[80px] rounded-br-[40px] md:rounded-br-[80px] hover:rounded-tl-[20px] hover:rounded-br-[20px] md:translate-y-6";
+  } else if (isWine) {
+    styleClasses = "bg-accent-wine text-white rounded-tr-[40px] md:rounded-tr-[80px] rounded-bl-[40px] md:rounded-bl-[80px] hover:rounded-tr-[20px] hover:rounded-bl-[20px] lg:translate-y-12";
   }
 
+  const handleCardClick = () => {
+    const serviceParam = encodeURIComponent(service.title)
+    window.location.hash = `#contacto?service=${serviceParam}`
+    setTimeout(() => {
+      document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' })
+    }, 100)
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
+    <div 
+      className={`${baseClasses} ${styleClasses} cursor-pointer hover:shadow-xl`}
+      onClick={handleCardClick}
     >
-      <Card 
-        className="group relative h-full bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl hover:shadow-primary-light/20 transition-all duration-500 overflow-hidden cursor-pointer rounded-2xl"
-        onClick={handleCardClick}
-      >
-        {/* Hover Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <div className={`
+        mb-4 md:mb-6 transition-transform duration-700 group-hover:-translate-y-1 group-hover:scale-105
+        ${isCream ? 'text-primary' : 'text-secondary'}
+      `}>
+        <Icon className="w-8 h-8 md:w-10 md:h-10" />
+      </div>
 
-        <div className="p-8 relative z-10 flex flex-col items-start h-full">
-            {/* Icon Box - High Contrast */}
-            <div className="mb-6 p-4 rounded-xl bg-white/10 group-hover:bg-accent-gold group-hover:scale-110 transition-all duration-500 relative shadow-inner">
-                <Icon className="w-8 h-8 text-secondary-light group-hover:text-primary-dark transition-colors duration-500 relative z-10" />
-            </div>
+      <h3 className="font-heading text-xl md:text-2xl mb-3 md:mb-4 leading-snug font-bold">
+        {service.title}
+      </h3>
 
-            {/* Title */}
-            <CardTitle className="mb-4 text-2xl font-heading font-bold text-white group-hover:text-accent-gold transition-colors duration-300">
-                {service.title}
-            </CardTitle>
+      <p className={`
+        font-body text-xs md:text-sm leading-relaxed opacity-90
+        ${isCream ? 'text-neutral-gray' : 'text-white/80'}
+      `}>
+        {service.description}
+      </p>
 
-            {/* Description */}
-            <CardContent className="p-0 mt-auto">
-                <p className="font-body text-white/70 text-lg leading-relaxed group-hover:text-white transition-colors duration-300">
-                    {service.description}
-                </p>
-            </CardContent>
-
-             {/* Decorative bottom line */}
-             <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5">
-                <div className="h-full bg-gradient-to-r from-accent-gold to-secondary w-0 group-hover:w-full transition-all duration-700 ease-out"></div>
-             </div>
-        </div>
-      </Card>
-    </motion.div>
+      {/* Decorative Watermark Number */}
+      <span className={`
+        absolute bottom-4 right-6 font-heading text-4xl md:text-5xl opacity-5 transition-opacity group-hover:opacity-10 pointer-events-none select-none
+        ${isCream ? 'text-primary' : 'text-white'}
+      `}>
+        0{index + 1}
+      </span>
+    </div>
   )
 }
 
@@ -81,69 +77,40 @@ export const ServicesSection = () => {
   if (!servicesData || !servicesData.isVisible) return null;
 
   return (
-    <section id="servicios" className="py-24 bg-primary relative overflow-hidden">
-        {/* Background Gradients for Depth */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-primary-light/20 rounded-full blur-[100px]"></div>
-            <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-secondary-dark/10 rounded-full blur-[120px]"></div>
-        </div>
-
-        {/* Decorative Grid of Squares (Subtle on Dark) */}
-        <div className="absolute top-0 right-0 p-12 opacity-20 hidden lg:block">
-            <div className="grid grid-cols-3 gap-6">
-                {[...Array(9)].map((_, i) => (
-                    <div key={i} className={`w-3 h-3 rounded-sm transform rotate-45 ${i % 2 === 0 ? 'bg-white' : 'bg-accent-gold'}`}></div>
-                ))}
-            </div>
-        </div>
-
-        {/* Decorative "Tapes" / Ribbons */}
-        <div className="absolute top-40 left-0 w-32 h-64 opacity-30 pointer-events-none">
-            <div className="w-full h-1 bg-accent-gold rotate-45 transform translate-x-10 shadow-[0_0_15px_rgba(255,255,255,0.3)]"></div>
-            <div className="w-full h-8 bg-white/5 backdrop-blur-sm rotate-45 transform -translate-x-10 mt-10 border border-white/10"></div>
-        </div>
-
-
-         {/* Floating decorative squares */}
-        <motion.div 
-            animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-20 left-10 w-20 h-20 border border-white/10 rounded-xl hidden md:block backdrop-blur-sm"
-        />
-        <motion.div 
-            animate={{ y: [0, 30, 0], rotate: [0, -10, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-            className="absolute bottom-20 right-10 w-24 h-24 bg-accent-gold/5 rounded-2xl hidden md:block border border-accent-gold/20"
-        />
-
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Section Header */}
-        <div className="text-center max-w-4xl mx-auto mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-             <span className="text-accent-gold font-cta font-bold tracking-widest uppercase text-sm mb-4 block">Nuestras Soluciones</span>
-            <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-6 relative inline-block">
+    <section id="servicios" className="py-16 md:py-20 bg-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="flex flex-col md:flex-row md:items-start justify-between mb-12 gap-6">
+          <div className="max-w-xl">
+            <motion.span 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="font-cta text-accent-terracotta text-[10px] md:text-xs uppercase tracking-[0.3em] font-bold mb-3 block"
+            >
+              Nuestra Experiencia
+            </motion.span>
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="font-heading text-3xl md:text-5xl text-primary leading-tight font-bold"
+            >
               {servicesData.title}
-            </h2>
-          </motion.div>
-          
+            </motion.h2>
+          </div>
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-xl md:text-2xl font-body text-white/80 leading-relaxed max-w-2xl mx-auto mt-6"
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="font-body text-neutral-gray text-sm md:text-base max-w-xs md:text-right border-l-4 md:border-l-0 md:border-r-4 border-secondary/30 pl-4 md:pl-0 md:pr-4"
           >
             {servicesData.description}
           </motion.p>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-6 pb-12 md:pb-0">
           {servicesData.services.map((service, index) => {
             const Icon = getIcon(service.iconName);
             return (
@@ -157,6 +124,9 @@ export const ServicesSection = () => {
           })}
         </div>
       </div>
+
+      {/* Decorative Background Elements */}
+      <div className="absolute top-0 right-0 w-1/3 h-full bg-neutral-cream/30 -z-10 skew-x-12 transform origin-top pointer-events-none" />
     </section>
   )
 }
