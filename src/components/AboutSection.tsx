@@ -26,19 +26,23 @@ export const AboutSection = () => {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 1 }}
           >
-            <img 
+            <motion.img 
               src="/images/founder.jpg" 
               alt="Betsabé Sánchez - Fundadora Anthrovia HR" 
-              className="w-full h-full object-cover md:grayscale md:group-hover:grayscale-0 transition-all duration-700"
+              className="w-full h-full object-cover transition-all duration-700"
+              initial={{ filter: 'grayscale(100%)' }}
+              whileInView={{ filter: 'grayscale(0%)' }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1.5 }}
             />
             
             {/* Name/Title Overlay */}
             <motion.div 
-               initial={{ opacity: 0, y: 10 }}
+               initial={{ opacity: 0, y: 20 }}
                whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true, margin: "-50px" }}
-               transition={{ duration: 0.5, delay: 0.5 }}
-               className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-primary/90 to-transparent p-6 pt-12 flex flex-col items-center text-center md:opacity-0 md:group-hover:opacity-100 md:transition-opacity md:duration-500 md:transform md:translate-y-2 md:group-hover:translate-y-0"
+               viewport={{ once: true, margin: "-100px" }}
+               transition={{ duration: 0.8, delay: 0.3 }}
+               className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-primary/95 to-transparent p-6 pt-12 flex flex-col items-center text-center"
             >
                <h3 className="font-heading text-white text-xl font-bold">Betsabé Sánchez</h3>
                <p className="font-body text-white/90 text-sm uppercase tracking-wider">Lic. RRHH • Founder</p>
@@ -65,14 +69,12 @@ export const AboutSection = () => {
                      className={`
                        relative transition-all duration-300 ease-in-out cursor-pointer rounded-xl border flex flex-col items-center justify-center p-2 text-center group/card
                        ${isHovered 
-                         ? 'bg-primary text-white border-primary shadow-xl z-50 scale-110 md:scale-125' 
+                         ? 'bg-primary text-white border-primary shadow-xl z-50 scale-110' 
                          : 'bg-white border-neutral-gray/10 hover:border-accent-terracotta/30 z-0'
                        }
                        ${isAnyHovered && !isHovered ? 'opacity-40 blur-[1px]' : 'opacity-100'}
                        aspect-square
                      `}
-                     onMouseEnter={() => window.innerWidth >= 768 && setExpandedValue(index)}
-                     onMouseLeave={() => window.innerWidth >= 768 && setExpandedValue(null)}
                      onClick={() => setExpandedValue(expandedValue === index ? null : index)}
                    >
                      {/* Icon */}
@@ -132,7 +134,13 @@ export const AboutSection = () => {
           <div className="space-y-12">
             <div className="group">
               <h4 className="font-heading text-2xl text-primary mb-4 flex items-center gap-4">
-                <span className="w-10 h-px bg-accent-terracotta group-hover:w-16 transition-all" />
+                <motion.span 
+                  initial={{ width: "2.5rem" }}
+                  whileInView={{ width: "4rem" }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="h-px bg-accent-terracotta transition-all" 
+                />
                 {aboutData.mission.title || "Misión"}
               </h4>
               <p className="font-body text-neutral-gray pl-14 text-base leading-relaxed">
@@ -142,7 +150,13 @@ export const AboutSection = () => {
             
             <div className="group">
               <h4 className="font-heading text-2xl text-primary mb-4 flex items-center gap-4">
-                <span className="w-10 h-px bg-accent-terracotta group-hover:w-16 transition-all" />
+                <motion.span 
+                  initial={{ width: "2.5rem" }}
+                  whileInView={{ width: "4rem" }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="h-px bg-accent-terracotta transition-all" 
+                />
                 {aboutData.purpose.title || "Nuestra Filosofía"}
               </h4>
               <p className="font-body text-neutral-gray pl-14 text-base leading-relaxed">

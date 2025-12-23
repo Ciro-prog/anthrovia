@@ -21,11 +21,11 @@ const ServiceCard = ({ service, Icon, index }: ServiceCardProps) => {
   // Mosaic shapes and colors
   let styleClasses = "";
   if (isCream) {
-    styleClasses = "bg-neutral-cream text-primary rounded-tr-[40px] md:rounded-tr-[80px] rounded-bl-[40px] md:rounded-bl-[80px] hover:rounded-tr-[20px] hover:rounded-bl-[20px]";
+    styleClasses = "bg-neutral-cream text-primary rounded-tr-[40px] md:rounded-tr-[80px] rounded-bl-[40px] md:rounded-bl-[80px]";
   } else if (isGreen) {
-    styleClasses = "bg-primary text-white rounded-tl-[40px] md:rounded-tl-[80px] rounded-br-[40px] md:rounded-br-[80px] hover:rounded-tl-[20px] hover:rounded-br-[20px] md:translate-y-6";
+    styleClasses = "bg-primary text-white rounded-tl-[40px] md:rounded-tl-[80px] rounded-br-[40px] md:rounded-br-[80px]";
   } else if (isWine) {
-    styleClasses = "bg-accent-wine text-white rounded-tr-[40px] md:rounded-tr-[80px] rounded-bl-[40px] md:rounded-bl-[80px] hover:rounded-tr-[20px] hover:rounded-bl-[20px] lg:translate-y-12";
+    styleClasses = "bg-accent-wine text-white rounded-tr-[40px] md:rounded-tr-[80px] rounded-bl-[40px] md:rounded-bl-[80px]";
   }
 
   const handleCardClick = () => {
@@ -37,7 +37,27 @@ const ServiceCard = ({ service, Icon, index }: ServiceCardProps) => {
   };
 
   return (
-    <div 
+    <motion.div 
+      initial={{ 
+        opacity: 0, 
+        y: 30,
+        borderRadius: isCream 
+          ? "0px 40px 0px 40px" 
+          : isGreen 
+            ? "40px 0px 40px 0px" 
+            : "0px 40px 0px 40px"
+      }}
+      whileInView={{ 
+        opacity: 1, 
+        y: isGreen && typeof window !== 'undefined' && window.innerWidth >= 768 ? 24 : isWine && typeof window !== 'undefined' && window.innerWidth >= 1024 ? 48 : 0,
+        borderRadius: isCream 
+          ? "0px 20px 0px 20px" 
+          : isGreen 
+            ? "20px 0px 20px 0px" 
+            : "0px 20px 0px 20px"
+      }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 1, ease: "easeOut" }}
       className={`${baseClasses} ${styleClasses} cursor-pointer hover:shadow-xl`}
       onClick={handleCardClick}
     >
@@ -66,7 +86,7 @@ const ServiceCard = ({ service, Icon, index }: ServiceCardProps) => {
       `}>
         0{index + 1}
       </span>
-    </div>
+    </motion.div>
   )
 }
 

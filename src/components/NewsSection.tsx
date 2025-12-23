@@ -1,11 +1,10 @@
-import { Card, CardContent } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
-import { Calendar, User, ArrowRight } from "lucide-react"
+import { Calendar, ArrowRight } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { useCMS } from "@/context/CMSContext"
 import { NewsSectionContent, NewsItem } from "@/types/cms"
-import { motion } from "framer-motion"
 
 // --- Components ---
 
