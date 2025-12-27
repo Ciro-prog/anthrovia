@@ -1,7 +1,14 @@
 import { Linkedin, Instagram, MessageCircle, Mail, Phone, MapPin } from "lucide-react"
+import { useCMS } from "@/context/CMSContext"
+import { SettingsSectionContent } from "@/types/cms"
 
 export const Footer = () => {
-    const currentYear = new Date().getFullYear()
+  const currentYear = new Date().getFullYear()
+  const { content } = useCMS()
+
+  const settings = content.sections.find(s => s.type === 'settings') as SettingsSectionContent
+  const cvUrl = settings?.cvUrl || "https://talento.anthroviahr.com/"
+  const cvText = settings?.cvText || "Dejanos tu CV"
 
   return (
     <footer className="bg-primary text-white pt-32 pb-10 relative overflow-hidden">
@@ -81,6 +88,16 @@ export const Footer = () => {
               <li>
                 <a href="#contacto" className="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
                   Contacto
+                </a>
+              </li>
+              <li>
+                <a 
+                  href={cvUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-secondary font-bold hover:text-white hover:translate-x-1 transition-all duration-300 inline-block mt-2"
+                >
+                  {cvText}
                 </a>
               </li>
             </ul>

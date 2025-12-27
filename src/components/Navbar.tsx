@@ -1,4 +1,6 @@
 import { useState } from "react"
+import { useCMS } from "@/context/CMSContext"
+import { SettingsSectionContent } from "@/types/cms"
 import {
   Menu,
   X,
@@ -23,6 +25,11 @@ const services = [
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [servicesOpen, setServicesOpen] = useState(false)
+  const { content } = useCMS()
+
+  const settings = content.sections.find(s => s.type === 'settings') as SettingsSectionContent
+  const cvUrl = settings?.cvUrl || "https://talento.anthroviahr.com/"
+  const cvText = settings?.cvText || "Dejanos tu CV"
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -105,6 +112,15 @@ export const Navbar = () => {
             >
               Contacto
             </a>
+
+            <a
+              href={cvUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-primary text-white hover:bg-primary/90 px-5 py-2.5 rounded-full transition-all font-bold text-sm ml-2 shadow-sm hover:shadow-md"
+            >
+              {cvText}
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -178,11 +194,23 @@ export const Navbar = () => {
 
             <a
               href="#contacto"
-              className="block text-gray-700 hover:text-primary hover:bg-primary/5 transition-all font-medium py-2 px-3 rounded-md"
+              className="block text-gray-700 hover:text-primary hover:bg-primary/5 transition-all font-medium py-2 px-3 rounded-md mb-4"
               onClick={() => setIsOpen(false)}
             >
               Contacto
             </a>
+
+            <div className="px-3 pt-2">
+              <a
+                href={cvUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center bg-primary text-white transition-all font-bold py-3 rounded-full shadow-sm"
+                onClick={() => setIsOpen(false)}
+              >
+                {cvText}
+              </a>
+            </div>
           </div>
         )}
       </div>

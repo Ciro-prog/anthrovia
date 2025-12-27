@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Save, Layout, Type, Image as ImageIcon, Link as LinkIcon, Eye, Edit, Monitor, Smartphone, Trash2, Plus, LogOut, ChevronLeft, ChevronRight, FileText } from "lucide-react"
-import { HeroSectionContent, ServicesSectionContent, AboutSectionContent, ContactSectionContent, PostsSectionContent, NewsSectionContent, NewsItem, NewsMedia } from "@/types/cms"
+import { Save, Layout, Type, Image as ImageIcon, Link as LinkIcon, Eye, Edit, Monitor, Smartphone, Trash2, Plus, LogOut, ChevronLeft, ChevronRight, FileText, Globe } from "lucide-react"
+import { HeroSectionContent, ServicesSectionContent, AboutSectionContent, ContactSectionContent, PostsSectionContent, NewsSectionContent, SettingsSectionContent, NewsItem, NewsMedia } from "@/types/cms"
 import { ColorPicker } from "@/components/admin/ColorPicker"
 import { IconPicker } from "@/components/admin/IconPicker"
 import { ImageUpload } from "@/components/admin/ImageUpload"
@@ -1216,6 +1216,33 @@ export const AdminPage = () => {
           </Card>
         )
 
+      case 'settings':
+        const settingsData = selectedSection as SettingsSectionContent;
+        return (
+          <div className="space-y-6">
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="cvUrl">URL de "Dejanos tu CV"</Label>
+                <Input 
+                  id="cvUrl" 
+                  value={settingsData.cvUrl} 
+                  onChange={(e) => updateSection(settingsData.id, { cvUrl: e.target.value })}
+                  placeholder="https://..."
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="cvText">Texto del enlace/botón</Label>
+                <Input 
+                  id="cvText" 
+                  value={settingsData.cvText} 
+                  onChange={(e) => updateSection(settingsData.id, { cvText: e.target.value })}
+                  placeholder="Dejanos tu CV"
+                />
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return (
           <div className="text-center py-12 text-gray-500">
@@ -1252,6 +1279,7 @@ export const AdminPage = () => {
               {section.type === 'contact' && <LinkIcon className="w-4 h-4" />}
               {section.type === 'posts' && <Monitor className="w-4 h-4" />}
               {section.type === 'news' && <FileText className="w-4 h-4" />}
+              {section.type === 'settings' && <Globe className="w-4 h-4" />}
               <span className="capitalize">{section.id}</span>
             </button>
           ))}

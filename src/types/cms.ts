@@ -1,4 +1,4 @@
-export type SectionType = 'hero' | 'services' | 'about' | 'contact' | 'posts' | 'news';
+export type SectionType = 'hero' | 'services' | 'about' | 'contact' | 'posts' | 'news' | 'settings';
 
 export interface BaseSection {
   id: string;
@@ -8,7 +8,7 @@ export interface BaseSection {
 
 export interface HeroSectionContent extends BaseSection {
   type: 'hero';
-  title: string;
+title: string;
   subtitle: string;
   description: string;
   backgroundType?: 'media' | 'color';
@@ -132,6 +132,7 @@ export interface NewsItem {
   date: string;
   author: string;
   category: string;
+  citation?: string;
   attachments: Attachment[];
 }
 
@@ -155,13 +156,20 @@ export interface NewsSectionContent extends BaseSection {
   newsItems: NewsItem[];
 }
 
+export interface SettingsSectionContent extends BaseSection {
+  type: 'settings';
+  cvUrl: string;
+  cvText: string;
+}
+
 export type SectionContent = 
   | HeroSectionContent 
   | ServicesSectionContent 
   | AboutSectionContent 
   | ContactSectionContent
   | PostsSectionContent
-  | NewsSectionContent;
+  | NewsSectionContent
+  | SettingsSectionContent;
 
 export interface SiteContent {
   sections: SectionContent[];

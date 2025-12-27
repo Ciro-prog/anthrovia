@@ -145,9 +145,24 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
               </div>
             </div>
 
-            <div className="prose prose-lg max-w-none text-gray-600 mb-12 whitespace-pre-line">
+            <div className="prose prose-lg max-w-none text-gray-600 mb-8 whitespace-pre-line">
               {article.content || article.excerpt}
             </div>
+
+            {article.citation && (
+              <div className="mb-12 pt-4 border-t border-gray-100">
+                <p className="text-sm text-gray-500 italic">
+                  Fuente: <a 
+                    href={article.citation} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline font-medium"
+                  >
+                    {article.citation.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
+                  </a>
+                </p>
+              </div>
+            )}
 
             {article.attachments && article.attachments.length > 0 && (
               <div className="border-t pt-8">

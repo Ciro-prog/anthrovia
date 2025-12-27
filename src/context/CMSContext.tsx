@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SiteContent, SectionContent } from '../types/cms';
 import { initialContent } from '../data/initialContent';
-import { supabase } from '../lib/supabase';
+// import { supabase } from '../lib/supabase';
 
 interface CMSContextType {
   content: SiteContent;
@@ -14,10 +14,11 @@ export const CMSContext = createContext<CMSContextType | undefined>(undefined);
 
 export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [content, setContent] = useState<SiteContent>(initialContent);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
 
-  // Load from Supabase on mount
+  // Load from Supabase on mount (DISABLED for now to avoid fetch errors)
   useEffect(() => {
+    /*
     const fetchContent = async () => {
       setIsLoading(true);
       try {
@@ -31,16 +32,11 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
 
         if (data && data.length > 0) {
-          // Map the rows back to our SiteContent structure
           const sections = data.map(row => row.content as SectionContent);
-          
-          // Merge with initial content to ensure we have all sections even if DB is partial
-          // This is a simple merge strategy: DB wins if exists
           const mergedSections = initialContent.sections.map(initSection => {
             const dbSection = sections.find(s => s.id === initSection.id);
             return dbSection || initSection;
           });
-
           setContent({ sections: mergedSections });
         }
       } catch (err) {
@@ -51,6 +47,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     fetchContent();
+    */
   }, []);
 
   const updateSection = (sectionId: string, newContent: Partial<SectionContent>) => {
@@ -63,9 +60,11 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const saveContent = async () => {
+    console.warn("Save functionality is disabled as Supabase integration is inactive.");
+    alert("Funcionalidad de guardado desactivada temporalmente.");
+    /*
     setIsLoading(true);
     try {
-      // Upsert each section to Supabase
       const updates = content.sections.map(section => {
         return supabase
           .from('sections')
@@ -85,10 +84,11 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } finally {
       setIsLoading(false);
     }
+    */
   };
 
   return (
-    <CMSContext.Provider value={{ content, updateSection, saveContent, isLoading }}>
+    <CMSContext.Provider value={{ content, updateSection, saveContent, isLoading: false }}>
       {children}
     </CMSContext.Provider>
   );
