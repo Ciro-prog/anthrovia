@@ -56,6 +56,30 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
     setCurrentSlide((prev) => (prev - 1 + mediaList.length) % mediaList.length);
   };
 
+  const renderContent = (content: string) => {
+    return content.split('\n').map((line, index) => {
+      // Regex for subheadings starts with a number followed by a dot (e.g., 1. Name)
+      const subHeadingRegex = /^(\d+\.?\s*)(.*)/;
+      const match = line.match(subHeadingRegex);
+
+      if (match && match[2] && line.length < 100) { // Safety check to avoid long paragraphs matching
+        return (
+          <h3 key={index} className="text-2xl font-bold text-primary mt-10 mb-5 tracking-tight border-l-4 border-primary pl-4">
+            {line}
+          </h3>
+        );
+      }
+
+      if (line.trim() === '') return <div key={index} className="h-4" />;
+
+      return (
+        <p key={index} className="mb-6 leading-relaxed text-gray-700">
+          {line}
+        </p>
+      );
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -71,7 +95,7 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
         </Button>
 
         <article className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
-          {/* Media Carousel */}
+          {/* ... carousel code ... */}
           <div className="relative h-[400px] md:h-[500px] bg-black group">
             {mediaList.length > 0 ? (
               <>
@@ -126,31 +150,32 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
           </div>
 
           <div className="p-8 md:p-12 relative">
-             <div className="mb-8">
+             <div className="mb-8 border-b pb-8">
               <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-semibold mb-4 inline-block">
                 {article.category}
               </span>
-              <h1 className="text-3xl md:text-5xl font-bold mb-4 leading-tight text-gray-900">
+              <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight text-gray-900 tracking-tight">
                 {article.title}
               </h1>
               <div className="flex items-center gap-6 text-gray-500">
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-5 w-5" />
+                  <Calendar className="h-5 w-5 text-primary/60" />
                   <span>{formatDate(article.date)}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <User className="h-5 w-5" />
+                  <User className="h-5 w-5 text-primary/60" />
                   <span>{article.author}</span>
                 </div>
               </div>
             </div>
 
-            <div className="prose prose-lg max-w-none text-gray-600 mb-8 whitespace-pre-line">
-              {article.content || article.excerpt}
+            <div className="prose prose-lg max-w-none text-gray-800 mb-8">
+              {renderContent(article.content || article.excerpt)}
             </div>
 
             {article.citation && (
-              <div className="mb-12 pt-4 border-t border-gray-100">
+              <div className="mb-12 pt-8 border-t border-gray-100 flex items-center gap-2">
+                <LinkIcon className="w-4 h-4 text-primary" />
                 <p className="text-sm text-gray-500 italic">
                   Fuente: <a 
                     href={article.citation} 
