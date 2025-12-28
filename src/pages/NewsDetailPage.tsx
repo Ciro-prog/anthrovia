@@ -58,23 +58,41 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
 
   const renderContent = (content: string) => {
     return content.split('\n').map((line, index) => {
-      // Regex for subheadings starts with a number followed by a dot (e.g., 1. Name)
-      const subHeadingRegex = /^(\d+\.?\s*)(.*)/;
-      const match = line.match(subHeadingRegex);
-
-      if (match && match[2] && line.length < 100) { // Safety check to avoid long paragraphs matching
+      // Handle ## Headings
+      const headingMatch = line.match(/^##\s+(.+)/);
+      if (headingMatch) {
         return (
-          <h3 key={index} className="text-2xl font-bold text-primary mt-10 mb-5 tracking-tight border-l-4 border-primary pl-4">
-            {line}
+          <h3 key={index} className="text-2xl font-bold text-primary mt-12 mb-6 border-l-4 border-primary pl-4 tracking-tight">
+            {headingMatch[1]}
           </h3>
         );
       }
 
+      // Handle Numbered Lists (1. Item)
+      const listMatch = line.match(/^(\d+)\.\s+(.+)/);
+      if (listMatch) {
+         return (
+           <div key={index} className="flex gap-4 mb-6 ml-2 md:ml-4 group">
+             <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm group-hover:bg-primary group-hover:text-white transition-colors">
+               {listMatch[1]}
+             </span>
+             <p className="text-lg text-gray-700 leading-relaxed pt-0.5">
+               {listMatch[2].split('**').map((part, i) => 
+                 i % 2 === 1 ? <strong key={i} className="text-primary font-semibold">{part}</strong> : part
+               )}
+             </p>
+           </div>
+         )
+      }
+
       if (line.trim() === '') return <div key={index} className="h-4" />;
 
+      // Standard paragraphs with basic bold support
       return (
-        <p key={index} className="mb-6 leading-relaxed text-gray-700">
-          {line}
+        <p key={index} className="mb-6 leading-relaxed text-gray-700 text-lg">
+          {line.split('**').map((part, i) => 
+            i % 2 === 1 ? <strong key={i} className="text-primary font-semibold">{part}</strong> : part
+          )}
         </p>
       );
     });

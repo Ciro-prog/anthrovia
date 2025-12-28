@@ -14,12 +14,11 @@ export const HeroSection = () => {
   return (
     <section className="relative min-h-[700px] md:min-h-[600px] flex items-end justify-center overflow-hidden">
       {/* Background Media */}
-      {/* Background Media */}
       <div className="absolute inset-0">
         {heroData.backgroundType === 'color' ? (
           <div 
             className="w-full h-full"
-            style={{ background: heroData.backgroundColor || 'transparent' }}
+            style={{ background: heroData.backgroundColor || '#ffffff' }}
           />
         ) : (
           <>
@@ -50,20 +49,20 @@ export const HeroSection = () => {
       </div>
 
       <div className="container mx-auto px-4 pb-12 md:pb-20 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center text-transparent">
           <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 0, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight"
-            style={getTextStyle(heroData.titleColor || '#ffffff')}
+            style={getTextStyle(heroData.titleColor || '#ffffff' )}
           >
             {heroData.title}
           </motion.h1>
 
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 0, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto font-light"
             style={getTextStyle(heroData.subtitleColor || '#e2e8f0')}
@@ -72,8 +71,8 @@ export const HeroSection = () => {
           </motion.p>
 
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 0, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-lg mb-10 max-w-2xl mx-auto leading-relaxed"
             style={getTextStyle(heroData.descriptionColor || '#cbd5e1')}

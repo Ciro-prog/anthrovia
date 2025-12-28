@@ -6,9 +6,9 @@ export const initialContent: SiteContent = {
       id: "hero",
       type: "hero",
       isVisible: true,
-      title: "",
-      subtitle: "",
-      description: "",
+      title: "Anthrovia HR",
+      subtitle: "Evolucionando el talento",
+      description: "Soluciones integrales de Recursos Humanos diseñadas para transformar tu organización y maximizar el potencial de tu equipo. Impulsamos culturas más humanas, procesos más eficientes y equipos que crecen con propósito.",
       videoUrl: "/video.mp4",
       buttons: [
         {
@@ -129,6 +129,38 @@ export const initialContent: SiteContent = {
       descriptionColor: '#4b5563',
       newsItems: [
         {
+          id: "2",
+          title: "Humanos 4.0: El Futuro del Trabajo y la Gestión de Talento hacia 2026",
+          excerpt: "Un análisis exhaustivo sobre la transformación del mercado laboral en Latinoamérica, explorando cómo la inteligencia artificial y la aceleración tecnológica exigen un nuevo liderazgo híbrido centrado en la capacidad de aprendizaje y la empatía humana.",
+          content: `El futuro del trabajo no llega, se actualiza: Crehana presenta el reporte "Humanos 4.0"
+
+En un mundo donde la vida útil de las habilidades técnicas ha colapsado de 15 años a tan solo 2.5 años, las empresas se enfrentan a una realidad ineludible: la velocidad ya no es una ventaja competitiva, es el costo de entrada. Bajo esta premisa, Crehana lanza su más reciente reporte, "Humanos 4.0: La visión más clara del 2026", una guía estratégica para líderes de talento que buscan navegar la disrupción tecnológica con un enfoque humano.
+
+El reporte revela datos críticos para la región: Latinoamérica enfrenta un déficit de 1.2 millones de desarrolladores para 2025 y una escasez del 65% en roles de ciencia de datos e IA. A través de casos de éxito de gigantes regionales como Nubank, Mercado Libre y Globant, el documento demuestra que las empresas ganadoras no serán las que tengan la tecnología más avanzada, sino las que logren la simbiosis perfecta entre la eficiencia de la IA y las capacidades "irreductiblemente humanas", como el pensamiento crítico y la inteligencia emocional.
+
+Entre las tendencias clave que analiza el estudio se encuentran el auge del talento fraccionado (gig economy ejecutivo), la aparición de los "empleados digitales", los gemelos digitales de CEOs y la transición hacia el upskilling-as-a-service. Además, propone un framework de 90 días para que las organizaciones dejen de ser simples observadoras y se conviertan en arquitectas de su propio futuro.
+
+"Humanos 4.0" es una lectura obligatoria para quienes comprenden que el contrato social del trabajo ha cambiado y que la única forma de sobrevivir es aprendiendo más rápido que el ritmo de la obsolescencia.`,
+          media: [
+            {
+              type: 'image',
+              url: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1000&auto=format&fit=crop",
+              isMain: true
+            }
+          ],
+          date: new Date().toISOString(),
+          author: "Crehana",
+          category: "Tendencias",
+          attachments: [
+            {
+              id: "report-2026",
+              name: "HR Reporte 2026",
+              url: "/HR_REPORT_2026-2.pdf",
+              type: "pdf"
+            }
+          ]
+        },
+        {
           id: "1",
           title: "El futuro de los Recursos Humanos en 2026: estrategia, datos y personas",
           excerpt: "El mundo del trabajo avanza a un ritmo acelerado y obliga a los departamentos de Recursos Humanos a anticiparse a los cambios. De cara a 2026, la función de RRHH evoluciona hacia un modelo más estratégico, digital y centrado en las personas.",
@@ -136,7 +168,7 @@ export const initialContent: SiteContent = {
 
 El mundo del trabajo continúa evolucionando a gran velocidad, y los departamentos de Recursos Humanos se enfrentan a un reto clave: anticiparse a los cambios y liderar la transformación de las organizaciones. De cara a 2026, las tendencias en RR. HH. apuntan a un modelo más digital, estratégico y centrado en las personas, donde la tecnología y la cultura corporativa avanzan de la mano. 
 
-En este artículo analizamos las principales tendencias de Recursos Humanos en 2026 y cómo las empresas pueden prepararse para afrontarlas con éxito.
+En este artículo analizamos las principales tendencias de Recursos Humanos in 2026 y cómo las empresas pueden prepararse para afrontarlas con éxito.
 
 1. RRHH como socio estratégico del negocio
 Una de las tendencias más consolidadas para 2026 es la evolución definitiva de RR. HH. hacia un rol estratégico. El área deja atrás su función puramente operativa para convertirse en un actor clave en la toma de decisiones empresariales. 
@@ -221,27 +253,34 @@ Invertir en digitalización, analítica e innovación no es solo una cuestión d
           attachments: []
         },
         {
-          id: "2",
-          title: "La importancia del Salario Emocional",
-          excerpt: "Más allá de la retribución económica, el salario emocional es clave para la fidelización del talento.",
-          content: "El salario emocional comprende todos aquellos beneficios no monetarios que la empresa ofrece a sus empleados...",
-          media: [
-            {
-              type: 'image',
-              url: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1000&auto=format&fit=crop",
-              isMain: true
-            }
-          ],
-          date: new Date().toISOString(),
-          author: "Anthrovia HR",
-          category: "Cultura",
-          attachments: []
-        },
-        {
           id: "3",
-          title: "Liderazgo en tiempos de cambio",
-          excerpt: "Cómo los líderes pueden gestionar la incertidumbre y guiar a sus equipos hacia el éxito.",
-          content: "El liderazgo adaptativo es una competencia crucial en el entorno actual...",
+          title: "La era de la IA autónoma: RR. HH. automatizará más de la mitad de sus procesos administrativos en 2026.",
+          excerpt: "La implementación de agentes de IA autónomos permitirá automatizar el 56% del ciclo de vida del empleado para 2026, desplazando la carga administrativa hacia un modelo de gestión basado en habilidades humanas críticas.",
+          content: `# IA Agente y Automatización Total: El Nuevo Paradigma del Empleado Digital en 2026
+
+La gestión del capital humano está cruzando su frontera más ambiciosa. Al cierre de 2025 y con la mirada puesta en 2026, las empresas han dejado de ver a la Inteligencia Artificial como un simple asistente de chat para convertirla en el motor operativo de toda la organización. La era de la IA Agente y la Automatización del Ciclo de Vida (Hire-to-Retire) ha llegado para redefinir el trabajo administrativo.
+
+## Del "Copiloto" al "Agente Autónomo"
+La gran tendencia para 2026 es el despliegue de los Agentes de IA. A diferencia de los modelos anteriores que requerían instrucciones constantes (prompts), estos nuevos sistemas son capaces de ejecutar flujos de trabajo de extremo a extremo sin intervención humana constante.
+En los departamentos de RRHH, esto significa que un agente de IA puede detectar una vacante, redactar la oferta, filtrar candidatos por competencias, coordinar entrevistas según las agendas disponibles y, una vez seleccionado el talento, iniciar el proceso de alta legal y técnica de forma autónoma.
+
+## Automatización del Ciclo de Vida: El fin de la burocracia
+Se estima que para 2026, hasta el 56% de las tareas administrativas del ciclo de vida del empleado (desde la contratación hasta el retiro) estarán completamente automatizadas. Los puntos clave de esta transformación incluyen:
+1. Onboarding Dinámico: Programas de bienvenida personalizados por IA que ajustan el contenido de capacitación según la velocidad de aprendizaje del nuevo empleado.
+2. Gestión de Nómina y Beneficios: Sistemas que ajustan automáticamente las deducciones y pagos en tiempo real ante cambios legislativos o peticiones de adelantos salariales.
+3. Offboarding Predictivo: Herramientas de análisis que identifican patrones de desvinculación antes de que ocurran, permitiendo a las empresas actuar para retener el talento clave o gestionar la salida de forma fluida.
+
+## El impacto en el empleo: Habilidades sobre Títulos
+La automatización masiva está desplazando el enfoque de los reclutadores. Para 2026, la tendencia de "Skills-based Hiring" (contratación basada en habilidades) se consolida. Dado que la IA se encarga del procesamiento de datos y la administración, las empresas están priorizando perfiles con alta inteligencia emocional, pensamiento crítico y capacidad de supervisión de sistemas automatizados.
+
+## El Desafío Ético y Humano
+A pesar del avance tecnológico, el reporte de tendencias 2026 subraya un riesgo: la deshumanización. El reto para los líderes de RRHH este año será mantener el "toque humano" en una estructura donde la mayoría de las interacciones transaccionales son gestionadas por algoritmos.
+"La tecnología hace el trabajo, pero las personas construyen la cultura", es el lema que resuena en las conferencias globales de cara al próximo año.
+
+## ¿Cómo prepararse para 2026?
+1. Auditoría de Procesos: Identificar qué tareas repetitivas de "Hire-to-Retire" pueden delegarse a agentes de IA.
+2. Upskilling Digital: Capacitar a los equipos de RRHH en el manejo y supervisión de herramientas de automatización.
+3. Transparencia de Datos: Asegurar que el uso de IA en la toma de decisiones sea ético y auditable.`,
           media: [
             {
               type: 'image',
@@ -249,9 +288,9 @@ Invertir en digitalización, analítica e innovación no es solo una cuestión d
               isMain: true
             }
           ],
-          date: new Date().toISOString(),
+          date: "2025-12-27T00:00:00.000Z",
           author: "Anthrovia HR",
-          category: "Liderazgo",
+          category: "Tecnología",
           attachments: []
         }
       ]

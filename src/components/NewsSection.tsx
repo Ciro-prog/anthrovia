@@ -214,9 +214,9 @@ export const NewsSection = () => {
           }`}
         >
           <div className="max-w-2xl">
-              <span className="text-accent-gold font-cta font-bold tracking-widest uppercase text-sm mb-2 block">Actualidad Anthrovia</span>
+              <span className="text-accent-gold font-cta font-bold tracking-widest uppercase text-sm mb-2 block">Sección de Noticias</span>
             <h2 className="text-4xl md:text-5xl font-heading font-bold text-white leading-tight">
-              {newsSection.title}
+              Últimas Noticias
             </h2>
              <p className="text-xl font-body text-white/80 mt-4">
                 {newsSection.subtitle}
@@ -251,7 +251,7 @@ export const NewsSection = () => {
             <div className="lg:col-span-5 xl:col-span-4 flex flex-col gap-4">
                  <div className="flex items-center gap-2 mb-2">
                     <span className="w-1 h-6 bg-accent-gold rounded-full"></span>
-                    <h3 className="font-heading font-bold text-xl text-white">Más Recientes</h3>
+                    <h3 className="font-heading font-bold text-xl text-white">Novedades</h3>
                  </div>
                  
                  <div className="bg-white/5 backdrop-blur-md rounded-2xl p-4 border border-white/10 shadow-lg flex flex-col gap-2 h-full">
