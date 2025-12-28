@@ -10,7 +10,7 @@ export const SectionDivider = () => {
           whileInView={{ width: "100%", opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1, ease: "easeOut" }}
-          className="h-1.5 bg-gradient-to-l from-primary/30 to-transparent w-full"
+          className="h-2 rounded-r-full bg-gradient-to-l from-primary/30 to-transparent w-full"
         />
 
         {/* Central Geometric Element */}
@@ -32,7 +32,7 @@ export const SectionDivider = () => {
               className="relative"
             >
               <div className="w-3 h-3 bg-primary rotate-45 transform" />
-              <div className="absolute top-0 left-0 w-3 h-3 border border-accent-terracotta rotate-45 transform scale-150" />
+              <div className="absolute  top-0 left-0 w-3 h-3 border border-accent-terracotta rotate-45 transform scale-150" />
             </motion.div>
         </motion.div>
 
@@ -42,7 +42,7 @@ export const SectionDivider = () => {
           whileInView={{ width: "100%", opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1, ease: "easeOut" }}
-          className="h-1.5 bg-gradient-to-r from-primary/30 to-transparent w-full"
+          className="h-2 rounded-l-full bg-gradient-to-r from-primary/30 to-transparent w-full"
         />
       </div>
     </div>
