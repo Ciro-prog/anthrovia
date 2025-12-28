@@ -29,11 +29,12 @@ export const AboutSection = () => {
             <motion.img 
               src="/images/founder.jpg" 
               alt="Betsabé Sánchez - Fundadora Anthrovia HR" 
-              className="w-full h-full object-cover transition-all duration-700"
+              className="w-full h-full object-cover transition-all duration-700 md:grayscale md:group-hover:grayscale-0"
               initial={{ filter: 'grayscale(100%)' }}
               whileInView={{ filter: 'grayscale(0%)' }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 1.5 }}
+              style={{ filter: undefined }} // Allow CSS to take precedence on desktop
             />
             
             {/* Name/Title Overlay */}

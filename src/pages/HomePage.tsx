@@ -6,6 +6,7 @@ import { NewsSection } from "../components/NewsSection"
 import { PostsSection } from "../components/PostsSection"
 import { ContactSection } from "../components/ContactSection"
 import { Footer } from "../components/Footer"
+import { SectionDivider } from "../components/ui/SectionDivider"
 
 export const HomePage = () => {
   return (
@@ -13,6 +14,7 @@ export const HomePage = () => {
       <Navbar />
       <HeroSection />
       <ServicesSection />
+      <SectionDivider />
       <AboutSection />
       <NewsSection /> 
       <PostsSection />
