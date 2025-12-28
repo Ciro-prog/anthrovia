@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useCMS } from "@/context/CMSContext"
 import { NewsSectionContent, Attachment } from "@/types/cms"
 import { Button } from "@/components/ui/button"
@@ -12,6 +12,10 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
   const { content } = useCMS()
   const navigate = useNavigate()
   const [currentSlide, setCurrentSlide] = useState(0)
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [articleId])
   
   const newsSection = content.sections.find(s => s.id === 'news') as NewsSectionContent
   const article = newsSection?.newsItems.find(item => item.id === articleId)

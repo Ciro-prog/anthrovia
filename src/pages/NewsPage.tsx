@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { useCMS } from "@/context/CMSContext"
 import { NewsSectionContent, NewsItem } from "@/types/cms"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -74,6 +75,10 @@ export const NewsPage = () => {
   
   const newsSection = content.sections.find(s => s.id === 'news') as NewsSectionContent
   const articles = newsSection?.newsItems || []
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-50">
