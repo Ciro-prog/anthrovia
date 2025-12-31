@@ -1,6 +1,8 @@
 import { Linkedin, Instagram, MessageCircle, Mail, Phone, MapPin } from "lucide-react"
 import { useCMS } from "@/context/CMSContext"
 import { SettingsSectionContent } from "@/types/cms"
+import { useState } from "react"
+import LegalModal from "./LegalModal"
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear()
@@ -9,6 +11,15 @@ export const Footer = () => {
   const settings = content.sections.find(s => s.type === 'settings') as SettingsSectionContent
   const cvUrl = settings?.cvUrl || "https://talento.anthroviahr.com/"
   const cvText = settings?.cvText || "Dejanos tu CV"
+
+  const [legalModal, setLegalModal] = useState<{ isOpen: boolean, type: 'privacy' | 'terms' }>({
+    isOpen: false,
+    type: 'privacy'
+  });
+
+  const openLegalModal = (type: 'privacy' | 'terms') => {
+    setLegalModal({ isOpen: true, type });
+  };
 
   return (
     <footer className="bg-primary text-white pt-32 pb-10 relative overflow-hidden">
@@ -135,12 +146,22 @@ export const Footer = () => {
           </div>
         </div>
 
-         <div className="border-t border-white/10 pt-8 text-center">
-            <p className="text-gray-400 text-sm font-body">
-                &copy; {currentYear} Anthrovia HR. Todos los derechos reservados.
-            </p>
-        </div> 
+         <div className="pt-8 border-t border-blanco/10 flex flex-col md:flex-row justify-between items-center gap-4">
+             <p className="font-lora text-xs text-blanco/60">
+                © {currentYear} Anthrovia HR. Todos los derechos reservados.
+             </p>
+             <div className="flex gap-6 text-xs text-blanco/60 font-montserrat">
+               <button onClick={() => openLegalModal('privacy')} className="hover:text-durazno transition-colors cursor-pointer">Políticas de Privacidad</button>
+               <button onClick={() => openLegalModal('terms')} className="hover:text-durazno transition-colors cursor-pointer">Términos y Condiciones</button>
+             </div>
+          </div>
       </div>
+      
+      <LegalModal 
+        isOpen={legalModal.isOpen} 
+        onClose={() => setLegalModal({ ...legalModal, isOpen: false })} 
+        type={legalModal.type} 
+      />
     </footer>
   )
 }

@@ -18,7 +18,8 @@ export const AboutSection = () => {
         
         {/* Left Column: Image + Values */}
         <div className="flex-1 relative w-full flex flex-col gap-10 items-center md:items-start">
-          {/* Founder Image */}
+          {/* Founder Image (Commented out) */}
+          {/* 
           <motion.div 
             className="relative z-10 w-3/4 md:w-2/3 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl group"
             initial={{ filter: 'grayscale(100%)' }}
@@ -37,7 +38,6 @@ export const AboutSection = () => {
               style={{ filter: undefined }} // Allow CSS to take precedence on desktop
             />
             
-            {/* Name/Title Overlay */}
             <motion.div 
                initial={{ opacity: 0, y: 20 }}
                whileInView={{ opacity: 1, y: 0 }}
@@ -49,7 +49,23 @@ export const AboutSection = () => {
                <p className="font-body text-white/90 text-sm uppercase tracking-wider">Lic. RRHH • Founder</p>
             </motion.div>
 
-             {/* Decorative blob behind */}
+            <div className="absolute -bottom-10 -left-10 w-full h-48 bg-secondary/10 rounded-full blur-3xl -z-10" />
+          </motion.div>
+          */}
+
+          {/* Generic About Image */}
+          <motion.div 
+            className="relative z-10 w-3/4 md:w-2/3 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl group"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8 }}
+          >
+            <img 
+              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800" 
+              alt="Anthrovia HR Team" 
+              className="w-full h-full object-cover"
+            />
             <div className="absolute -bottom-10 -left-10 w-full h-48 bg-secondary/10 rounded-full blur-3xl -z-10" />
           </motion.div>
 
