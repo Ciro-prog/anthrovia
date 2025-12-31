@@ -307,7 +307,7 @@ A pesar del avance tecnológico, el reporte de tendencias 2026 subraya un riesgo
       posts: [
         {
           id: "1",
-          imageUrl: "https://scontent.cdninstagram.com/v/t39.30808-6/602376822_962717576915678_7257672553361074790_n.png?stp=dst-png_p640x640_sh0.08&_nc_cat=105&ig_cache_key=Mzc5NDc4NjMzMTI0ODI0Njg0MQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjkyOHgxMTUyLnNkci5DMiJ9&_nc_ohc=d1T555pXFHwQ7kNvwGlyJPG&_nc_oc=AdkFvBJxtoCWH1aNTzwooP27m8BZf1bYbRqbZTrsdR17o0YdfFU1fJ6Kex-SppTM4t8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=wpdFnt3ZuFDApkh3O21P8A&oh=00_AfkPXpdxgJo2__tPi3CHL_OzdliJw-MQhOOfIMM_9-YcAA&oe=6954C3A4",
+          imageUrl: "/nosiempre.png",
           description: "El estrés laboral no siempre se nota como ansiedad o crisis.",
           postUrl: "https://www.instagram.com/p/DSpyhAIj0A5/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
           platform: "instagram"
@@ -321,16 +321,23 @@ A pesar del avance tecnológico, el reporte de tendencias 2026 subraya un riesgo
         },
         {
           id: "3",
-          imageUrl: "https://scontent.cdninstagram.com/v/t39.30808-6/600144564_957814544072648_4632779820255661304_n.png?stp=dst-png_p640x640_sh0.08&_nc_cat=107&ig_cache_key=Mzc5MDYwMzc4MzI1MzA5MzU3OQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjkyOHgxMTUyLnNkci5DMiJ9&_nc_ohc=7MHG968fs-MQ7kNvwHkmN9P&_nc_oc=Admyjp23cMt4KX_9RWaYxbo1fEQeFp4RO1At2sv3XwRVFSCJ4WtpZIrlZ8aT9gvAugM&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=wpdFnt3ZuFDApkh3O21P8A&oh=00_Afm85t2_N_5T2WYKyAWQ8gdw9-gFS0j2iIawDzlnyAx-lA&oe=6954D467",
+          imageUrl: "/dospost.png",
           description: "¿TENÉS UNA ENTREVISTA Y NO SABÉS SI LO ESTÁS HACIENDO BIEN?",
           postUrl: "https://www.instagram.com/p/DSa7g6xDWzL/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
           platform: "instagram"
         },
         {
           id: "4",
-          imageUrl: "https://scontent.cdninstagram.com/v/t39.30808-6/599092808_955460834308019_5030425618147390910_n.png?_nc_cat=105&ig_cache_key=Mzc4OTg0ODg0OTU2MTc4NDc5MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjkyOHgxMTUyLnNkci5DMiJ9&_nc_ohc=uf8Knr5n0CYQ7kNvwFWoFGS&_nc_oc=AdkmwWX2AVhLy6yVjgOq2dASx1uItwnLyc88N-owp2S8A2_My87kp5J-No64vqjdoBM&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=wpdFnt3ZuFDApkh3O21P8A&oh=00_AflH9k5zISrIYfqBBo5aITv4ztZC0xgmI8AN23tEQOFCwA&oe=6954B4D6",
+          imageUrl: "/despues.png",
           description: "POR QUÉ TANTAS ENTREVISTAS TERMINAN EN MALAS CONTRATACIONES?",
           postUrl: "https://www.instagram.com/p/DSYP3eADdYp/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+          platform: "instagram"
+        },
+        {
+          id: "5",
+          imageUrl: "/webinar.png",
+          description: "👉 Lanzamos nuestro webinar gratuito: Gestión del estrés laboral.",
+          postUrl: "https://www.instagram.com/p/DS5E_6YDUY6/?utm_source=ig_web_button_share_sheet&igsh=MzRlODBiNWFlZA==",
           platform: "instagram"
         },
       ]
