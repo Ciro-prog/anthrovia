@@ -198,12 +198,7 @@ export const ContactSection = () => {
             transition={{ duration: 0.6 }}
             className="space-y-6 md:space-y-8 lg:pt-10"
           >
-             <div className="prose prose-lg">
-                <h3 className="font-heading font-bold text-2xl md:text-3xl text-primary mb-4 md:mb-6">Conectemos</h3>
-                <p className="font-body text-neutral-gray text-base md:text-lg leading-relaxed mb-6 md:mb-8">
-                    Estamos listos para potenciar el talento de tu organización. Escríbenos o encuéntranos en nuestras redes sociales.
-                </p>
-             </div>
+          
 
             <div className="grid gap-4 md:gap-6">
               {contactData.socialLinks.map((link, index) => {
