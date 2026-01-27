@@ -79,21 +79,16 @@ export const AboutSection = () => {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            {/* Base Image (Visible by default, hidden on hover if video plays) */}
-            <img 
-              src="/images/founder.jpg" 
-              alt="Betsabé Sánchez - Fundadora Anthrovia HR" 
-              className="w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0 absolute inset-0 z-20"
-            />
-
-            {/* Video (Behind image, revealed on hover) */}
+            {/* Video (Serves as both image and video) */}
             <video
               ref={videoRef}
-              src="/founder.mp4"
+              src="/founder2.mp4"
               muted
               loop
               playsInline
               className="w-full h-full object-cover absolute inset-0 z-10"
+              // Ensure the first frame is shown
+              preload="auto"
             />
             
             {/* Overlay Info (Appears on Hover) */}
