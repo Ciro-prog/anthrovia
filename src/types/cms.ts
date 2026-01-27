@@ -29,6 +29,7 @@ export interface ServiceItem {
   title: string;
   description: string;
   color: string;
+  category?: 'companies' | 'individuals';
 }
 
 export interface ServicesSectionContent extends BaseSection {

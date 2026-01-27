@@ -3,12 +3,26 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useCMS } from "@/context/CMSContext"
 import { AboutSectionContent } from "@/types/cms"
 import { getIcon } from "@/lib/iconMap"
-import { useState } from "react"
+import { useRef, useState } from "react"
 
 export const AboutSection = () => {
   const { content } = useCMS();
   const aboutData = content.sections.find(s => s.id === 'about') as AboutSectionContent;
   const [expandedValue, setExpandedValue] = useState<number | null>(null)
+  const videoRef = useRef<HTMLVideoElement>(null);
+  
+  const handleMouseEnter = () => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(e => console.log("Video play error:", e));
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
 
   if (!aboutData || !aboutData.isVisible) return null;
 
@@ -54,19 +68,45 @@ export const AboutSection = () => {
           */}
 
           {/* Generic About Image */}
+          {/* Founder Card with Video Reveal */}
+          {/* Founder Card with Video Reveal */}
           <motion.div 
-            className="relative z-10 w-3/4 md:w-2/3 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl group"
+            className="relative z-10 w-3/4 md:w-2/3 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl group cursor-pointer"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8 }}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
+            {/* Base Image (Visible by default, hidden on hover if video plays) */}
             <img 
-              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800" 
-              alt="Anthrovia HR Team" 
-              className="w-full h-full object-cover"
+              src="/images/founder.jpg" 
+              alt="Betsabé Sánchez - Fundadora Anthrovia HR" 
+              className="w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0 absolute inset-0 z-20"
             />
-            <div className="absolute -bottom-10 -left-10 w-full h-48 bg-secondary/10 rounded-full blur-3xl -z-10" />
+
+            {/* Video (Behind image, revealed on hover) */}
+            <video
+              ref={videoRef}
+              src="/founder.mp4"
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover absolute inset-0 z-10"
+            />
+            
+            {/* Overlay Info (Appears on Hover) */}
+            <div 
+               className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-primary/95 via-primary/60 to-transparent p-6 pt-20 flex flex-col items-center text-center translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-30"
+            >
+               <h3 className="font-heading text-white text-xl md:text-2xl font-bold mb-1">Betsabé Sánchez</h3>
+               <p className="font-body text-accent-light text-xs md:text-sm uppercase tracking-widest font-semibold">Lic. RRHH • Founder & CEO</p>
+               <div className="w-12 h-1 bg-accent-terracotta mt-3 rounded-full"></div>
+            </div>
+
+            {/* Decorative Bloom */}
+            <div className="absolute -bottom-10 -left-10 w-full h-48 bg-secondary/20 rounded-full blur-3xl -z-10 group-hover:bg-secondary/30 transition-colors duration-500" />
           </motion.div>
 
           {/* Values Section (Moved below image) */}

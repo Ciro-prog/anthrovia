@@ -28,7 +28,7 @@ export default {
           },
           neutral: {
             white: '#FFFFFF',
-            cream: '#FAF8F5',
+            cream: '#E9E4DB',
             gray: '#8A8A8A',
           },
           // Legacy support mappings

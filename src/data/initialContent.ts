@@ -31,41 +31,56 @@ export const initialContent: SiteContent = {
       description: "Diseñamos soluciones a medida que conectan estrategia, personas y cultura. Acompañamos a las organizaciones en cada etapa de su evolución, impulsando procesos más eficientes y experiencias laborales con propósito.",
       videoUrl: "/bg-mov.mp4",
       services: [
+        // Servicios para Empresas
         {
-          iconName: "FileSearch",
-          title: "Asesorías iniciales",
-          description: "Diagnóstico estratégico rápido que identifica prioridades y propone una hoja de ruta práctica para gestionar talento y procesos.",
-          color: "from-primary to-accent-teal"
+          iconName: "Search",
+          title: "Atracción de Talento y Selección Estratégica",
+          description: "Gestionamos procesos de reclutamiento, selección por competencias y evaluación especializada para asegurar incorporaciones alineadas al negocio, la cultura y los objetivos organizacionales. Incluye también servicios de sourcing, preselección y armado de shortlists para empresas o agencias que requieren apoyo parcial en sus búsquedas.",
+          color: "from-primary to-accent-teal",
+          category: "companies"
         },
         {
-          iconName: "Users",
-          title: "Reclutamiento y Selección Estratégica por Competencias",
-          description: "Identificamos, evaluamos y atraemos el mejor talento para tu organización mediante procesos estructurados y evaluaciones especializadas, asegurando incorporaciones alineadas a la cultura, los valores y los resultados del negocio.",
-          color: "from-accent-teal to-primary-light"
+          iconName: "Rocket",
+          title: "Onboarding, Coaching y Acompañamiento Post-Ingreso",
+          description: "Implementamos procesos estructurados de integración y seguimiento durante los primeros meses, combinando onboarding, diagnóstico temprano y sesiones de coaching profesional para fortalecer desempeño, actitud, adaptación cultural y retención.",
+          color: "from-accent-teal to-primary-light",
+          category: "companies"
         },
         {
-          iconName: "Settings",
-          title: "Diseño y Optimización de Procesos de RRHH",
-          description: "Análisis y rediseño de los procesos clave del área con foco en la eficiencia, la trazabilidad y la experiencia del colaborador. Se aplican metodologías ágiles y herramientas digitales para simplificar tareas operativas, generar control de indicadores y fortalecer la toma de decisiones.",
-          color: "from-primary-light to-accent-rose"
+          iconName: "BarChart3",
+          title: "Diagnóstico Organizacional y Optimización de RRHH",
+          description: "Analizamos y rediseñamos procesos clave del área con foco en eficiencia, experiencia del colaborador y toma de decisiones basada en datos. Incluye revisión de indicadores, People Analytics aplicado, diseño de flujos de trabajo y mejora continua.",
+          color: "from-primary-light to-accent-rose",
+          category: "companies"
         },
         {
-          iconName: "Heart",
-          title: "Programas de Experiencia y Bienestar",
-          description: "Desarrollamos programas que fortalecen la conexión entre las personas y su entorno laboral, integrando acciones de reconocimiento, bienestar integral y propuestas de salario emocional adaptadas a cada cultura organizacional. Nuestro enfoque impulsa el compromiso, promueve la motivación y genera experiencias laborales más significativas.",
-          color: "from-accent-rose to-accent-burgundy"
+          iconName: "Smile",
+          title: "Cultura, Experiencia y Bienestar",
+          description: "Diseñamos programas que fortalecen el compromiso y la motivación, integrando acciones de reconocimiento, bienestar integral y salario emocional alineados a cada organización.",
+          color: "from-accent-rose to-accent-burgundy",
+          category: "companies"
         },
         {
-          iconName: "GraduationCap",
-          title: "Career Coaching & Desarrollo Profesional",
-          description: "Brindamos acompañamiento personalizado para impulsar tu empleabilidad: optimizamos tu CV, potenciamos tu perfil de LinkedIn y te preparamos para entrevistas laborales con técnicas y estrategias actuales del mercado. Un enfoque práctico, claro y orientado a que te postules con seguridad y destaques en cada proceso.",
-          color: "from-primary to-primary-light"
+          iconName: "Briefcase",
+          title: "Servicios Laborales y Administración",
+          description: "Brindamos soluciones complementarias a través de partners especializados en asesoría legal laboral, compensaciones y beneficios, administración de nómina y soporte operativo en gestión de personal.",
+          color: "from-accent-burgundy to-accent-teal",
+          category: "companies"
+        },
+        // Servicios para Personas
+        {
+          iconName: "Compass",
+          title: "Career Coaching y Empleabilidad",
+          description: "Acompañamos a personas que buscan su primer empleo, desean crecer profesionalmente o atravesar una transición laboral. Optimizamos CV, perfil de LinkedIn, preparación para entrevistas y estrategias de búsqueda acordes al mercado.",
+          color: "from-primary to-primary-light",
+          category: "individuals"
         },
         {
-          iconName: "Layers",
-          title: "Servicios complementarios",
-          description: "Asesoría legal laboral, Compensaciones y beneficios, Administración de nómina, Employer Branding y People Analytics. (Disponibles próximamente.)",
-          color: "from-accent-burgundy to-accent-teal"
+          iconName: "TrendingUp",
+          title: "Orientación y Proyección de Carrera",
+          description: "Espacios de análisis y conversación para clarificar objetivos, explorar oportunidades, redefinir el rumbo profesional y construir planes de desarrollo concretos y accionables.",
+          color: "from-accent-teal to-primary",
+          category: "individuals"
         }
       ]
     },
@@ -314,7 +329,7 @@ A pesar del avance tecnológico, el reporte de tendencias 2026 subraya un riesgo
         },
         {
           id: "2",
-          imageUrl: "https://media.licdn.com/dms/image/v2/D4E22AQFSmJWHQE3hWg/feedshare-shrink_800/B4EZtIXEveHoAg-/0/1766445567670?e=1768435200&v=beta&t=qg3YyGPa5fKvwYCjJIdxzOU76HSiIKzPMYPS1ggLy4o",
+          imageUrl: "/linkpst1.jpg",
           description: "En estas semanas muchas personas llegan al límite justo cuando el año termina. Y enero aparece como una oportunidad… o como más de lo mismo.",
           postUrl: "https://www.linkedin.com/posts/anthrovia-hr_volviendo-al-tema-que-venimos-conversando-activity-7410314699197689856-FNiP?utm_source=share&utm_medium=member_desktop&rcm=ACoAADxdw-sB9Bsnn1BphidW8OUw49O-QewzNKo",
           platform: "linkedin"

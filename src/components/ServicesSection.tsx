@@ -21,7 +21,7 @@ const ServiceCard = ({ service, Icon, index }: ServiceCardProps) => {
   // Mosaic shapes and colors
   let styleClasses = "";
   if (isCream) {
-    styleClasses = "bg-neutral-cream text-primary rounded-tr-[40px] md:rounded-tr-[80px] rounded-bl-[40px] md:rounded-bl-[80px]";
+    styleClasses = "bg-neutral-cream text-primary rounded-tr-[40px] md:rounded-tr-[80px] rounded-bl-[40px] md:rounded-bl-[80px] shadow-sm border border-neutral-100/50";
   } else if (isGreen) {
     styleClasses = "bg-primary text-white rounded-tl-[40px] md:rounded-tl-[80px] rounded-br-[40px] md:rounded-br-[80px]";
   } else if (isWine) {
@@ -130,18 +130,60 @@ export const ServicesSection = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-6 pb-12 md:pb-0">
-          {servicesData.services.map((service, index) => {
-            const Icon = getIcon(service.iconName);
-            return (
-              <ServiceCard
-                key={index}
-                service={service}
-                Icon={Icon}
-                index={index}
-              />
-            )
-          })}
+        {/* Company Services */}
+        <div className="mb-16">
+          <motion.h3 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="font-heading text-2xl md:text-3xl text-primary font-bold mb-8 flex items-center gap-3"
+          >
+            <span className="w-8 h-1 bg-accent-terracotta rounded-full"></span>
+            Servicios para Empresas
+          </motion.h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-6">
+            {servicesData.services
+              .filter(s => s.category === 'companies' || !s.category)
+              .map((service, index) => {
+                const Icon = getIcon(service.iconName);
+                return (
+                  <ServiceCard
+                    key={`company-${index}`}
+                    service={service}
+                    Icon={Icon}
+                    index={index}
+                  />
+                )
+              })}
+          </div>
+        </div>
+
+        {/* Individual Services */}
+        <div className="pb-12 md:pb-0">
+          <motion.h3 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="font-heading text-2xl md:text-3xl text-primary font-bold mb-8 flex items-center gap-3"
+          >
+            <span className="w-8 h-1 bg-accent-terracotta rounded-full"></span>
+            Servicios para Personas y Desarrollo Profesional
+          </motion.h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-6">
+            {servicesData.services
+              .filter(s => s.category === 'individuals')
+              .map((service, index) => {
+                const Icon = getIcon(service.iconName);
+                return (
+                  <ServiceCard
+                    key={`individual-${index}`}
+                    service={service}
+                    Icon={Icon}
+                    index={index}
+                  />
+                )
+              })}
+          </div>
         </div>
       </div>
 
