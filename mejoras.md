@@ -1,84 +1,270 @@
+[17:08, 27/1/2026] Amor Mailen: 📋 FORMULARIO – POSTULACIÓN ASESOR COMERCIAL PLANES DE SALUD
+[17:09, 27/1/2026] Amor Mailen: 🔵 SECCIÓN 1 – TEXTO INTRODUCTORIO
 
-import React from 'react';
-import { SERVICES } from '../constants';
+Texto fijo arriba del formulario:
 
-const IconWrapper: React.FC<{ type: string }> = ({ type }) => {
-  const icons: Record<string, React.ReactNode> = {
-    search: <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>,
-    briefcase: <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>,
-    smile: <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
-    users: <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>,
-  };
-  return icons[type] || icons['briefcase'];
-};
+Postulación – Asesor Comercial | Planes de Salud
 
-const Services: React.FC = () => {
-  return (
-    <section id="servicios" className="py-32 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-8">
-          <div className="max-w-2xl">
-            <span className="font-cta text-brand-terracotta text-xs uppercase tracking-[0.5em] font-bold mb-6 block">Nuestra Experiencia</span>
-            <h2 className="font-display text-5xl md:text-7xl text-brand-green leading-tight">
-              Soluciones <span className="italic text-brand-wine">Integrales</span> de RRHH
-            </h2>
-          </div>
-          <p className="font-body text-brand-gray text-lg max-w-sm md:text-right border-r-2 border-brand-peach/30 pr-6">
-            Estrategias personalizadas para el crecimiento sostenible de su organización.
-          </p>
-        </div>
+Gracias por tu interés en esta oportunidad.
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-12">
-          {SERVICES.map((service, index) => {
-            // Estilos alternados para crear el efecto de mosaico asimétrico
-            const isEven = index % 2 === 0;
-            const isThird = (index + 1) % 3 === 0;
-            
-            return (
-              <div 
-                key={service.id} 
-                className={`
-                  relative p-12 transition-all duration-1000 group
-                  ${index % 3 === 0 ? 'bg-brand-cream rounded-tr-[120px] rounded-bl-[120px] hover:rounded-tr-[40px] hover:rounded-bl-[40px]' : ''}
-                  ${index % 3 === 1 ? 'bg-brand-green text-white rounded-tl-[120px] rounded-br-[120px] hover:rounded-tl-[40px] hover:rounded-br-[40px] md:translate-y-12' : ''}
-                  ${index % 3 === 2 ? 'bg-brand-wine text-white rounded-tr-[120px] rounded-bl-[120px] hover:rounded-tr-[40px] hover:rounded-bl-[40px] lg:translate-y-24' : ''}
-                `}
-              >
-                <div className={`
-                  mb-10 transition-transform duration-700 group-hover:-translate-y-2 group-hover:scale-110
-                  ${index % 3 === 0 ? 'text-brand-green' : 'text-brand-peach'}
-                `}>
-                  <IconWrapper type={service.icon} />
-                </div>
+A través de este formulario buscamos conocer tu perfil, tu experiencia comercial y validar si estás alineado/a con la modalidad de trabajo y contratación.
 
-                <h3 className="font-display text-2xl md:text-3xl mb-6 leading-snug">
-                  {service.title}
-                </h3>
+La información será utilizada únicamente con fines de evaluación para procesos de selección.
 
-                <p className={`
-                  font-body text-sm md:text-base leading-relaxed opacity-90
-                  ${index % 3 === 0 ? 'text-brand-gray' : 'text-white/80'}
-                `}>
-                  {service.description}
-                </p>
+Completá todos los campos con datos reales y actualizados.
+[17:10, 27/1/2026] Amor Mailen: 🔵 SECCIÓN 2 – DATOS PERSONALES
 
-                {/* Marca de agua decorativa con el número del servicio */}
-                <span className={`
-                  absolute bottom-8 right-12 font-display text-6xl opacity-5 transition-opacity group-hover:opacity-10
-                  ${index % 3 === 0 ? 'text-brand-green' : 'text-white'}
-                `}>
-                  0{index + 1}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+Apellido
+➡️ Respuesta corta – obligatorio
 
-      {/* Elementos decorativos de fondo para romper la monotonía */}
-      <div className="absolute top-0 right-0 w-1/3 h-full bg-brand-cream/20 -z-10 skew-x-12 transform origin-top" />
-    </section>
-  );
-};
+Nombre
+➡️ Respuesta corta – obligatorio
 
-export default Services;
+Edad
+➡️ Respuesta corta – obligatorio
+
+Teléfono con WhatsApp
+➡️ Respuesta corta – obligatorio
+
+Correo electrónico
+➡️ Respuesta corta – obligatorio
+
+Perfil de LinkedIn (si tenés)
+➡️ Respuesta corta – opcional
+[17:16, 27/1/2026] Amor Mailen: 🔵 SECCIÓN 3 – UBICACIÓN Y DOCUMENTACIÓN
+
+País de residencia actual
+➡️ Respuesta corta – obligatorio
+
+Provincia
+➡️ Respuesta corta – obligatorio
+
+Ciudad
+➡️ Respuesta corta – obligatorio
+
+En caso de ser extranjero/a: ¿contás con residencia habilitante en Argentina y CUIL?
+➡️ Opción múltiple – obligatorio
+
+No aplica (soy argentino/a)
+
+Sí, tengo documentación vigente
+
+No
+[17:17, 27/1/2026] Amor Mailen: 🔵 SECCIÓN 4 – FORMACIÓN
+
+Nivel educativo más alto alcanzado
+➡️ Desplegable – obligatorio
+
+Secundario incompleto
+
+Secundario completo
+
+Terciario en curso
+
+Terciario completo
+
+Universitario en curso
+
+Universitario completo
+
+👉 Condicional si selecciona Secundario completo:
+
+En relación al nivel secundario, ¿cuál es tu situación actual?
+➡️ Opción múltiple – obligatorio
+
+Tengo todas las materias aprobadas
+
+Tengo materias pendientes
+
+Cuento con analítico / título en trámite
+
+
+Área de formación principal
+➡️ Desplegable – obligatorio
+
+Comercial / Ventas
+
+Marketing
+
+Negocios
+
+Gestión
+
+Marketing de servicios de salud
+
+APM
+
+Otra
+
+Carrera cursada o en curso
+➡️ Respuesta corta
+[17:19, 27/1/2026] Amor Mailen: 🔵 SECCIÓN 5 – EXPERIENCIA COMERCIAL
+
+¿Cuántos años de experiencia tenés en ventas?
+➡️ Desplegable – obligatorio
+
+Menos de 2 años
+
+2–3 años
+
+3–4 años
+
+Más de 4 años
+
+¿Tenés experiencia en venta de planes de salud / medicina prepaga u obras sociales?
+➡️ Opción múltiple – obligatorio
+
+Sí
+
+No
+
+👉 Condicional si responde Sí:
+
+Contanos brevemente dónde y qué vendías.
+➡️ Párrafo – obligatorio
+
+Además de salud, ¿en qué rubros vendiste?
+➡️ Casillas múltiples
+
+Seguros
+
+Financiera
+
+Tecnología
+
+Estética / cosmética
+
+Call center
+
+Venta consultiva
+
+Otro
+[17:40, 27/1/2026] Amor Mailen: 🔵 SECCIÓN 6 – SITUACIÓN LABORAL Y DISPONIBILIDAD
+
+¿Actualmente estás trabajando?
+➡️ Opción múltiple – obligatorio
+
+Sí
+
+No
+
+👉 Si responde “Sí”:
+
+¿En qué área o rol trabajás?
+➡️ Respuesta corta – obligatorio
+
+¿Estás buscando cambiar de trabajo en el corto plazo?
+➡️ Opción múltiple – obligatorio
+
+Sí
+
+No
+
+👉 Si responde “No”:
+
+Este rol requiere dedicación full time y no aplica como complemento laboral.
+¿Estarías dispuesto/a a evaluar un cambio si la propuesta resulta alineada a tus expectativas?
+➡️ Opción múltiple – obligatorio
+
+Sí
+
+No
+
+Tal vez / dependería de la propuesta
+
+👉 Si responde “Depende la propuesta” → mostrar:
+
+¿De qué dependería que evalúes un cambio laboral?
+➡️ Párrafo – obligatorio
+
+
+¿Cuándo podrías comenzar?
+➡️ Desplegable – obligatorio
+
+Inmediato
+
+En 15 días
+
+En 1 mes
+
+En más de 2 meses
+🔵 SECCIÓN 7 – MODALIDAD Y CONDICIONES DE CONTRATACIÓN
+
+La posición es 100% remota. ¿Estás de acuerdo con esta modalidad?
+➡️ Opción múltiple – obligatorio
+
+Sí
+
+No
+
+El esquema de ingresos es 100% a comisión, sin sueldo básico, e incluye escalas comisionales desde la primera venta.
+¿Estás de acuerdo con este esquema?
+➡️ Opción múltiple – obligatorio
+
+Sí
+
+No
+
+👉 Si responde “No” → mostrar:
+
+¿Qué tipo de esquema de ingresos estás buscando actualmente?
+➡️ Respuesta corta – obligatorio
+ La modalidad de contratación es por prestación de servicios (no relación de dependencia).
+¿Estás de acuerdo con esta forma de contratación?
+➡️ Opción múltiple – obligatorio
+
+Sí
+
+No
+
+¿Contás con monotributo o estarías dispuesto/a a gestionarlo para facturar tus servicios?
+➡️ Opción múltiple – obligatorio
+
+Ya tengo
+
+Lo gestionaría
+
+No
+ 🔵 SECCIÓN 8 – REQUISITOS TÉCNICOS
+
+¿Contás con PC propia para trabajar?
+➡️ Opción múltiple – obligatorio
+
+Sí
+
+No
+
+¿Tenés conexión estable a internet?
+➡️ Opción múltiple – obligatorio
+
+Sí
+
+No
+ 🔵 SECCIÓN 9 – MOTIVACIÓN
+
+¿Por qué te interesa esta oportunidad laboral?
+➡️ Párrafo – obligatorio
+
+¿Qué te atrae del rubro salud y de comercializar planes médicos?
+➡️ Párrafo – obligatorio
+ 🔵 SECCIÓN 10 – CV
+
+Adjuntá tu CV actualizado (formatos permitidos: PDF, JPG o PNG).
+➡️ Subida de archivo – obligatorio
+ 🔵 SECCIÓN 11 – CONSENTIMIENTO Y TRATAMIENTO DE DATOS
+
+Brindo mi conformidad para que mis datos personales y la información enviada en este formulario sean utilizados en procesos de reclutamiento y selección actuales o futuros.
+Autorizo a ser contactado/a para avanzar en el proceso.
+
+➡️ Casilla obligatoria ✔️
+[18:13, 27/1/2026] Amor Mailen: 🟢 MENSAJE FINAL AL ENVIAR EL FORMULARIO
+
+Texto de confirmación:
+
+¡Gracias por postularte!
+
+Recibimos tu información y CV correctamente.
+
+Nuestro equipo va a revisar tu perfil y, si se alinea con los requisitos del puesto, nos pondremos en contacto.
+
+Sabemos que completar una postulación lleva tiempo, por lo que desde Anthrovia HR valoramos tu interés y por haberte tomado ese momento para aplicar.

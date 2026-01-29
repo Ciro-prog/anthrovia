@@ -19,6 +19,20 @@ export default {
             light: '#E6C9A8', // Warm Sand
             dark: '#B47F75', // Terracota
           },
+          // Compatibility with Job Application Form
+          'verde-profundo': '#2E625A',
+          'durazno': '#C79F93',
+          'terracota': '#B47F75',
+          'vino': '#6B2A41',
+          'gris-neutro': '#8A8A8A',
+          'blanco': '#FFFFFF',
+          'crema': '#FAF8F5',
+          'golden-mustard': '#D4A74A',
+          'soft-teal': '#66B2A1',
+          'muted-sky': '#66B2A1', // Fixed mapping
+          'lavender-gray': '#BCA5D6',
+          'warm-sand': '#E6C9A8',
+          
           accent: {
             terracotta: '#B47F75',
             wine: '#6B2A41',
@@ -50,6 +64,10 @@ export default {
           cta: ['"Montserrat"', 'sans-serif'],
           sans: ['"Montserrat"', 'ui-sans-serif', 'system-ui'],
           serif: ['"Playfair Display"', 'Georgia', 'serif'],
+          // Compatibility with Job Application Form
+          'playfair': ['"Playfair Display"', 'serif'],
+          'lora': ['"Lora"', 'serif'],
+          'montserrat': ['"Montserrat"', 'sans-serif'],
         },
         borderRadius: {
             lg: "var(--radius)",

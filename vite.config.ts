@@ -10,4 +10,14 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    proxy: {
+      '/api/webhook': {
+        target: 'https://n8n.pampaservers.com/webhook',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api\/webhook/, ''),
+      }
+    }
+  }
 })

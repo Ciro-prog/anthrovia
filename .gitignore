@@ -25,3 +25,8 @@ dist-ssr
 
 # Local tool settings (ignore local-only config files)
 .claude/settings.local.json
+
+# Environment variables
+.env
+.env.*
+*.env
