@@ -558,6 +558,15 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
             {/* --- STEP 1 --- */}
             {currentStep === 1 && (
               <div className="animate-fade-in space-y-6">
+                <div className="bg-crema/30 p-6 rounded-lg mb-8 border border-durazno/20 text-center space-y-3">
+                   <p className="text-gris-neutro font-lora">Gracias por tu interés en esta oportunidad.</p>
+                   <p className="text-gris-neutro font-lora">A través de este formulario buscamos conocer tu perfil, tu experiencia comercial y validar si estás alineado/a con la modalidad de trabajo y contratación.</p>
+                   <p className="text-sm italic opacity-80 text-verde-profundo">
+                     La información será utilizada únicamente con fines de evaluación para procesos de selección.
+                     <br/>
+                     Completá todos los campos con datos reales y actualizados.
+                   </p>
+                </div>
                 <FormSection title="🔹 Datos Personales">
                    <div className="grid md:grid-cols-2 gap-4">
                       <div>

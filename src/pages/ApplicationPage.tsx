@@ -67,17 +67,7 @@ export function ApplicationPage() {
           <h1 className="font-playfair text-3xl md:text-5xl font-bold text-verde-profundo mb-6 animate-fade-in">
             Postulación – <span className="text-terracota italic">Asesor Comercial</span> | Planes de Salud
           </h1>
-          <div className="font-lora text-lg text-gris-neutro max-w-3xl mx-auto leading-relaxed animate-fade-in space-y-4">
-            <p>Gracias por tu interés en esta oportunidad.</p>
-            <p>
-              A través de este formulario buscamos conocer tu perfil, tu experiencia comercial y validar si estás alineado/a con la modalidad de trabajo y contratación.
-            </p>
-            <p className="text-sm italic opacity-80">
-              La información será utilizada únicamente con fines de evaluación para procesos de selección.
-              <br/>
-              Completá todos los campos con datos reales y actualizados.
-            </p>
-          </div>
+
         </div>
       </section>
 
