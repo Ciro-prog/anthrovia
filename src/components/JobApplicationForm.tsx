@@ -47,15 +47,7 @@ const SALES_EXP_YEARS = [
   'Más de 4 años'
 ];
 
-const OTHER_SALES_TYPES = [
-  'Seguros',
-  'Financiera',
-  'Tecnología',
-  'Estética / cosmética',
-  'Call center',
-  'Venta consultiva',
-  'Otro'
-];
+
 
 // --- Validation Schema ---
 
@@ -758,24 +750,7 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
                         </div>
                      )}
 
-                     <div>
-                        <label className="block mb-3 font-montserrat font-medium text-verde-profundo">Además de salud, ¿en qué rubros vendiste?</label>
-                        <div className="grid grid-cols-2 gap-2">
-                           {OTHER_SALES_TYPES.map(type => (
-                              <label key={type} className="flex items-center gap-2 cursor-pointer p-2 border border-durazno/10 rounded hover:bg-crema/50">
-                                 <input type="checkbox" value={type} {...register('otherSalesExperience')} className="text-verde-profundo rounded" />
-                                 <span className="font-lora text-sm">{type}</span>
-                              </label>
-                           ))}
-                        </div>
-                     </div>
 
-                     {otherSalesExperience?.includes('Otro') && (
-                        <div className="animate-fade-in">
-                           <input {...register('otherSalesExperienceOther')} placeholder="Especificar otro rubro" className="w-full px-4 py-3 rounded-lg border border-durazno/30 bg-crema/50" />
-                           {errors.otherSalesExperienceOther && <p className="text-vino text-xs mt-1">{errors.otherSalesExperienceOther.message as string}</p>}
-                        </div>
-                     )}
                   </FormSection>
 
                   <FormSection title="🔹 Situación Laboral y Disponibilidad">
