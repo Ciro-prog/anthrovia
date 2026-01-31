@@ -232,6 +232,8 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
      reset,
      setValue,
      clearErrors,
+     getValues,
+     setError,
      formState: { errors, touchedFields }
   } = useForm<any>({
     resolver: zodResolver(formSchema),
@@ -254,7 +256,55 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
     if (currentStep === 2) fieldsToValidate = STEP_2_FIELDS;
 
     const isStepValid = await trigger(fieldsToValidate);
-    if (isStepValid) {
+    
+    // Manual validation for dependent fields (Zod superRefine doesn't run on partial trigger)
+    const data = getValues();
+    let isCustomValid = true;
+
+    if (currentStep === 1) {
+        if (data.educationLevel === 'Secundario completo' && !data.secondaryStatus) {
+            setError('secondaryStatus', { type: 'custom', message: 'Indica tu situación del secundario' });
+            isCustomValid = false;
+        }
+        if ((data.country !== 'Argentina') && (data.city === 'Otros' || data.city === 'Otro') && !data.cityOther) {
+             // Logic in superRefine was generic for city, but let's stick to what we see in UI logic
+             setError('cityOther', { type: 'custom', message: 'Especifique su ciudad' });
+             isCustomValid = false;
+        }
+        // Note: superRefine for cityOther didn't check country, but logic suggests it applies generally if city is 'Otros'
+    }
+
+    if (currentStep === 2) {
+        // Validation for "Contanos brevemente dónde y qué vendías"
+        if (data.healthSalesExperience === 'si' && !data.healthSalesExperienceDesc) {
+            setError('healthSalesExperienceDesc', { type: 'custom', message: 'Contanos brevemente dónde y qué vendías' });
+            isCustomValid = false;
+        }
+
+        if (data.isWorking === 'si') {
+             // Validation for "¿En qué área o rol trabajás?"
+             if (!data.currentRole) {
+                 setError('currentRole', { type: 'custom', message: 'Indica tu rol actual' });
+                 isCustomValid = false;
+             }
+             if (!data.lookingForChange) {
+                 setError('lookingForChange', { type: 'custom', message: 'Indica si buscas cambio' });
+                 isCustomValid = false;
+             }
+             if (data.lookingForChange === 'no') {
+                 if (!data.willingToChange) {
+                     setError('willingToChange', { type: 'custom', message: 'Selecciona una opción' });
+                     isCustomValid = false;
+                 }
+                 if (data.willingToChange === 'depende' && !data.changeCondition) {
+                     setError('changeCondition', { type: 'custom', message: 'Indica de qué dependería' });
+                     isCustomValid = false;
+                 }
+             }
+        }
+    }
+
+    if (isStepValid && isCustomValid) {
       setCurrentStep(prev => Math.min(prev + 1, totalSteps));
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -660,7 +710,7 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
 
 
                    <div>
-                      <label className="block mb-2 font-montserrat font-medium text-verde-profundo">Carrera cursada o cursos</label>
+                      <label className="block mb-2 font-montserrat font-medium text-verde-profundo">Carrera o cursos</label>
                       <input {...register('careerRun')} className="w-full px-4 py-3 rounded-lg border border-durazno/30 bg-crema/50" />
                    </div>
                 </FormSection>

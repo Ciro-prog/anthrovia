@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/webhook/(.*)",
+      "destination": "https://n8n.pampaservers.com/webhook/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
