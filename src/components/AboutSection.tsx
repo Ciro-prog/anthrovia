@@ -65,7 +65,7 @@ export const AboutSection = () => {
             transition={{ duration: 0.8 }}
           >
             <img
-              src="/founder3.jpeg"
+              src="/founder3.png"
               alt="Betsabé Sánchez - Fundadora Anthrovia HR"
               className="w-full h-full object-cover"
             />
