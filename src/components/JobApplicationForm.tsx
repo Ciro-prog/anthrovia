@@ -30,15 +30,7 @@ const EDUCATION_LEVELS = [
   'Universitario completo'
 ];
 
-const STUDY_AREAS = [
-  'Comercial / Ventas',
-  'Marketing',
-  'Negocios',
-  'Gestión',
-  'Marketing de servicios de salud',
-  'APM',
-  'Otra'
-];
+
 
 const SALES_EXP_YEARS = [
   'Menos de 2 años',
@@ -74,16 +66,14 @@ const formSchema = z.object({
   // Sección 4: Formación
   educationLevel: z.string().min(1, 'Selecciona tu nivel educativo'),
   secondaryStatus: z.enum(['aprobadas', 'pendientes', 'en_tramite']).optional(),
-  studyArea: z.string().min(1, 'Selecciona tu área de formación'),
-  studyAreaOther: z.string().optional(),
+
   careerRun: z.string().optional(),
 
   // Sección 5: Experiencia Comercial
   salesExperienceYears: z.string().min(1, 'Selecciona tus años de experiencia'),
   healthSalesExperience: z.enum(['si', 'no']),
   healthSalesExperienceDesc: z.string().optional(),
-  otherSalesExperience: z.array(z.string()).optional(),
-  otherSalesExperienceOther: z.string().optional(),
+
 
   // Sección 6: Situación Laboral y Disponibilidad
   isWorking: z.enum(['si', 'no']),
@@ -130,13 +120,7 @@ const formSchema = z.object({
       path: ['secondaryStatus']
     });
   }
-  if (data.studyArea === 'Otra' && !data.studyAreaOther) {
-    ctx.addIssue({
-       code: z.ZodIssueCode.custom,
-       message: 'Especifica el área',
-       path: ['studyAreaOther']
-    });
-  }
+
 
   // Logic for City Other
   if ((data.city === 'Otros' || data.city === 'Otro') && !data.cityOther) {
@@ -155,13 +139,7 @@ const formSchema = z.object({
       path: ['healthSalesExperienceDesc']
     });
   }
-  if (data.otherSalesExperience?.includes('Otro') && !data.otherSalesExperienceOther) {
-     ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Especifica el otro rubro',
-        path: ['otherSalesExperienceOther']
-     });
-  }
+
 
   // Logic for Work Status
   if (data.isWorking === 'si') {
@@ -239,10 +217,10 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
   const STEP_1_FIELDS: (keyof FormData)[] = [
      'lastName', 'firstName', 'age', 'phone', 'email', 'linkedin',
      'country', 'province', 'city', 'cityOther', 'residencyStatus',
-     'educationLevel', 'secondaryStatus', 'studyArea', 'studyAreaOther', 'careerRun'
+     'educationLevel', 'secondaryStatus', 'careerRun'
   ];
   const STEP_2_FIELDS: (keyof FormData)[] = [
-     'salesExperienceYears', 'healthSalesExperience', 'healthSalesExperienceDesc', 'otherSalesExperience', 'otherSalesExperienceOther',
+     'salesExperienceYears', 'healthSalesExperience', 'healthSalesExperienceDesc',
      'isWorking', 'currentRole', 'lookingForChange', 'willingToChange', 'changeCondition', 'startDate'
   ];
 
@@ -259,7 +237,7 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
     resolver: zodResolver(formSchema),
     mode: 'onTouched', // Validate only when touched to prevent premature errors
     defaultValues: {
-      otherSalesExperience: [],
+
       consent: undefined 
     }
   });
@@ -289,9 +267,9 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
 
   // Watchers for conditional rendering
   const educationLevel = watch('educationLevel');
-  const studyArea = watch('studyArea');
+
   const healthSalesExperience = watch('healthSalesExperience');
-  const otherSalesExperience = watch('otherSalesExperience');
+
   const isWorking = watch('isWorking');
   const lookingForChange = watch('lookingForChange');
   const willingToChange = watch('willingToChange');
@@ -319,12 +297,7 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
     }
   }, [educationLevel, setValue, clearErrors]);
 
-  useEffect(() => {
-    if (studyArea !== 'Otra') {
-      setValue('studyAreaOther', '');
-      clearErrors('studyAreaOther');
-    }
-  }, [studyArea, setValue, clearErrors]);
+
 
   // Sales Experience
   useEffect(() => {
@@ -334,12 +307,7 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
     }
   }, [healthSalesExperience, setValue, clearErrors]);
 
-  useEffect(() => {
-    if (!otherSalesExperience?.includes('Otro')) {
-      setValue('otherSalesExperienceOther', '');
-      clearErrors('otherSalesExperienceOther');
-    }
-  }, [otherSalesExperience, setValue, clearErrors]);
+
 
   // Work Status
   useEffect(() => {
@@ -425,9 +393,8 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
       const ALL_FIELDS: (keyof FormData)[] = [
         'lastName', 'firstName', 'age', 'phone', 'email', 'linkedin',
         'country', 'province', 'city', 'residencyStatus',
-        'educationLevel', 'secondaryStatus', 'studyArea', 'studyAreaOther', 'careerRun',
-        'salesExperienceYears', 'healthSalesExperience', 'healthSalesExperienceDesc', 
-        'otherSalesExperience', 'otherSalesExperienceOther',
+        'educationLevel', 'secondaryStatus', 'careerRun',
+        'salesExperienceYears', 'healthSalesExperience', 'healthSalesExperienceDesc',
         'isWorking', 'currentRole', 'lookingForChange', 'willingToChange', 'changeCondition', 'startDate',
         'remoteWorkAgreement', 'commissionSchemeAgreement', 'desiredIncomeScheme', 
         'contractTypeAgreement', 'monotributo',
@@ -690,24 +657,10 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
                      </div>
                    )}
 
-                   <div>
-                      <label className="block mb-2 font-montserrat font-medium text-verde-profundo">Área de formación principal *</label>
-                      <select {...register('studyArea')} className="w-full px-4 py-3 rounded-lg border border-durazno/30 bg-crema/50">
-                         <option value="">Seleccionar...</option>
-                         {STUDY_AREAS.map(a => <option key={a} value={a}>{a}</option>)}
-                      </select>
-                      {errors.studyArea && <p className="text-vino text-xs mt-1">{errors.studyArea.message as string}</p>}
-                   </div>
 
-                   {studyArea === 'Otra' && (
-                      <div className="animate-fade-in">
-                         <input {...register('studyAreaOther')} placeholder="Especificar área" className="w-full px-4 py-3 rounded-lg border border-durazno/30 bg-crema/50" />
-                         {errors.studyAreaOther && <p className="text-vino text-xs mt-1">{errors.studyAreaOther.message as string}</p>}
-                      </div>
-                   )}
 
                    <div>
-                      <label className="block mb-2 font-montserrat font-medium text-verde-profundo">Carrera cursada o en curso</label>
+                      <label className="block mb-2 font-montserrat font-medium text-verde-profundo">Carrera cursada o cursos</label>
                       <input {...register('careerRun')} className="w-full px-4 py-3 rounded-lg border border-durazno/30 bg-crema/50" />
                    </div>
                 </FormSection>
@@ -1012,7 +965,7 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 px-6 py-3 rounded-xl bg-naranja text-blanco font-semibold hover:bg-naranja/90 hover:shadow-lg hover:shadow-naranja/20 transition-all duration-300 flex items-center justify-center gap-2 transform hover:-translate-y-1 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ml-auto"
+                  className="flex-1 px-6 py-3 rounded-xl bg-terracota text-blanco font-semibold hover:bg-terracota/90 hover:shadow-lg hover:shadow-terracota/20 transition-all duration-300 flex items-center justify-center gap-2 transform hover:-translate-y-1 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ml-auto"
                 >
                   {isSubmitting ? (
                     <>
