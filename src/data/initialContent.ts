@@ -41,28 +41,28 @@ export const initialContent: SiteContent = {
         },
         {
           iconName: "Rocket",
-          title: "Onboarding, Coaching y Acompañamiento Post-Ingreso",
+          title: "Onboarding y Desarrollo Ejecutivo",
           description: "Implementamos procesos estructurados de integración y seguimiento durante los primeros meses, combinando onboarding, diagnóstico temprano y sesiones de coaching profesional para fortalecer desempeño, actitud, adaptación cultural y retención.",
           color: "from-accent-teal to-primary-light",
           category: "companies"
         },
         {
           iconName: "BarChart3",
-          title: "Diagnóstico Organizacional y Optimización de RRHH",
+          title: "Diagnóstico Organizacional y RRHH Estratégico",
           description: "Analizamos y rediseñamos procesos clave del área con foco en eficiencia, experiencia del colaborador y toma de decisiones basada en datos. Incluye revisión de indicadores, People Analytics aplicado, diseño de flujos de trabajo y mejora continua.",
           color: "from-primary-light to-accent-rose",
           category: "companies"
         },
         {
           iconName: "Smile",
-          title: "Cultura, Experiencia y Bienestar",
+          title: "Cultura y Experiencia del Colaborador",
           description: "Diseñamos programas que fortalecen el compromiso y la motivación, integrando acciones de reconocimiento, bienestar integral y salario emocional alineados a cada organización.",
           color: "from-accent-rose to-accent-burgundy",
           category: "companies"
         },
         {
           iconName: "Briefcase",
-          title: "Servicios Laborales y Administración",
+          title: "Gestión Laboral y Administración",
           description: "Brindamos soluciones complementarias a través de partners especializados en asesoría legal laboral, compensaciones y beneficios, administración de nómina y soporte operativo en gestión de personal.",
           color: "from-accent-burgundy to-accent-teal",
           category: "companies"
@@ -77,7 +77,7 @@ export const initialContent: SiteContent = {
         },
         {
           iconName: "TrendingUp",
-          title: "Orientación y Proyección de Carrera",
+          title: "Proyección y Desarrollo Profesional",
           description: "Espacios de análisis y conversación para clarificar objetivos, explorar oportunidades, redefinir el rumbo profesional y construir planes de desarrollo concretos y accionables.",
           color: "from-accent-teal to-primary",
           category: "individuals"
@@ -350,11 +350,18 @@ A pesar del avance tecnológico, el reporte de tendencias 2026 subraya un riesgo
         },
         {
           id: "5",
-          imageUrl: "/webinar.png",
-          description: "👉 Lanzamos nuestro webinar gratuito: Gestión del estrés laboral.",
-          postUrl: "https://www.instagram.com/p/DS5E_6YDUY6/?utm_source=ig_web_button_share_sheet&igsh=MzRlODBiNWFlZA==",
+          imageUrl: "/elviaje.png",
+          description: "El viaje del talento es un recorrido clave para construir organizaciones sólidas, humanas y sostenibles.",
+          postUrl: "https://www.instagram.com/p/DUD26czDUe1/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
           platform: "instagram"
         },
+        {
+          id: "6",
+          imageUrl: "/costo.jpg",
+          description: "⚠️ El costo de no invertir en RRHH no siempre se ve en números… pero sí en lo cotidiano.",
+          postUrl: "https://www.instagram.com/p/DT20otzgTzo/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+          platform: "instagram"
+        }
       ]
     },
     {

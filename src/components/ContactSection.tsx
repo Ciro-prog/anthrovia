@@ -153,12 +153,13 @@ export const ContactSection = () => {
                         required
                         >
                         <option value="">Selecciona un servicio</option>
-                        <option value="Consultoría de RRHH">Consultoría de RRHH</option>
-                        <option value="Reclutamiento y Selección">Reclutamiento y Selección</option>
-                        <option value="Desarrollo Organizacional">Desarrollo Organizacional</option>
-                        <option value="Capacitación y Formación">Capacitación y Formación</option>
-                        <option value="Clima Laboral">Clima Laboral</option>
-                        <option value="Evaluación de Desempeño">Evaluación de Desempeño</option>
+                        <option value="Atracción de Talento y Selección Estratégica">Atracción de Talento y Selección Estratégica</option>
+                        <option value="Onboarding y Desarrollo Ejecutivo">Onboarding y Desarrollo Ejecutivo</option>
+                        <option value="Diagnóstico Organizacional y RRHH Estratégico">Diagnóstico Organizacional y RRHH Estratégico</option>
+                        <option value="Cultura y Experiencia del Colaborador">Cultura y Experiencia del Colaborador</option>
+                        <option value="Gestión Laboral y Administración">Gestión Laboral y Administración</option>
+                        <option value="Career Coaching y Empleabilidad">Career Coaching y Empleabilidad</option>
+                        <option value="Proyección y Desarrollo Profesional">Proyección y Desarrollo Profesional</option>
                         </select>
                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
                              <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
