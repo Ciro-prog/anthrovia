@@ -22,22 +22,18 @@ export function ApplicationPage() {
       <div className="fixed inset-0 bg-crema/90 z-0 pointer-events-none" />
 
       {/* Header */}
-      <header className="relative z-50 bg-blanco/90 backdrop-blur-md border-b border-durazno/10 sticky top-0 transition-all duration-300">
-        <div className="container mx-auto px-6 h-20 flex justify-between items-center">
+      <header className="bg-white shadow-md sticky top-0 z-50">
+        <div className="container mx-auto px-4 h-20 flex justify-between items-center">
           {/* Logo */}
-          <a 
-            href="/" 
-            className="flex items-center gap-2 group"
-          >
-             {/* Placeholder for logo if image fails loading */}
-             <div className="h-10 w-auto">
-                <img
-                  src="/logo.png"
-                  alt="Anthrovia HR"
-                  className="h-full w-auto object-contain transition-transform group-hover:scale-105 duration-300"
-                />
-             </div>
-          </a>
+          <div className="flex items-center">
+            <a href="/" className="flex items-center space-x-2">
+              <img
+                src="/logo.png"
+                alt="Anthrovia HR"
+                className="h-48 w-auto"
+              />
+            </a>
+          </div>
 
           {/* Back link */}
           <a 
