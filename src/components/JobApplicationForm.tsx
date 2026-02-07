@@ -99,10 +99,9 @@ const formSchema = z.object({
     
   hasInternet: z.string().refine(val => val === 'si' || val === 'no', { message: 'Selecciona si tienes internet estable' }),
 
-  // Sección 9: Motivación
-  motivationStats: z.string().min(10, 'Cuéntanos por qué te interesa esta oportunidad'),
-
-  motivationHealth: z.string().min(10, 'Cuéntanos qué te atrae del rubro salud'),
+  // Sección 9: Motivación (REMOVED from UI, keeping commented for reference or fully removing)
+  // motivationStats: z.string().min(10, 'Cuéntanos por qué te interesa esta oportunidad'),
+  // motivationHealth: z.string().min(10, 'Cuéntanos qué te atrae del rubro salud'),
 
   // Sección 10: CV (handled via state/file input, validated manually on submit)
   
@@ -449,7 +448,7 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
         'remoteWorkAgreement', 'commissionSchemeAgreement', 'desiredIncomeScheme', 
         'contractTypeAgreement', 'monotributo',
         'hasPC', 'hasInternet',
-        'motivationStats', 'motivationHealth',
+        // 'motivationStats', 'motivationHealth', // Removed from automatic loop
         'consent'
       ];
 
@@ -469,6 +468,10 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
            formData.append(key, value !== undefined && value !== null ? String(value) : '');
         }
       });
+
+      // Manually append removed fields as empty strings for backward compatibility
+      formData.append('motivationStats', '');
+      formData.append('motivationHealth', '');
 
       formData.append('cv', file);
       formData.append('submittedAt', new Date().toISOString());
@@ -944,20 +947,7 @@ export default function JobApplicationForm({ webhookUrl = '' }: JobApplicationFo
                       </div>
                   </FormSection>
 
-                  <FormSection title="🔹 Motivación">
-                     <div className="space-y-4">
-                        <div>
-                           <label className="block mb-2 font-montserrat font-medium text-verde-profundo">¿Por qué te interesa esta oportunidad laboral? *</label>
-                           <textarea {...register('motivationStats')} rows={3} className="w-full px-4 py-3 rounded-lg border border-durazno/30 bg-crema/50" />
-                           {errors.motivationStats && <p className="text-vino text-xs mt-1">{errors.motivationStats.message as string}</p>}
-                        </div>
-                        <div>
-                           <label className="block mb-2 font-montserrat font-medium text-verde-profundo">¿Qué te atrae del rubro salud y de comercializar planes médicos? *</label>
-                           <textarea {...register('motivationHealth')} rows={3} className="w-full px-4 py-3 rounded-lg border border-durazno/30 bg-crema/50" />
-                           {errors.motivationHealth && <p className="text-vino text-xs mt-1">{errors.motivationHealth.message as string}</p>}
-                        </div>
-                     </div>
-                  </FormSection>
+
 
                   <FormSection title="🔹 CV y Consentimiento">
                     <div className="space-y-6">
