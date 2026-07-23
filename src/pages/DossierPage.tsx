@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { DOSSIER_CATEGORIES, ModuleItem } from '../data/dossierData';
+import { DOSSIER_CATEGORIES } from '../data/dossierData';
 
 export default function DossierPage() {
   // Store the active module ID for each of the 5 categories
