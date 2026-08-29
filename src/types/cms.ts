@@ -323,6 +323,17 @@ export type CourseBlock =
       items: CourseFaqItem[];
     }
   | {
+      type: 'pricing';
+      title: string;
+      body?: string;
+      priceLabel: string;
+      priceAmount: string;
+      strikethrough?: string;
+      badge?: string;
+      items?: { title: string; description: string; valueLabel?: string }[];
+      buttons?: CourseBlockButton[];
+    }
+  | {
       type: 'scheduleCta';
       title: string;
       body: string;

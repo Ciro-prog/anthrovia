@@ -412,6 +412,54 @@ export function CourseScheduleCta({ block }: { block: Extract<CourseBlock, { typ
   )
 }
 
+export function CoursePricing({ block }: { block: Extract<CourseBlock, { type: "pricing" }> }) {
+  return (
+    <section className="w-full py-16 md:py-24 lg:py-section-gap bg-surface-container-low">
+      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col gap-12">
+        <div className="max-w-3xl">
+          <h2 className="font-heading text-headline-md text-on-surface mb-4">{block.title}</h2>
+          {block.body && <p className="font-body text-body-lg text-on-surface-variant">{block.body}</p>}
+        </div>
+
+        {block.items && block.items.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {block.items.map((item) => (
+              <div
+                key={item.title}
+                className="bg-surface p-6 md:p-8 rounded-2xl shadow-soft border border-outline-variant/20 flex flex-col gap-3"
+              >
+                <h3 className="font-label-md text-label-md text-on-surface uppercase tracking-wider">{item.title}</h3>
+                <p className="font-body text-body-md text-on-surface-variant flex-grow">{item.description}</p>
+                {item.valueLabel && (
+                  <p className="font-label-md text-sm text-on-surface mt-auto pt-4 border-t border-outline-variant/20">
+                    {item.valueLabel}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="bg-primary text-on-primary rounded-3xl p-8 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-8 relative overflow-hidden">
+          {block.badge && (
+            <span className="absolute top-4 right-4 md:top-6 md:right-6 bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-xs uppercase tracking-wider">
+              {block.badge}
+            </span>
+          )}
+          <div className="flex flex-col gap-2 max-w-xl">
+            <p className="font-label-md text-label-md text-primary-fixed uppercase tracking-widest">{block.priceLabel}</p>
+            <p className="font-heading text-headline-lg-mobile md:text-headline-lg text-white">{block.priceAmount}</p>
+            {block.strikethrough && (
+              <p className="font-body text-body-md text-primary-fixed-dim/80 line-through">{block.strikethrough}</p>
+            )}
+          </div>
+          {block.buttons && <CourseButtons buttons={block.buttons} />}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export function CourseBlockRenderer({ blocks }: { blocks: CourseBlock[] }) {
   return (
     <>
@@ -436,6 +484,8 @@ export function CourseBlockRenderer({ blocks }: { blocks: CourseBlock[] }) {
             return <CourseInstructors key={key} block={block} />
           case "faq":
             return <CourseFaq key={key} block={block} />
+          case "pricing":
+            return <CoursePricing key={key} block={block} />
           case "scheduleCta":
             return <CourseScheduleCta key={key} block={block} />
           default:
