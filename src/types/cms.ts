@@ -264,18 +264,134 @@ export type CourseBlock =
   | {
       type: 'hero';
       title: string;
+      /** Substring of title rendered in italic primary */
+      titleItalic?: string;
       paragraphs?: string[];
       highlight?: string;
       imageUrl?: string;
       logoUrl?: string;
+      /** editorial = left-aligned Stitch hero; centered = default */
+      layout?: 'editorial' | 'centered';
+      checks?: string[];
       buttons?: CourseBlockButton[];
     }
   | {
       type: 'richText';
       eyebrow?: string;
       title: string;
+      titleItalic?: string;
       body: string;
+      paragraphs?: string[];
       background?: 'surface' | 'low' | 'container';
+      align?: 'left' | 'center';
+    }
+  | {
+      type: 'contextSplit';
+      title: string;
+      titleItalic?: string;
+      paragraphs: string[];
+      formulaLabel?: string;
+      formulaItems?: { iconName: string; label: string }[];
+      closing?: string;
+      imageUrl: string;
+    }
+  | {
+      type: 'beforeAfter';
+      title: string;
+      body?: string;
+      before: { title: string; items: string[] };
+      after: { title: string; items: string[] };
+    }
+  | {
+      type: 'triad';
+      title: string;
+      items: { title: string; body: string; featured?: boolean }[];
+    }
+  | {
+      type: 'desireFear';
+      title: string;
+      desire: { title: string; items: string[] };
+      fear: { title: string; items: string[] };
+    }
+  | {
+      type: 'pathway';
+      eyebrow: string;
+      intro: string[];
+      forYouLabel?: string;
+      forYou?: string[];
+      note?: string;
+      stepsTitle: string;
+      stepsTitleItalic?: string;
+      aside?: string;
+      steps: {
+        title: string;
+        paragraphs: string[];
+        result: string;
+        imageUrl: string;
+        imageFirst?: boolean;
+        highlight?: boolean;
+      }[];
+    }
+  | {
+      type: 'toolsSplit';
+      title: string;
+      categories: { title: string; tools: string }[];
+      paragraphs: string[];
+      imageUrl: string;
+    }
+  | {
+      type: 'philosophy';
+      title: string;
+      paragraphs: string[];
+      emphasis?: string;
+      paragraphsAfter?: string[];
+    }
+  | {
+      type: 'testimonials';
+      title: string;
+      items: { quote: string; author: string }[];
+    }
+  | {
+      type: 'teacherBand';
+      title: string;
+      lead?: string;
+      name: string;
+      role: string;
+      experienceLabel?: string;
+      experience?: string[];
+      paragraphs?: string[];
+      emphasis?: string;
+      imageUrl: string;
+    }
+  | {
+      type: 'investmentCard';
+      title: string;
+      badge?: string;
+      inclusions: string[];
+      priceOld?: string;
+      priceNew: string;
+      discountBadge?: string;
+    }
+  | {
+      type: 'bonuses';
+      title: string;
+      items: {
+        label: string;
+        title: string;
+        description: string;
+        valueLabel: string;
+        featured?: boolean;
+      }[];
+      footer: string;
+    }
+  | {
+      type: 'closingCta';
+      title: string;
+      titleItalic?: string;
+      primary: CourseBlockButton;
+      doubtTitle?: string;
+      doubtBody?: string;
+      secondary?: CourseBlockButton;
     }
   | {
       type: 'twoColumn';
