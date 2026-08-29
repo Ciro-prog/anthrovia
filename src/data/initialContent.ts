@@ -104,7 +104,7 @@ export const initialContent: SiteContent = {
             "Funcionalidades potenciadas con Inteligencia Artificial."
           ],
           ctaText: "Conocer la plataforma",
-          ctaLink: "/?service=HR%20Tech#contacto"
+          ctaLink: "/dossier"
         }
       ]
     },
