@@ -1,80 +1,180 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-    darkMode: ["class"],
-    content: [
-      "./index.html",
-      "./src/**/*.{js,ts,jsx,tsx}",
-    ],
-    theme: {
-      extend: {
-        colors: {
-          // Anthrovia HR Brand Colors (from datos.md)
-          primary: {
-            DEFAULT: '#2E625A', // Verde Profundo
-            light: '#66B2A1', // Soft Teal
-            dark: '#2E625A', // Base
+  darkMode: ["class"],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // Ethos & Talent design system
+        background: "#fcf9f8",
+        surface: {
+          DEFAULT: "#fcf9f8",
+          dim: "#dcd9d9",
+          bright: "#fcf9f8",
+          variant: "#e4e2e1",
+          container: {
+            DEFAULT: "#f0eded",
+            lowest: "#ffffff",
+            low: "#f6f3f2",
+            high: "#eae7e7",
+            highest: "#e4e2e1",
           },
-          secondary: {
-            DEFAULT: '#C79F93', // Durazno Suave
-            light: '#E6C9A8', // Warm Sand
-            dark: '#B47F75', // Terracota
-          },
-          // Compatibility with Job Application Form
-          'verde-profundo': '#2E625A',
-          'durazno': '#C79F93',
-          'terracota': '#B47F75',
-          'vino': '#6B2A41',
-          'gris-neutro': '#8A8A8A',
-          'blanco': '#FFFFFF',
-          'crema': '#FAF8F5',
-          'golden-mustard': '#D4A74A',
-          'soft-teal': '#66B2A1',
-          'muted-sky': '#66B2A1', // Fixed mapping
-          'lavender-gray': '#BCA5D6',
-          'warm-sand': '#E6C9A8',
-          
-          accent: {
-            terracotta: '#B47F75',
-            wine: '#6B2A41',
-            gold: '#D4A74A',
-            blue: '#6EA8D8',
-            lavender: '#BCA5D6',
-          },
-          neutral: {
-            white: '#FFFFFF',
-            cream: '#E9E4DB',
-            gray: '#8A8A8A',
-          },
-          // Legacy support mappings
-          brand: {
-            dark: '#6B2A41',
-            medium: '#B47F75',
-            light: '#C79F93',
-            teal: '#2E625A',
-            gradient: {
-                start: '#2E625A',
-                middle: '#B47F75',
-                end: '#C79F93',
-              }
-          }
         },
-        fontFamily: {
-          heading: ['"Playfair Display"', 'serif'],
-          body: ['"Lora"', 'serif'],
-          cta: ['"Montserrat"', 'sans-serif'],
-          sans: ['"Montserrat"', 'ui-sans-serif', 'system-ui'],
-          serif: ['"Playfair Display"', 'Georgia', 'serif'],
-          // Compatibility with Job Application Form
-          'playfair': ['"Playfair Display"', 'serif'],
-          'lora': ['"Lora"', 'serif'],
-          'montserrat': ['"Montserrat"', 'sans-serif'],
+        "on-surface": {
+          DEFAULT: "#1b1c1c",
+          variant: "#404848",
         },
-        borderRadius: {
-            lg: "var(--radius)",
-            md: "calc(var(--radius) - 2px)",
-            sm: "calc(var(--radius) - 4px)",
+        primary: {
+          DEFAULT: "#003737",
+          foreground: "#ffffff",
+          container: "#1d4e4e",
+          fixed: "#bbeceb",
+          "fixed-dim": "#9fcfcf",
+          light: "#66B2A1",
+          dark: "#003737",
+        },
+        "on-primary": {
+          DEFAULT: "#ffffff",
+          container: "#8ebebd",
+          fixed: "#002020",
+          "fixed-variant": "#1d4e4e",
+        },
+        secondary: {
+          DEFAULT: "#6b5c4c",
+          foreground: "#ffffff",
+          container: "#f4dfcb",
+          fixed: "#f4dfcb",
+          "fixed-dim": "#d7c3b0",
+          light: "#E6C9A8",
+          dark: "#B47F75",
+        },
+        "on-secondary": {
+          DEFAULT: "#ffffff",
+          container: "#716252",
+          fixed: "#241a0e",
+          "fixed-variant": "#524436",
+        },
+        destructive: {
+          DEFAULT: "#ba1a1a",
+          foreground: "#ffffff",
+        },
+        muted: {
+          DEFAULT: "#f6f3f2",
+          foreground: "#404848",
+        },
+        accent: {
+          DEFAULT: "#f6f3f2",
+          foreground: "#1b1c1c",
+          terracotta: "#B47F75",
+          wine: "#6B2A41",
+          gold: "#D4A74A",
+          blue: "#6EA8D8",
+          lavender: "#BCA5D6",
+          teal: "#1d4e4e",
+          rose: "#C79F93",
+          burgundy: "#6B2A41",
+        },
+        input: "#c0c8c7",
+        ring: "#1d4e4e",
+        card: {
+          DEFAULT: "#ffffff",
+          foreground: "#1b1c1c",
+        },
+        popover: {
+          DEFAULT: "#ffffff",
+          foreground: "#1b1c1c",
+        },
+        outline: {
+          DEFAULT: "#707978",
+          variant: "#c0c8c7",
+        },
+        tertiary: {
+          DEFAULT: "#31312f",
+          container: "#474745",
+          fixed: "#e5e2df",
+        },
+        "inverse-surface": "#303030",
+        "inverse-on-surface": "#f3f0f0",
+        "inverse-primary": "#9fcfcf",
+
+        // Legacy aliases (postulacion / dossier)
+        "verde-profundo": "#003737",
+        durazno: "#C79F93",
+        terracota: "#B47F75",
+        vino: "#6B2A41",
+        "gris-neutro": "#8A8A8A",
+        blanco: "#FFFFFF",
+        crema: "#FAF8F5",
+        "golden-mustard": "#D4A74A",
+        "soft-teal": "#66B2A1",
+        "muted-sky": "#66B2A1",
+        "lavender-gray": "#BCA5D6",
+        "warm-sand": "#E6C9A8",
+
+        neutral: {
+          white: "#FFFFFF",
+          cream: "#E9E4DB",
+          gray: "#8A8A8A",
+        },
+        brand: {
+          dark: "#6B2A41",
+          medium: "#B47F75",
+          light: "#C79F93",
+          teal: "#003737",
+          gradient: {
+            start: "#003737",
+            middle: "#B47F75",
+            end: "#C79F93",
           },
+        },
+      },
+      fontFamily: {
+        heading: ['"Libre Caslon Text"', "Georgia", "serif"],
+        body: ['"Hanken Grotesk"', "ui-sans-serif", "system-ui", "sans-serif"],
+        label: ['"Hanken Grotesk"', "ui-sans-serif", "system-ui", "sans-serif"],
+        cta: ['"Hanken Grotesk"', "ui-sans-serif", "system-ui", "sans-serif"],
+        sans: ['"Hanken Grotesk"', "ui-sans-serif", "system-ui"],
+        serif: ['"Libre Caslon Text"', "Georgia", "serif"],
+        playfair: ['"Libre Caslon Text"', "serif"],
+        lora: ['"Hanken Grotesk"', "sans-serif"],
+        montserrat: ['"Hanken Grotesk"', "sans-serif"],
+      },
+      fontSize: {
+        "display-lg": ["64px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "400" }],
+        "headline-lg": ["48px", { lineHeight: "1.2", fontWeight: "400" }],
+        "headline-lg-mobile": ["32px", { lineHeight: "1.2", fontWeight: "400" }],
+        "headline-md": ["32px", { lineHeight: "1.3", fontWeight: "400" }],
+        "body-lg": ["20px", { lineHeight: "1.6", fontWeight: "400" }],
+        "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+        "label-md": ["14px", { lineHeight: "1.2", letterSpacing: "0.05em", fontWeight: "600" }],
+      },
+      spacing: {
+        "section-gap": "120px",
+        "margin-mobile": "20px",
+        "margin-desktop": "64px",
+        gutter: "32px",
+        unit: "8px",
+      },
+      maxWidth: {
+        "container-max": "1280px",
+      },
+      borderRadius: {
+        DEFAULT: "0.25rem",
+        sm: "0.125rem",
+        md: "0.375rem",
+        lg: "0.5rem",
+        xl: "0.75rem",
+        "2xl": "1rem",
+        "3xl": "1.5rem",
+      },
+      boxShadow: {
+        ethereal: "0 20px 40px -12px rgba(107, 92, 76, 0.2)",
+        soft: "0 4px 24px rgba(0, 0, 0, 0.04)",
       },
     },
-    plugins: [require("tailwindcss-animate")],
-  }
+  },
+  plugins: [require("tailwindcss-animate")],
+}

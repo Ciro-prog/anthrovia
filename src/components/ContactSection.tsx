@@ -2,233 +2,309 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent } from "@/components/ui/card"
 import { motion } from "framer-motion"
 import { useCMS } from "@/context/CMSContext"
-import { ContactSectionContent } from "@/types/cms"
-import { MessageCircle, Linkedin, Instagram, Link as LinkIcon, Send, ChevronRight } from "lucide-react"
+import { ContactSectionContent, ServicesSectionContent } from "@/types/cms"
+import { MessageCircle, Linkedin, Send, ArrowRight, Mail } from "lucide-react"
 
-export const ContactSection = () => {
-  const { content } = useCMS();
-  const contactData = content.sections.find(s => s.id === 'contact') as ContactSectionContent;
-  
+interface ContactSectionProps {
+  showCustomTraining?: boolean
+  serviceOptions?: string[]
+}
+
+export const ContactSection = ({
+  showCustomTraining = false,
+  serviceOptions,
+}: ContactSectionProps) => {
+  const { content } = useCMS()
+  const contactData = content.sections.find(s => s.id === 'contact') as ContactSectionContent
+  const learningServices = content.sections.find(s => s.id === 'learning-services') as ServicesSectionContent
+
+  const defaultOptions = showCustomTraining
+    ? [
+        ...(learningServices?.formaciones?.map(f => f.title) || []),
+        "Formación In Company",
+        "Capacitación a medida",
+      ]
+    : serviceOptions || [
+        "Talent Acquisition",
+        "Growth Profesional",
+        "Capacitaciones / Learning",
+        "HR Tech",
+        "Otro motivo",
+      ]
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     service: "",
     message: ""
   })
 
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash;
-      if (hash.startsWith('#contacto')) {
-        const params = new URLSearchParams(hash.split('?')[1]);
-        const serviceParam = params.get('service');
-        if (serviceParam) {
-          setFormData(prev => ({ ...prev, service: decodeURIComponent(serviceParam) }));
-        }
+    const applyServiceFromUrl = () => {
+      const searchParams = new URLSearchParams(window.location.search)
+      let serviceParam = searchParams.get("service")
+
+      const hash = window.location.hash
+      if (!serviceParam && hash.startsWith("#contacto")) {
+        const hashQuery = hash.includes("?") ? hash.split("?")[1] : ""
+        serviceParam = new URLSearchParams(hashQuery).get("service")
       }
-    };
 
-    // Initial check
-    handleHashChange();
+      if (serviceParam) {
+        setFormData((prev) => ({ ...prev, service: decodeURIComponent(serviceParam!) }))
+      }
 
-    // Listen for hash changes
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
+      if (hash.startsWith("#contacto") || serviceParam) {
+        requestAnimationFrame(() => {
+          document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth", block: "start" })
+        })
+      }
+    }
+
+    applyServiceFromUrl()
+    window.addEventListener("hashchange", applyServiceFromUrl)
+    window.addEventListener("popstate", applyServiceFromUrl)
+    return () => {
+      window.removeEventListener("hashchange", applyServiceFromUrl)
+      window.removeEventListener("popstate", applyServiceFromUrl)
+    }
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const message = `Hola, mi nombre es ${formData.name}. Me interesa el servicio de ${formData.service}. ${formData.message}`
+    const message = `Hola, mi nombre es ${formData.name}. Email: ${formData.email}. WhatsApp: ${formData.phone}. Me interesa: ${formData.service}. ${formData.message}`
     const whatsappUrl = `https://wa.me/${contactData.whatsappNumber}?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, '_blank')
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+    setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  if (!contactData || !contactData.isVisible) return null;
+  if (!contactData || !contactData.isVisible) return null
+
+  const custom = contactData.customTraining
 
   return (
-    <section id="contacto" className="py-16 md:py-24 bg-[#FAF8F5] relative overflow-hidden">
-        {/* Top Wave Transition */}
-        <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0] transform rotate-180">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-[calc(100%+1.3px)] h-[40px] md:h-[60px] text-white">
-                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="currentColor"></path>
-            </svg>
-        </div>
-
-      {/* Decorative ambient background */}
-      <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-secondary/5 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2 hidden md:block"></div>
-      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-primary/5 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2 hidden md:block"></div>
-      
-       {/* Geometric Overlay - Colored Squares */}
-       <div className="absolute top-40 right-10 hidden lg:block opacity-60">
-            <div className="w-20 h-20 border-2 border-accent-wine/30 rotate-12 rounded-xl mb-4"></div>
-            <div className="w-12 h-12 bg-accent-gold/10 -rotate-12 rounded-lg ml-10"></div>
-       </div>
-
-        {/* Decorative Tape */}
-        <div className="absolute bottom-20 left-10 w-48 h-6 bg-primary/10 rotate-[-10deg] hidden md:block"></div>
-
-
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
-        <div className="text-center max-w-4xl mx-auto mb-10 md:mb-20 mt-6 md:mt-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-             <h2 className="text-3xl md:text-5xl font-heading font-bold text-primary mb-4 md:mb-6">
-              {contactData.title}
+    <>
+      {showCustomTraining && custom && (
+        <section className="w-full py-16 md:py-24 lg:py-section-gap px-margin-mobile lg:px-margin-desktop bg-primary text-on-primary relative overflow-hidden">
+          <div
+            className="absolute inset-0 opacity-10 pointer-events-none"
+            style={{
+              backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)",
+              backgroundSize: "32px 32px",
+            }}
+          />
+          <div className="max-w-container-max mx-auto flex flex-col items-center text-center gap-10 relative z-10">
+            <h2 className="max-w-4xl text-balance font-heading text-headline-lg-mobile md:text-[1.875rem] text-on-primary-container">
+              {custom.title}
             </h2>
-          </motion.div>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-lg md:text-xl font-body text-neutral-gray max-w-2xl mx-auto"
-          >
-            {contactData.description}
-          </motion.p>
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-8 md:gap-16 max-w-7xl mx-auto items-start">
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <Card className="shadow-2xl border-none bg-white rounded-2xl md:rounded-3xl overflow-hidden relative">
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-accent-wine to-secondary" />
-              <CardContent className="p-6 md:p-12">
-                <form onSubmit={handleSubmit} className="space-y-5 md:space-y-8">
-                  {/* Mobile: Stack, Desktop: Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
-                    <div className="space-y-2 md:space-y-3">
-                      <label htmlFor="name" className="text-xs md:text-sm font-cta font-bold text-primary uppercase tracking-wider">Nombre</label>
-                      <Input
-                        id="name"
-                        name="name"
-                        placeholder="Tu nombre completo"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                        className="bg-neutral-cream border-transparent focus:border-secondary focus:ring-0 rounded-xl h-12 font-body text-neutral-gray text-base"
-                      />
-                    </div>
-                    <div className="space-y-2 md:space-y-3">
-                      <label htmlFor="email" className="text-xs md:text-sm font-cta font-bold text-primary uppercase tracking-wider">Email</label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        placeholder="tu@email.com"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        className="bg-neutral-cream border-transparent focus:border-secondary focus:ring-0 rounded-xl h-12 font-body text-neutral-gray text-base"
-                      />
-                    </div>
+            <p className="font-body text-body-lg text-on-primary/80 max-w-2xl">{custom.description}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-5xl relative mt-4">
+              <div className="hidden lg:block absolute top-12 left-[10%] right-[10%] h-px bg-on-primary/20 -z-10" />
+              {custom.steps.map((step) => (
+                <div key={step.number} className="flex flex-col items-center gap-4 group">
+                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-primary-container border-4 border-primary flex items-center justify-center text-3xl font-heading text-on-primary-container group-hover:bg-on-primary group-hover:text-primary transition-colors">
+                    {step.number}
                   </div>
-                  
-                  <div className="space-y-2 md:space-y-3">
-                    <label htmlFor="service" className="text-xs md:text-sm font-cta font-bold text-primary uppercase tracking-wider">Servicio de interés</label>
-                    <div className="relative">
-                        <select
-                        id="service"
-                        name="service"
-                        value={formData.service}
-                        onChange={handleChange}
-                        className="flex h-12 w-full items-center justify-between rounded-xl border border-transparent bg-neutral-cream px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 font-body text-neutral-gray appearance-none"
-                        required
-                        >
-                        <option value="">Selecciona un servicio</option>
-                        <option value="Atracción de Talento y Selección Estratégica">Atracción de Talento y Selección Estratégica</option>
-                        <option value="Onboarding y Desarrollo Ejecutivo">Onboarding y Desarrollo Ejecutivo</option>
-                        <option value="Diagnóstico Organizacional y RRHH Estratégico">Diagnóstico Organizacional y RRHH Estratégico</option>
-                        <option value="Cultura y Experiencia del Colaborador">Cultura y Experiencia del Colaborador</option>
-                        <option value="Gestión Laboral y Administración">Gestión Laboral y Administración</option>
-                        <option value="Career Coaching y Empleabilidad">Career Coaching y Empleabilidad</option>
-                        <option value="Proyección y Desarrollo Profesional">Proyección y Desarrollo Profesional</option>
-                        </select>
-                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                             <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-                        </div>
-                    </div>
-                  </div>
+                  <h4 className="font-label-md uppercase tracking-wider text-on-primary">{step.title}</h4>
+                  <p className="font-body text-body-md text-on-primary/80">{step.description}</p>
+                </div>
+              ))}
+            </div>
+            <a
+              href="#contacto"
+              className="mt-4 bg-primary-container text-on-primary-container px-10 py-4 rounded-full font-label-md hover:bg-on-primary hover:text-primary transition-all inline-flex items-center justify-center gap-2 group shadow-ethereal"
+            >
+              {custom.ctaText}
+              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </a>
+          </div>
+        </section>
+      )}
 
-                  <div className="space-y-2 md:space-y-3">
-                    <label htmlFor="message" className="text-xs md:text-sm font-cta font-bold text-primary uppercase tracking-wider">Mensaje</label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      placeholder="Cuéntanos más sobre tus necesidades..."
-                      value={formData.message}
+      <section
+        id="contacto"
+        className="w-full px-margin-mobile lg:px-margin-desktop py-16 md:py-24 lg:py-section-gap bg-surface-container-lowest border-t border-outline-variant/20 relative"
+      >
+        <div className="w-full max-w-container-max mx-auto">
+          <div className="mb-12 md:mb-16">
+            <div className="inline-flex items-center gap-2 mb-4">
+              <span className="material-symbols-outlined text-primary text-xl">forum</span>
+              <span className="font-label-md text-primary uppercase tracking-widest">Hablemos</span>
+            </div>
+            <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface leading-tight">
+              ¿En qué podemos <span className="italic text-primary">ayudarte?</span>
+            </h2>
+            {contactData.description && (
+              <p className="font-body text-body-lg text-on-surface-variant mt-4 max-w-2xl">
+                {contactData.description}
+              </p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+            <motion.div
+              className="lg:col-span-7"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="flex flex-col gap-2 relative">
+                    <label className="font-label-md text-[12px] text-on-surface-variant uppercase tracking-widest absolute -top-2 left-4 bg-surface-container-lowest px-1 z-10" htmlFor="name">
+                      Nombre y Apellido
+                    </label>
+                    <Input
+                      id="name"
+                      name="name"
+                      placeholder="Ej. Juan Pérez"
+                      value={formData.name}
                       onChange={handleChange}
-                      className="min-h-[120px] md:min-h-[150px] bg-neutral-cream border-transparent focus:border-secondary focus:ring-0 rounded-xl font-body text-neutral-gray resize-none p-4 text-base"
                       required
+                      className="w-full bg-transparent border border-outline-variant rounded-xl px-4 py-4 h-auto font-body text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                     />
                   </div>
+                  <div className="flex flex-col gap-2 relative">
+                    <label className="font-label-md text-[12px] text-on-surface-variant uppercase tracking-widest absolute -top-2 left-4 bg-surface-container-lowest px-1 z-10" htmlFor="email">
+                      Email
+                    </label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="ejemplo@empresa.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full bg-transparent border border-outline-variant rounded-xl px-4 py-4 h-auto font-body text-on-surface focus:border-primary focus:ring-1 focus:ring-primary"
+                    />
+                  </div>
+                </div>
 
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-primary hover:bg-primary-dark text-white font-cta font-bold py-4 h-auto shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 rounded-xl text-base md:text-lg flex items-center justify-center gap-2"
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="flex flex-col gap-2 relative">
+                    <label className="font-label-md text-[12px] text-on-surface-variant uppercase tracking-widest absolute -top-2 left-4 bg-surface-container-lowest px-1 z-10" htmlFor="phone">
+                      WhatsApp
+                    </label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      placeholder="+54 9 11 1234 5678"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="w-full bg-transparent border border-outline-variant rounded-xl px-4 py-4 h-auto font-body text-on-surface focus:border-primary"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2 relative">
+                    <label className="font-label-md text-[12px] text-on-surface-variant uppercase tracking-widest absolute -top-2 left-4 bg-surface-container-lowest px-1 z-10" htmlFor="service">
+                      Servicio de interés
+                    </label>
+                    <select
+                      id="service"
+                      name="service"
+                      value={formData.service}
+                      onChange={handleChange}
+                      required
+                      className="w-full bg-transparent border border-outline-variant rounded-xl px-4 py-4 font-body text-on-surface focus:outline-none focus:border-primary appearance-none"
+                    >
+                      <option value="">Selecciona un servicio</option>
+                      {defaultOptions.map((opt) => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2 relative">
+                  <label className="font-label-md text-[12px] text-on-surface-variant uppercase tracking-widest absolute -top-2 left-4 bg-surface-container-lowest px-1 z-10" htmlFor="message">
+                    Mensaje
+                  </label>
+                  <Textarea
+                    id="message"
+                    name="message"
+                    placeholder="Contanos brevemente qué necesitas..."
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    rows={4}
+                    className="w-full bg-transparent border border-outline-variant rounded-xl px-4 py-4 font-body text-on-surface focus:border-primary resize-none min-h-[120px]"
+                  />
+                </div>
+
+                <div className="mt-2">
+                  <Button
+                    type="submit"
+                    className="w-full md:w-auto inline-flex items-center justify-center bg-primary text-on-primary px-10 py-4 h-auto rounded-full font-label-md uppercase tracking-widest hover:bg-primary-container"
                   >
-                    Enviar Mensaje <Send className="w-5 h-5" />
+                    Enviar mensaje
+                    <Send className="ml-2 w-4 h-4" />
                   </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </motion.div>
+                </div>
+              </form>
+            </motion.div>
 
-          {/* Contact Info & Socials */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="space-y-6 md:space-y-8 lg:pt-10"
-          >
-          
+            <motion.div
+              className="lg:col-span-5 flex flex-col gap-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              {contactData.socialLinks.map((link) => {
+                let Icon = Mail
+                let hoverClass = "hover:bg-primary-fixed/10 hover:border-primary-fixed"
+                let iconColor = "text-primary"
+                let labelHover = "group-hover:text-primary"
+                let title = "Escribinos"
 
-            <div className="grid gap-4 md:gap-6">
-              {contactData.socialLinks.map((link, index) => {
-                let Icon = LinkIcon;
-                let bgClass = 'bg-white hover:bg-neutral-cream text-primary';
-                
-                if (link.platform === 'whatsapp') Icon = MessageCircle;
-                else if (link.platform === 'linkedin') Icon = Linkedin;
-                else if (link.platform === 'instagram') Icon = Instagram;
+                if (link.platform === "whatsapp") {
+                  Icon = MessageCircle
+                  hoverClass = "hover:bg-[#25D366]/10 hover:border-[#25D366]/30"
+                  iconColor = "text-[#25D366]"
+                  labelHover = "group-hover:text-[#25D366]"
+                  title = "WhatsApp"
+                } else if (link.platform === "linkedin") {
+                  Icon = Linkedin
+                  hoverClass = "hover:bg-[#0A66C2]/10 hover:border-[#0A66C2]/30"
+                  iconColor = "text-[#0A66C2]"
+                  labelHover = "group-hover:text-[#0A66C2]"
+                  title = "LinkedIn"
+                } else if (link.platform === "email") {
+                  title = "Escribinos"
+                }
 
                 return (
-                  <Card key={index} className={`group cursor-pointer border-none shadow-md hover:shadow-xl transition-all duration-300 rounded-xl md:rounded-2xl ${bgClass}`} onClick={() => window.open(link.url, '_blank')}>
-                    <CardContent className="p-4 md:p-6 flex items-center gap-4 md:gap-6">
-                      <div className={`w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300`}>
-                        <Icon className="w-6 h-6 md:w-7 md:h-7" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-cta font-bold text-lg md:text-xl text-primary capitalize mb-0.5 md:mb-1">{link.platform}</h4>
-                        <p className="font-body text-sm md:text-base text-neutral-gray group-hover:text-primary transition-colors">{link.label}</p>
-                      </div>
-                      <ChevronRight className="w-5 h-5 text-primary/30 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                    </CardContent>
-                  </Card>
+                  <a
+                    key={link.platform}
+                    href={link.url}
+                    target={link.platform === "email" ? undefined : "_blank"}
+                    rel="noopener noreferrer"
+                    className={`bg-surface-container-low p-6 md:p-8 rounded-3xl flex items-center gap-5 md:gap-6 group transition-colors border border-transparent cursor-pointer ${hoverClass}`}
+                  >
+                    <div className={`size-14 shrink-0 aspect-square bg-surface-container-lowest rounded-full shadow-soft inline-flex items-center justify-center ${iconColor} group-hover:scale-110 transition-transform`}>
+                      <Icon className="size-7 shrink-0" />
+                    </div>
+                    <div>
+                      <h5 className="font-label-md text-[12px] text-on-surface-variant uppercase tracking-widest mb-1">
+                        {title}
+                      </h5>
+                      <p className={`font-body text-body-lg text-on-surface transition-colors ${labelHover}`}>
+                        {link.label}
+                      </p>
+                    </div>
+                  </a>
                 )
               })}
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }

@@ -30,3 +30,7 @@ dist-ssr
 .env
 .env.*
 *.env
+
+# Design mockups / Stitch exports (local only)
+diseño/
+diseno/

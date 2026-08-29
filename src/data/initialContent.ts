@@ -1,4 +1,5 @@
 import { SiteContent } from "../types/cms";
+import { coursesData } from "./coursesContent";
 
 export const initialContent: SiteContent = {
   sections: [
@@ -6,20 +7,27 @@ export const initialContent: SiteContent = {
       id: "hero",
       type: "hero",
       isVisible: true,
-      title: "Anthrovia HR",
-      subtitle: "Evolucionando el talento",
-      description: "Soluciones integrales de Recursos Humanos diseñadas para transformar tu organización y maximizar el potencial de tu equipo. Impulsamos culturas más humanas, procesos más eficientes y equipos que crecen con propósito.",
-      videoUrl: "/video.mp4",
+      badge: "Consultoría de Recursos Humanos",
+      title: "Personas, estrategia y",
+      titleHighlight: "tecnología",
+      subtitle: "para transformar la gestión de Recursos Humanos.",
+      description: "Ayudamos a empresas a incorporar talento, desarrollar equipos e implementar soluciones que impulsan su crecimiento. También acompañamos a profesionales que buscan potenciar su desarrollo laboral.",
+      imageUrl: "/ethos/hero-pomelli-1.png",
+      floatingCardTitle: "Enfoque Humano",
+      floatingCardSubtitle: "Potencial Estratégico",
+      videoUrl: "",
+      backgroundType: "color",
+      backgroundColor: "#f6f3f2",
       buttons: [
         {
-          text: "Conoce nuestros servicios",
+          text: "Conocer servicios",
           link: "#servicios",
-          variant: "secondary"
+          variant: "primary"
         },
         {
-          text: "Contáctanos",
+          text: "Contactanos",
           link: "#contacto",
-          variant: "primary"
+          variant: "secondary"
         }
       ]
     },
@@ -27,60 +35,76 @@ export const initialContent: SiteContent = {
       id: "services",
       type: "services",
       isVisible: true,
-      title: "Nuestros servicios",
-      description: "Diseñamos soluciones a medida que conectan estrategia, personas y cultura. Acompañamos a las organizaciones en cada etapa de su evolución, impulsando procesos más eficientes y experiencias laborales con propósito.",
-      videoUrl: "/bg-mov.mp4",
+      eyebrow: "Nuestras Soluciones",
+      title: "¿Cómo podemos ayudarte?",
+      description: "Diseñamos soluciones a medida, conectando el talento adecuado con el entorno ideal, impulsando tanto a organizaciones como a individuos.",
+      videoUrl: "",
       services: [
-        // Servicios para Empresas
         {
-          iconName: "Search",
-          title: "Atracción de Talento y Selección Estratégica",
-          description: "Gestionamos procesos de reclutamiento, selección por competencias y evaluación especializada para asegurar incorporaciones alineadas al negocio, la cultura y los objetivos organizacionales. Incluye también servicios de sourcing, preselección y armado de shortlists para empresas o agencias que requieren apoyo parcial en sus búsquedas.",
-          color: "from-primary to-accent-teal",
-          category: "companies"
-        },
-        {
-          iconName: "Rocket",
-          title: "Onboarding y Desarrollo Ejecutivo",
-          description: "Implementamos procesos estructurados de integración y seguimiento durante los primeros meses, combinando onboarding, diagnóstico temprano y sesiones de coaching profesional para fortalecer desempeño, actitud, adaptación cultural y retención.",
-          color: "from-accent-teal to-primary-light",
-          category: "companies"
-        },
-        {
-          iconName: "BarChart3",
-          title: "Diagnóstico Organizacional y RRHH Estratégico",
-          description: "Analizamos y rediseñamos procesos clave del área con foco en eficiencia, experiencia del colaborador y toma de decisiones basada en datos. Incluye revisión de indicadores, People Analytics aplicado, diseño de flujos de trabajo y mejora continua.",
-          color: "from-primary-light to-accent-rose",
-          category: "companies"
-        },
-        {
-          iconName: "Smile",
-          title: "Cultura y Experiencia del Colaborador",
-          description: "Diseñamos programas que fortalecen el compromiso y la motivación, integrando acciones de reconocimiento, bienestar integral y salario emocional alineados a cada organización.",
-          color: "from-accent-rose to-accent-burgundy",
-          category: "companies"
-        },
-        {
-          iconName: "Briefcase",
-          title: "Gestión Laboral y Administración",
-          description: "Brindamos soluciones complementarias a través de partners especializados en asesoría legal laboral, compensaciones y beneficios, administración de nómina y soporte operativo en gestión de personal.",
-          color: "from-accent-burgundy to-accent-teal",
-          category: "companies"
-        },
-        // Servicios para Personas
-        {
-          iconName: "Compass",
-          title: "Career Coaching y Empleabilidad",
-          description: "Acompañamos a personas que buscan su primer empleo, desean crecer profesionalmente o atravesar una transición laboral. Optimizamos CV, perfil de LinkedIn, preparación para entrevistas y estrategias de búsqueda acordes al mercado.",
-          color: "from-primary to-primary-light",
-          category: "individuals"
+          iconName: "UserSearch",
+          title: "Talent Acquisition",
+          description: "Encontramos el talento adecuado para tu organización, alineando cada incorporación con su cultura, estrategia y necesidades, y optimizando el proceso de selección de principio a fin.",
+          color: "primary",
+          includesLabel: "Incluye",
+          includes: [
+            "Búsqueda y selección de perfiles generalistas, comerciales, técnicos e IT.",
+            "Diseño y definición del perfil del puesto.",
+            "Evaluación de candidatos por competencias.",
+            "Entrevistas estructuradas.",
+            "Presentación de candidatos finalistas.",
+            "Acompañamiento en la decisión de incorporación."
+          ],
+          ctaText: "Quiero incorporar talento",
+          ctaLink: "/?service=Talent%20Acquisition#contacto"
         },
         {
           iconName: "TrendingUp",
-          title: "Proyección y Desarrollo Profesional",
-          description: "Espacios de análisis y conversación para clarificar objetivos, explorar oportunidades, redefinir el rumbo profesional y construir planes de desarrollo concretos y accionables.",
-          color: "from-accent-teal to-primary",
-          category: "individuals"
+          title: "Growth",
+          description: "Potenciamos tu perfil profesional para que puedas presentarte con mayor claridad, confianza y estrategia frente a nuevas oportunidades laborales.",
+          color: "secondary",
+          includes: [
+            "Diagnóstico de perfil profesional.",
+            "Definición de propuesta de valor.",
+            "Preparación estratégica para entrevistas.",
+            "Identificación de fortalezas y oportunidades de mejora.",
+            "Estrategia de búsqueda laboral.",
+            "Orientación para posicionamiento profesional."
+          ],
+          ctaText: "Quiero potenciar mi perfil",
+          ctaLink: "/?service=Growth%20Profesional#contacto"
+        },
+        {
+          iconName: "BookOpen",
+          title: "Learning",
+          description: "Diseñamos experiencias de aprendizaje orientadas a desarrollar habilidades, fortalecer equipos y acompañar las necesidades reales de cada organización y profesional.",
+          color: "tertiary",
+          includes: [
+            "Capacitaciones In Company.",
+            "Cursos y programas abiertos.",
+            "Formación virtual.",
+            "Talleres prácticos.",
+            "Programas adaptados a necesidades específicas.",
+            "Recursos y materiales de aprendizaje."
+          ],
+          ctaText: "Ver capacitaciones",
+          ctaLink: "/capacitaciones"
+        },
+        {
+          iconName: "Network",
+          title: "HR Tech",
+          description: "Acercamos tecnología aplicada a Recursos Humanos para centralizar la gestión, optimizar procesos y transformar información en decisiones más estratégicas.",
+          color: "neutral",
+          includesLabel: "Incluye",
+          includes: [
+            "Gestión centralizada de información.",
+            "Automatización de tareas y procesos.",
+            "Comunicación y gestión interna.",
+            "Seguimiento de indicadores de RRHH.",
+            "Herramientas para la experiencia del colaborador.",
+            "Funcionalidades potenciadas con Inteligencia Artificial."
+          ],
+          ctaText: "Conocer la plataforma",
+          ctaLink: "/?service=HR%20Tech#contacto"
         }
       ]
     },
@@ -88,10 +112,36 @@ export const initialContent: SiteContent = {
       id: "about",
       type: "about",
       isVisible: true,
-      title: "Sobre Nosotros",
+      title: "¿Por qué Anthrovia?",
+      eyebrow: "",
+      personName: "Betsabé Sánchez",
+      personRole: "Founder & CEO",
+      personImage: "/ethos/founder-betsabe.png",
       introText: [
-        "En Anthrovia HR somos tu aliado estratégico en la gestión y desarrollo del talento. Diseñamos soluciones integrales y a medida que transforman organizaciones y maximizan el potencial de los equipos. Como consultora digital, acompañamos a personas y organizaciones sin límites geográficos, adaptándonos a cada cultura y necesidad.",
-        "El nombre Anthrovia combina \"anthro\" (persona) y \"via\" (camino): representa nuestra visión práctica y estratégica del talento — un camino claro para que las personas y las organizaciones crezcan juntas. Trabajamos con metodologías probadas, entregables accionables y foco humano, para lograr resultados sostenibles y medibles."
+        "No es un nombre elegido al azar...",
+        "Anthrovia nace de la unión entre Anthropos (persona) y Vía (camino).",
+        "Porque creemos que detrás de cada organización hay personas que recorren distintos caminos: quienes se incorporan, quienes buscan desarrollarse, quienes lideran equipos y quienes toman decisiones para hacer crecer una empresa.",
+        "Acompañamos ese proceso integrando personas, estrategia y tecnología, para transformar necesidades en soluciones y generar oportunidades de crecimiento.",
+        "Entendemos que cada realidad tiene su propio camino. Nosotros ayudamos a encontrar la mejor forma de recorrerlo.",
+        "Ese es el propósito que guía cada proyecto que acompañamos."
+      ],
+      pillarsTitle: "Una forma más humana y estratégica de gestionar personas.",
+      pillars: [
+        {
+          iconName: "Target",
+          title: "Estrategia",
+          description: "Alineamos el talento con los objetivos de negocio para generar impacto real y medible en la organización."
+        },
+        {
+          iconName: "Handshake",
+          title: "Cercanía",
+          description: "Trabajamos como aliados, involucrándonos en cada proyecto."
+        },
+        {
+          iconName: "Lightbulb",
+          title: "Innovación",
+          description: "Aplicamos metodologías ágiles y tecnología para crear soluciones de RRHH adaptadas a los desafíos actuales."
+        }
       ],
       purpose: {
         title: "Nuestro Propósito",
@@ -99,36 +149,173 @@ export const initialContent: SiteContent = {
       },
       mission: {
         title: "Nuestra Misión",
-        description: "Potenciar el talento humano de las organizaciones mediante soluciones innovadoras y personalizadas que generen impacto real en su cultura, productividad y crecimiento. Nos comprometemos a ser el puente entre las empresas y el éxito de sus equipos."
+        description: "Potenciar el talento humano de las organizaciones mediante soluciones innovadoras y personalizadas."
       },
-      videoUrl: "/bg-mov-1.mp4",
-      values: [
+      videoUrl: "",
+      values: []
+    },
+    {
+      id: "learning-hero",
+      type: "hero",
+      isVisible: true,
+      badge: "Learning",
+      title: "FORMACIÓN Y DESARROLLO",
+      subtitle: "Aprender para transformar. Desarrollar habilidades para generar resultados.",
+      description: "En Anthrovia diseñamos y facilitamos experiencias de aprendizaje orientadas a desarrollar personas, potenciar equipos y acompañar a las organizaciones frente a los desafíos del mundo laboral actual. Porque capacitar no es simplemente transmitir información. Es lograr que una persona pueda hacer, pensar y desenvolverse de una manera diferente después de la experiencia de aprendizaje.",
+      imageUrl: "/ethos/hero-card.jpg",
+      statsValue: "100%",
+      statsLabel: "Enfoque Práctico",
+      videoUrl: "/ethos/hero.jpg",
+      backgroundType: "media",
+      buttons: [
         {
-          iconName: "ShieldCheck",
-          title: "Integridad",
-          description: "Actuamos con ética, respeto y coherencia en cada acción"
+          text: "Ver formaciones",
+          link: "#formaciones",
+          variant: "primary"
         },
         {
-          iconName: "Heart",
-          title: "Compromiso",
-          description: "Nos dedicamos completamente al éxito de nuestros clientes y sus equipos"
-        },
-        {
-          iconName: "Users",
-          title: "Colaboración",
-          description: "Trabajamos en conjunto para crear soluciones innovadoras y efectivas"
-        },
-        {
-          iconName: "Sparkles",
-          title: "Sinergia",
-          description: "Conectamos personas, ideas y propósitos para lograr resultados compartidos"
-        },
-        {
-          iconName: "TrendingUp",
-          title: "Innovación",
-          description: "Adoptamos nuevas tendencias, tecnologías y metodologías en gestión de talento"
+          text: "Capacitar a mi equipo",
+          link: "#in-company",
+          variant: "secondary"
         }
       ]
+    },
+    {
+      id: "learning-services",
+      type: "services",
+      isVisible: true,
+      title: "Nuestras Formaciones",
+      description: "Propuestas pensadas para incorporar conocimientos, desarrollar habilidades y adquirir herramientas aplicables al trabajo y al crecimiento profesional.",
+      videoUrl: "",
+      modalidadesTitle: "Elegí la modalidad que mejor se adapte a tu forma de aprender.",
+      modalidades: [
+        {
+          iconName: "Timer",
+          title: "Autogestiva",
+          description: "Contenido para aprender a tu ritmo, con materiales y recursos prácticos."
+        },
+        {
+          iconName: "MessagesSquare",
+          title: "Con Acompañamiento",
+          description: "Contenido y recursos audiovisuales, con espacios de consulta para avanzar con orientación.",
+          featured: true
+        },
+        {
+          iconName: "Video",
+          title: "En Vivo",
+          description: "Encuentros en tiempo real, participación, práctica y acompañamiento del formador. Las clases quedan grabadas para volver a consultarlas."
+        }
+      ],
+      formacionesTitle: "Nuestras Formaciones",
+      formacionesDescription: "Propuestas pensadas para incorporar conocimientos, desarrollar habilidades y adquirir herramientas aplicables al trabajo y al crecimiento profesional.",
+      formaciones: [
+        {
+          id: "cm-nivel-1",
+          title: "Community Manager Operativo · Nivel I",
+          description: "Formación práctica para aprender a gestionar redes sociales profesionalmente, trabajar con clientes y desarrollar una actividad como Community Manager.",
+          category: "Marketing Digital",
+          imageUrl: "/ethos/formacion-1.jpg",
+          link: "/capacitaciones/community-manager-nivel-1"
+        },
+        {
+          id: "cm-pro",
+          title: "Community Manager PRO",
+          description: "Formación avanzada en gestión de redes, inteligencia artificial, estrategia de contenidos y posicionamiento de marca.",
+          category: "Marketing Digital",
+          imageUrl: "/ethos/formacion-2.jpg",
+          link: "/capacitaciones/community-manager-pro"
+        },
+        {
+          id: "hablar-publico",
+          title: "Hablar en Público",
+          description: "Herramientas prácticas para comunicar con mayor claridad, seguridad y presencia frente a otras personas.",
+          category: "Habilidades Blandas",
+          imageUrl: "/ethos/formacion-3.jpg",
+          link: "/capacitaciones/hablar-en-publico"
+        },
+        {
+          id: "academia-comercial",
+          title: "Academia de Desarrollo Comercial",
+          description: "Formación orientada a desarrollar habilidades comerciales, mejorar la comunicación con clientes y fortalecer el proceso de venta.",
+          category: "Ventas",
+          imageUrl: "/ethos/formacion-4.jpg",
+          link: "/capacitaciones/academia-desarrollo-comercial"
+        },
+        {
+          id: "liderazgo-emocional",
+          title: "Liderazgo Emocional",
+          description: "Herramientas prácticas para liderar personas, gestionar tensiones y fortalecer la comunicación y el vínculo dentro de los equipos.",
+          category: "Habilidades Blandas",
+          imageUrl: "/ethos/formacion-5.jpg",
+          link: "#contacto"
+        }
+      ],
+      formacionesComingSoon: {
+        title: "Nuevas formaciones próximamente",
+        description: "Nuestro catálogo se encuentra en constante crecimiento. Iremos incorporando nuevas propuestas."
+      },
+      inCompany: {
+        title: "FORMACIÓN",
+        highlight: "IN COMPANY",
+        description: "Las formaciones que ofrecemos también pueden llevarse a tu organización. Adaptamos los contenidos para responder a la realidad de tu empresa y tu equipo en áreas clave como:",
+        imageUrl: "/ethos/in-company.jpg",
+        areas: [
+          "Comunicación y habilidades interpersonales",
+          "Liderazgo y equipos",
+          "Oratoria y comunicación profesional",
+          "Ventas y desarrollo comercial",
+          "Marketing digital",
+          "IA aplicada al trabajo"
+        ],
+        modalitiesTitle: "Modalidades de Implementación",
+        modalities: [
+          {
+            iconName: "Laptop",
+            title: "Online",
+            description: "Para equipos remotos o distribuidos geográficamente."
+          },
+          {
+            iconName: "MapPin",
+            title: "Presencial / Híbrida",
+            description: "Disponible en Mendoza y San Luis."
+          }
+        ],
+        ctaText: "Capacitar a mi equipo",
+        ctaLink: "#contacto"
+      },
+      services: []
+    },
+    {
+      id: "learning-about",
+      type: "about",
+      isVisible: true,
+      title: "Mauricio Ramos",
+      eyebrow: "Quién está detrás de las formaciones",
+      personName: "Mauricio Ramos",
+      personRole: "Formador · Coach · Speaker · Consultor",
+      personImage: "/ethos/mauricio.jpg",
+      specialties: [
+        "Capacitación y desarrollo",
+        "Habilidades interpersonales",
+        "Comunicación y oratoria",
+        "Desarrollo comercial y ventas",
+        "Marketing digital",
+        "Inteligencia Artificial"
+      ],
+      introText: [
+        "La formación ha sido una parte central de su recorrido profesional, con experiencia en capacitación de equipos y desarrollo de competencias vinculadas a personas, comunicación y negocio. A lo largo de su trayectoria ha trabajado en diferentes áreas de formación y desarrollo.",
+        "Cuenta además con formación como Coach, Speaker y Consultor, junto con un Diplomado en Dirección de Empresas. Su enfoque combina personas, comunicación, negocio y nuevas herramientas, buscando que cada experiencia de aprendizaje tenga una aplicación concreta."
+      ],
+      purpose: {
+        title: "Nuestro Propósito",
+        description: "Ser el puente que impulsa la evolución del talento y el desarrollo integral de las organizaciones."
+      },
+      mission: {
+        title: "Nuestra Misión",
+        description: "Potenciar el talento humano mediante experiencias de aprendizaje con aplicación concreta."
+      },
+      videoUrl: "",
+      values: []
     },
     {
       id: "news",
@@ -317,7 +504,7 @@ A pesar del avance tecnológico, el reporte de tendencias 2026 subraya un riesgo
       title: "Últimas Novedades",
       subtitle: "Síguenos en redes",
       backgroundType: 'color',
-      backgroundColor: 'linear-gradient(to right, #f8fafc, #e2e8f0)',
+      backgroundColor: '#f6f3f2',
       videoUrl: "",
       posts: [
         {
@@ -368,24 +555,52 @@ A pesar del avance tecnológico, el reporte de tendencias 2026 subraya un riesgo
       id: "contact",
       type: "contact",
       isVisible: true,
-      title: "Conectemos",
-      description: "\"El cambio comienza con una conversación\". Queremos conocer tu historia, tus desafíos y acompañarte en la evolución del talento dentro de tu organización. Escribinos y descubramos juntos cómo potenciar tu equipo.",
+      title: "¿En qué podemos ayudarte?",
+      description: "Contanos brevemente qué necesitás y te respondemos a la brevedad.",
       whatsappNumber: "5492604085501",
+      email: "anthroviahr@gmail.com",
+      customTraining: {
+        title: "¿Necesitás una capacitación que todavía no tenemos publicada?",
+        description: "Desarrollamos programas a medida siguiendo una metodología probada para garantizar el impacto en tu equipo.",
+        steps: [
+          {
+            number: "1",
+            title: "Entendemos el desafío",
+            description: "Conversamos sobre la necesidad, el equipo y el resultado que se busca alcanzar."
+          },
+          {
+            number: "2",
+            title: "Diseñamos la propuesta",
+            description: "Definimos contenidos, modalidad, duración y metodología."
+          },
+          {
+            number: "3",
+            title: "Desarrollamos la formación",
+            description: "Creamos los contenidos y recursos necesarios para la experiencia."
+          },
+          {
+            number: "4",
+            title: "La llevamos a la práctica",
+            description: "Buscamos que el aprendizaje pueda trasladarse a situaciones reales de trabajo."
+          }
+        ],
+        ctaText: "Hablemos"
+      },
       socialLinks: [
+        {
+          platform: "email",
+          url: "mailto:anthroviahr@gmail.com",
+          label: "anthroviahr@gmail.com"
+        },
         {
           platform: "whatsapp",
           url: "https://wa.me/5492604085501",
-          label: "Chatea con nosotros"
+          label: "+54 9 260 4085501"
         },
         {
           platform: "linkedin",
           url: "https://www.linkedin.com/company/anthrovia-hr/",
-          label: "Anthrovia HR"
-        },
-        {
-          platform: "instagram",
-          url: "https://www.instagram.com/anthrovia.hr/",
-          label: "@anthrovia.hr"
+          label: "/anthrovia.hr"
         }
       ]
     },
@@ -394,7 +609,14 @@ A pesar del avance tecnológico, el reporte de tendencias 2026 subraya un riesgo
       type: "settings",
       isVisible: true,
       cvUrl: "https://talento.anthroviahr.com/",
-      cvText: "Dejanos tu CV"
+      cvText: "Dejanos tu CV",
+      footerTagline: "Personas, estrategia y tecnología para transformar la gestión de Recursos Humanos."
+    },
+    {
+      id: "courses",
+      type: "courses",
+      isVisible: true,
+      courses: coursesData
     }
   ]
 };

@@ -1,206 +1,220 @@
-
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { useCMS } from "@/context/CMSContext"
 import { AboutSectionContent } from "@/types/cms"
 import { getIcon } from "@/lib/iconMap"
-import { useState } from "react"
 
-export const AboutSection = () => {
-  const { content } = useCMS();
-  const aboutData = content.sections.find(s => s.id === 'about') as AboutSectionContent;
-  const [expandedValue, setExpandedValue] = useState<number | null>(null)
+interface AboutSectionProps {
+  sectionId?: string
+  variant?: "home" | "learning"
+}
 
+export const AboutSection = ({ sectionId = "about", variant = "home" }: AboutSectionProps) => {
+  const { content } = useCMS()
+  const aboutData = content.sections.find(s => s.id === sectionId) as AboutSectionContent
 
-  if (!aboutData || !aboutData.isVisible) return null;
+  if (!aboutData || !aboutData.isVisible) return null
+
+  if (variant === "learning") {
+    return <LearningAbout aboutData={aboutData} />
+  }
+
+  const pillars = aboutData.pillars || []
 
   return (
-    <section id="sobre-nosotros" className="py-24 md:py-32 bg-white relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col-reverse md:flex-row gap-16 md:gap-24">
-        
-        {/* Left Column: Image + Values */}
-        <div className="flex-1 relative w-full flex flex-col gap-10 items-center md:items-start">
-          {/* Founder Image (Commented out) */}
-          {/* 
-          <motion.div 
-            className="relative z-10 w-3/4 md:w-2/3 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl group"
-            initial={{ filter: 'grayscale(100%)' }}
-            whileInView={{ filter: 'grayscale(0%)' }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1 }}
-          >
-            <motion.img 
-              src="/images/founder.jpg" 
-              alt="Betsabé Sánchez - Fundadora Anthrovia HR" 
-              className="w-full h-full object-cover transition-all duration-700 md:grayscale md:group-hover:grayscale-0"
-              initial={{ filter: 'grayscale(100%)' }}
-              whileInView={{ filter: 'grayscale(0%)' }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 1.5 }}
-              style={{ filter: undefined }} // Allow CSS to take precedence on desktop
-            />
-            
-            <motion.div 
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true, margin: "-100px" }}
-               transition={{ duration: 0.8, delay: 0.3 }}
-               className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-primary/95 to-transparent p-6 pt-12 flex flex-col items-center text-center"
-            >
-               <h3 className="font-heading text-white text-xl font-bold">Betsabé Sánchez</h3>
-               <p className="font-body text-white/90 text-sm uppercase tracking-wider">Lic. RRHH • Founder</p>
-            </motion.div>
+    <>
+      {/* Pillars */}
+      {pillars.length > 0 && (
+        <section className="w-full px-margin-mobile lg:px-margin-desktop py-16 md:py-24 lg:py-section-gap bg-surface-container-high relative overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full border border-outline-variant/30 opacity-50 pointer-events-none" />
+          <div className="relative z-10 w-full max-w-container-max mx-auto flex flex-col items-center text-center gap-12 md:gap-16">
+            {aboutData.pillarsTitle && (
+              <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface leading-tight max-w-3xl text-balance">
+                {aboutData.pillarsTitle.split("humana").map((part, i, arr) =>
+                  i < arr.length - 1 ? (
+                    <span key={i}>
+                      {part}
+                      <span className="italic text-primary">humana</span>
+                    </span>
+                  ) : (
+                    <span key={i}>
+                      {part.split("estratégica").map((p2, j, a2) =>
+                        j < a2.length - 1 ? (
+                          <span key={j}>
+                            {p2}
+                            <span className="italic text-primary">estratégica</span>
+                          </span>
+                        ) : (
+                          <span key={j}>{p2}</span>
+                        )
+                      )}
+                    </span>
+                  )
+                )}
+              </h2>
+            )}
 
-            <div className="absolute -bottom-10 -left-10 w-full h-48 bg-secondary/10 rounded-full blur-3xl -z-10" />
-          </motion.div>
-          */}
-
-          {/* Generic About Image */}
-          {/* Founder Card with Video Reveal */}
-          {/* Founder Card with Video Reveal */}
-          <motion.div 
-            className="relative z-10 w-3/4 md:w-2/3 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl"
-            initial={{ opacity: 0, y: 20, filter: 'grayscale(100%)' }}
-            whileInView={{ opacity: 1, y: 0, filter: 'grayscale(0%)' }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.8 }}
-          >
-            <img
-              src="/founder3.png"
-              alt="Betsabé Sánchez - Fundadora Anthrovia HR"
-              className="w-full h-full object-cover"
-            />
-            
-            {/* Overlay Info - Animated on scroll */}
-            <motion.div 
-               className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-primary/95 via-primary/60 to-transparent p-6 pt-20 flex flex-col items-center text-center"
-               initial={{ y: 50, opacity: 0 }}
-               whileInView={{ y: 0, opacity: 1 }}
-               viewport={{ once: true }}
-               transition={{ duration: 0.6, delay: 0.4 }}
-            >
-               <h3 className="font-heading text-white text-xl md:text-2xl font-bold mb-1">Betsabé Sánchez</h3>
-               <p className="font-body text-accent-light text-xs md:text-sm uppercase tracking-widest font-semibold">Lic. RRHH • Founder & CEO</p>
-               <div className="w-12 h-1 bg-accent-terracotta mt-3 rounded-full"></div>
-            </motion.div>
-
-            {/* Decorative Bloom */}
-            <div className="absolute -bottom-10 -left-10 w-full h-48 bg-secondary/20 rounded-full blur-3xl -z-10" />
-          </motion.div>
-
-          {/* Values Section (Moved below image) */}
-          <div className="w-full mt-2">
-             <h3 className="font-heading text-xl text-primary mb-4 border-b border-secondary/20 pb-2 inline-block">
-               Nuestros Valores
-             </h3>
-             <div className="grid grid-cols-3 gap-3">
-               {aboutData.values.map((value, index) => {
-                 const Icon = getIcon(value.iconName);
-                 const isHovered = expandedValue === index;
-                 const isAnyHovered = expandedValue !== null;
-                 
-                 return (
-                   <div 
-                     key={index}
-                     className={`
-                       relative transition-all duration-300 ease-in-out cursor-pointer rounded-xl border flex flex-col items-center justify-center p-2 text-center group/card
-                       ${isHovered 
-                         ? 'bg-primary text-white border-primary shadow-xl z-50 scale-110' 
-                         : 'bg-white border-neutral-gray/10 hover:border-accent-terracotta/30 z-0'
-                       }
-                       ${isAnyHovered && !isHovered ? 'opacity-40 blur-[1px]' : 'opacity-100'}
-                       aspect-square
-                     `}
-                     onClick={() => setExpandedValue(expandedValue === index ? null : index)}
-                   >
-                     {/* Icon */}
-                     <div className={`
-                       transition-all duration-300
-                       ${isHovered ? 'scale-75 mb-1' : 'mb-2'}
-                     `}>
-                        <Icon className={`w-6 h-6 transition-colors ${isHovered ? 'text-accent-gold' : 'text-accent-terracotta'}`} />
-                     </div>
-
-                     {/* Title (Hidden on Hover) */}
-                     {!isHovered && (
-                       <motion.h4 
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className="font-heading font-semibold text-[10px] md:text-xs text-primary leading-tight"
-                        >
-                          {value.title}
-                        </motion.h4>
-                     )}
-
-                     {/* Description (Visible ONLY on Hover/Click) */}
-                     <AnimatePresence>
-                       {isHovered && (
-                         <motion.div
-                           initial={{ opacity: 0 }}
-                           animate={{ opacity: 1 }}
-                           exit={{ opacity: 0 }}
-                           transition={{ duration: 0.2 }}
-                           className="absolute inset-0 p-3 md:p-4 flex items-center justify-center bg-primary rounded-xl"
-                         >
-                           <p className="text-[10px] md:text-xs font-body leading-tight text-white text-center">
-                             {value.description}
-                           </p>
-                         </motion.div>
-                       )}
-                     </AnimatePresence>
-                   </div>
-                 )
-               })}
-             </div>
-          </div>
-        </div>
-        
-        {/* Right Column: Content */}
-        <div className="flex-1 w-full pt-0">
-          <span className="font-cta text-accent-wine text-xs uppercase tracking-[0.4em] font-bold mb-6 block">Sobre Nosotros</span>
-          <h2 className="font-heading text-4xl md:text-5xl text-primary mb-10 leading-tight">
-            {aboutData.title}
-          </h2>
-          <div className="font-body text-lg text-neutral-gray mb-12 leading-relaxed italic border-l-4 border-secondary pl-8 py-2">
-            {aboutData.introText.map((paragraph, index) => (
-              <p key={index} className="mb-4 last:mb-0" dangerouslySetInnerHTML={{ __html: paragraph }} />
-            ))}
-          </div>
-          
-          <div className="space-y-12">
-            <div className="group">
-              <h4 className="font-heading text-2xl text-primary mb-4 flex items-center gap-4">
-                <motion.span 
-                  initial={{ width: "2.5rem" }}
-                  whileInView={{ width: "4rem" }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="h-px bg-accent-terracotta transition-all" 
-                />
-                {aboutData.mission.title || "Misión"}
-              </h4>
-              <p className="font-body text-neutral-gray pl-14 text-base leading-relaxed">
-                {aboutData.mission.description}
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 w-full">
+              {pillars.map((pillar, index) => {
+                const Icon = getIcon(pillar.iconName)
+                return (
+                  <motion.div
+                    key={pillar.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex flex-col items-center text-center gap-6 group"
+                  >
+                    <div className="w-24 h-24 rounded-full bg-surface-container-lowest shadow-soft flex items-center justify-center relative overflow-hidden transition-transform duration-500 group-hover:-translate-y-2">
+                      <Icon className="w-10 h-10 text-primary" />
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <h4 className="font-heading text-2xl text-on-surface">{pillar.title}</h4>
+                      <p className="font-body text-body-md text-on-surface-variant max-w-xs mx-auto">
+                        {pillar.description}
+                      </p>
+                    </div>
+                  </motion.div>
+                )
+              })}
             </div>
-            
-            <div className="group">
-              <h4 className="font-heading text-2xl text-primary mb-4 flex items-center gap-4">
-                <motion.span 
-                  initial={{ width: "2.5rem" }}
-                  whileInView={{ width: "4rem" }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="h-px bg-accent-terracotta transition-all" 
-                />
-                {aboutData.purpose.title || "Nuestra Filosofía"}
-              </h4>
-              <p className="font-body text-neutral-gray pl-14 text-base leading-relaxed">
-                {aboutData.purpose.description}
-              </p>
+          </div>
+        </section>
+      )}
+
+      {/* Why Anthrovia / Founder */}
+      <section
+        id="anthrovia"
+        className="w-full px-margin-mobile lg:px-margin-desktop py-16 md:py-24 lg:py-section-gap"
+      >
+        <div className="w-full max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+          <div className="lg:col-span-5 relative">
+            <div className="absolute -top-12 -left-8 lg:-left-16 z-0 select-none hidden md:block pointer-events-none">
+              <span className="font-heading text-[100px] lg:text-[140px] text-surface-variant/50 leading-none tracking-tighter">
+                ANTHROVIA
+              </span>
+            </div>
+            <div className="relative w-full aspect-[3/4] md:aspect-[4/5] rounded-[40px] overflow-hidden shadow-ethereal border-4 border-surface z-10 bg-surface-container">
+              <img
+                alt={aboutData.personName || "Founder Anthrovia HR"}
+                className="w-full h-full object-cover object-top"
+                src={aboutData.personImage || "/ethos/founder-betsabe.png"}
+              />
+            </div>
+            <div className="absolute -bottom-6 right-4 md:right-8 bg-surface-container-lowest p-5 rounded-2xl shadow-soft z-20 flex flex-col gap-1 border border-surface-variant">
+              <span className="font-label-md text-primary uppercase tracking-widest">
+                {aboutData.personName}
+              </span>
+              <span className="font-body text-sm text-on-surface-variant">
+                {aboutData.personRole}
+              </span>
+            </div>
+          </div>
+
+          <div className="lg:col-span-7 flex flex-col gap-8 lg:pl-12 mt-16 lg:mt-0 relative z-10">
+            <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface leading-tight">
+              {aboutData.title}
+            </h2>
+            <div className="flex flex-col gap-5">
+              {aboutData.introText.map((paragraph, i) => (
+                <p
+                  key={i}
+                  className={`font-body text-body-md md:text-body-lg text-on-surface-variant leading-relaxed ${
+                    i === 0 ? "italic" : ""
+                  }`}
+                >
+                  {paragraph.includes("Anthropos") ? (
+                    <>
+                      Anthrovia nace de la unión entre{" "}
+                      <strong className="text-on-surface">Anthropos</strong> (persona) y{" "}
+                      <strong className="text-on-surface">Vía</strong> (camino).
+                    </>
+                  ) : paragraph.includes("personas, estrategia y tecnología") ? (
+                    <>
+                      Acompañamos ese proceso integrando{" "}
+                      <strong className="text-on-surface">personas, estrategia y tecnología</strong>,
+                      para transformar necesidades en soluciones y generar oportunidades de crecimiento.
+                    </>
+                  ) : (
+                    paragraph
+                  )}
+                </p>
+              ))}
             </div>
           </div>
         </div>
+      </section>
+    </>
+  )
+}
 
+function LearningAbout({ aboutData }: { aboutData: AboutSectionContent }) {
+  const name = aboutData.personName || aboutData.title
+  const role = aboutData.personRole || ""
+  const image = aboutData.personImage || "/ethos/mauricio.jpg"
+  const specialties = aboutData.specialties || []
+
+  return (
+    <section
+      id="sobre-nosotros"
+      className="w-full py-16 md:py-24 lg:py-section-gap px-margin-mobile lg:px-margin-desktop bg-surface-container-high relative"
+    >
+      <div className="max-w-container-max mx-auto">
+        <motion.div
+          className="flex flex-col gap-10 bg-surface p-8 md:p-12 lg:p-16 rounded-[40px] shadow-soft relative overflow-hidden max-w-4xl mx-auto"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <div className="absolute -right-24 -top-24 w-96 h-96 bg-surface-container-low rounded-full opacity-50 z-0" />
+          <div className="relative z-10 w-full">
+            <span className="font-label-md text-primary uppercase tracking-widest">
+              {aboutData.eyebrow}
+            </span>
+            <div className="mt-4">
+              <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">
+                {name}
+              </h2>
+              {role && (
+                <p className="font-body text-body-lg text-on-surface-variant italic">{role}</p>
+              )}
+            </div>
+            <div className="h-px w-16 bg-outline-variant/50 my-6" />
+          </div>
+          <div className="relative z-10 flex flex-col md:flex-row gap-8 lg:gap-12 items-start">
+            <div className="w-full md:w-[220px] flex-shrink-0">
+              <div className="aspect-[3/4] rounded-xl overflow-hidden shadow-soft border border-surface-variant">
+                <img alt={name} className="w-full h-full object-cover" src={image} />
+              </div>
+            </div>
+            <div className="flex-grow flex flex-col gap-6">
+              {aboutData.introText.map((paragraph, i) => (
+                <p key={i} className="font-body text-body-md md:text-lg text-on-surface-variant leading-relaxed">
+                  {paragraph}
+                </p>
+              ))}
+              {specialties.length > 0 && (
+                <div className="mt-2">
+                  <p className="font-label-md text-on-surface uppercase mb-4">Áreas de Especialización:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {specialties.map((tag, i) => (
+                      <span
+                        key={tag}
+                        className={
+                          i === specialties.length - 1
+                            ? "bg-secondary-fixed/50 text-secondary px-4 py-2 rounded-full font-label-md text-xs border border-secondary-fixed"
+                            : "bg-surface-variant text-on-surface-variant px-4 py-2 rounded-full font-label-md text-xs"
+                        }
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   )
