@@ -6,5 +6,4 @@ dist
 media/*
 !media/.gitkeep
 *.log
-# seed solo se corre en host/dev; no hace falta en la imagen de build
-scripts
+# seed se corre en host/dev; el patch SÍ debe entrar en la imagen

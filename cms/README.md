@@ -63,14 +63,17 @@ Al primer arranque Payload crea las tablas y el usuario admin (si no hay ninguno
 
 Definilos en `.env` del VPS antes del `up --build`. Después abrí `/admin` e iniciá sesión.
 
-Si ves `relation "users" does not exist`, reconstruí con el config actualizado y reiniciá:
+Si ves `relation "users" does not exist`, la causa es que Payload **no hace push del schema en `NODE_ENV=production`**. La imagen aplica un patch (`scripts/patch-payload-push.mjs`) para respetar `push: true`. Reconstruí:
 
 ```bash
 docker compose -f docker-compose.prod.yml up -d --build
 docker compose -f docker-compose.prod.yml logs -f cms
 ```
 
+Buscá en los logs: `[patch-payload-push]`, `Admin creado`, o `[debug-8b02e2]`.
+
 - Admin: `http://IP_PUBLICA:60518/admin`
+- Usuario: `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` (defaults en `.env.example`)
 - API: `http://IP_PUBLICA:60518/api/...`
 ### Primera configuración
 
