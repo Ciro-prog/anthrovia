@@ -43,6 +43,10 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
+    // En Docker NODE_ENV=production desactiva el push automático;
+    // sin migraciones previas las tablas no existen. Forzamos push
+    // para crear/actualizar el schema al arrancar (VPS single-node).
+    push: true,
   }),
   sharp,
   cors: corsOrigins,

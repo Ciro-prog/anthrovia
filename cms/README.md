@@ -56,8 +56,14 @@ Arranque **producción** (Postgres **no** expuesto al host; solo `60518`):
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 
-- Admin: `http://IP_PUBLICA:60518/admin`
-- API: `http://IP_PUBLICA:60518/api/...`
+Al primer arranque Payload crea las tablas en Postgres (`push: true`). Después abrí `/admin` y creá el usuario.
+
+Si ves `relation "users" does not exist`, reconstruí con el config actualizado y reiniciá:
+
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+docker compose -f docker-compose.prod.yml logs -f cms
+```
 
 ### Primera configuración
 
