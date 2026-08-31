@@ -6,3 +6,5 @@ dist
 media/*
 !media/.gitkeep
 *.log
+# seed solo se corre en host/dev; no hace falta en la imagen de build
+scripts
