@@ -95,7 +95,9 @@ Definilos en `.env` del VPS antes del `up --build`. Después abrí `/admin` e in
 
 **Importante (schema / migraciones):**
 
-Payload guarda en `payload_migrations` qué migraciones ya corrieron: **la 2.ª vez no vuelve a crear tablas**. Si ves `already exists` (p.ej. `enum_courses_cohort_status`), el volumen quedó a medias (migración cortada): hay que limpiar Postgres una vez:
+Payload guarda en `payload_migrations` qué migraciones ya corrieron: **la 2.ª vez no vuelve a crear tablas**.
+
+Si ves `already exists` (enums) o `column "_status" does not exist`, el volumen tiene el schema **viejo** de `pages` (JSON, sin drafts). `CREATE TABLE IF NOT EXISTS` no altera esa tabla. La migración ahora detecta `pages` sin `_status` y resetea el schema `public` sola; igual lo más limpio es borrar el volumen una vez:
 
 ```bash
 docker compose -f docker-compose.prod.yml down -v
@@ -104,7 +106,7 @@ docker compose -f docker-compose.prod.yml up -d --build
 docker logs -f cms-cms-1
 ```
 
-Éxito en logs: `Migrated: 20260831_041819_initial`, `Admin creado` / `Page creada`, sin `already exists`. Luego `/admin`.
+Éxito en logs: `Migrated: 20260831_041819_initial`, `Admin creado` / `Page creada`, sin `already exists` ni `_status does not exist`. Luego `/admin`.
 
 Si el schema fallaba antes (volumen vacío / `users` inexistente), reconstruí:
 

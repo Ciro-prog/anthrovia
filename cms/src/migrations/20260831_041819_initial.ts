@@ -3,6 +3,22 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
    DO $$ BEGIN
+  IF to_regclass('public.pages') IS NOT NULL
+     AND NOT EXISTS (
+       SELECT 1
+       FROM information_schema.columns
+       WHERE table_schema = 'public'
+         AND table_name = 'pages'
+         AND column_name = '_status'
+     )
+  THEN
+    DROP SCHEMA public CASCADE;
+    CREATE SCHEMA public;
+    GRANT ALL ON SCHEMA public TO PUBLIC;
+    GRANT ALL ON SCHEMA public TO CURRENT_USER;
+  END IF;
+END $$;
+  DO $$ BEGIN
   CREATE TYPE "public"."enum_pages_blocks_hero_buttons_variant" AS ENUM('primary', 'secondary');
 EXCEPTION
   WHEN duplicate_object THEN null;
