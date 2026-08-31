@@ -41,14 +41,16 @@ cd cms
 cp .env.example .env
 ```
 
-Editá `.env` (mínimo):
+Editá `.env` (mínimo). La URL pública **no** puede ser `localhost` si abrís el admin desde otra máquina:
 
 ```
 PAYLOAD_SECRET=un-secreto-largo-aleatorio
-PAYLOAD_PUBLIC_SERVER_URL=http://IP_PUBLICA:60518
-NEXT_PUBLIC_SERVER_URL=http://IP_PUBLICA:60518
+PAYLOAD_PUBLIC_SERVER_URL=http://pampaservers.com:60518
+NEXT_PUBLIC_SERVER_URL=http://pampaservers.com:60518
 CORS_ORIGINS=https://tu-dominio.vercel.app,https://anthroviahr.com
 ```
+
+`NEXT_PUBLIC_SERVER_URL` se incrusta en el JS del admin en **build time**. Si la cambiás, hace falta `--build` (no alcanza `up -d`).
 
 Arranque **producción** (Postgres **no** expuesto al host; solo `60518`):
 
@@ -72,9 +74,11 @@ docker compose -f docker-compose.prod.yml logs -f cms
 
 Éxito esperado en logs: migración aplicada, `Admin creado: …`, sin `drizzle-kit/api` ni `relation "users" does not exist`.
 
-- Admin: `http://IP_PUBLICA:60518/admin`
+- Admin: `http://pampaservers.com:60518/admin`
 - Usuario: `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` (defaults en `.env.example`)
-- API: `http://IP_PUBLICA:60518/api/...`
+- API: `http://pampaservers.com:60518/api/...`
+
+Si el login falla con `ERR_CONNECTION_REFUSED` a `localhost:60518`, el `.env` del VPS todavía tiene localhost o no se rebuildió tras corregirlo.
 ### Primera configuración
 
 1. Usuario admin (wizard o seed local).
