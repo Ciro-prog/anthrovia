@@ -140,23 +140,20 @@ export function mapCmsBlocksToSections(
                     f.course && typeof f.course === 'object'
                       ? (f.course as Record<string, unknown>)
                       : null
-                  const src = related || f
-                  const slug = String(src.slug || '')
-                  const title = String(src.title || f.title || '')
+                  const title = String(f.title || related?.title || '')
+                  const slug = String(related?.slug || '')
                   if (!title && !slug) return null
                   return {
-                    id: String(src.courseId || src.id || f.itemId || slug || title),
+                    id: String(f.itemId || related?.courseId || related?.id || slug || title),
                     title,
-                    description: String(src.description || f.description || ''),
-                    category: String(src.category || f.category || ''),
+                    description: String(f.description || related?.description || ''),
+                    category: String(f.category || related?.category || ''),
                     imageUrl: mediaUrl(
                       cmsBase,
-                      src.image || f.image,
-                      (src.imageUrl || f.imageUrl) as string,
+                      f.image || related?.image,
+                      (f.imageUrl || related?.imageUrl) as string,
                     ),
-                    link: slug
-                      ? `/capacitaciones/${slug}`
-                      : String(f.link || '') || undefined,
+                    link: slug ? `/capacitaciones/${slug}` : '#contacto',
                   }
                 })
                 .filter((row): row is NonNullable<typeof row> => Boolean(row))

@@ -167,16 +167,32 @@ export const ServicesBlock: Block = {
       admin: {
         initCollapsed: true,
         description:
-          'Elegí capacitaciones. El contenido de «conocer más» se edita en Capacitaciones. Borrar un curso quita la card.',
+          'Editá la card acá. Al publicar se crea la URL (/capacitaciones/{título}) y la página «conocer más». Liderazgo Emocional sigue en #contacto.',
+        components: {
+          RowLabel: '/admin/CardRowLabel#CardRowLabel',
+        },
       },
       fields: [
+        { name: 'itemId', type: 'text', admin: { description: 'ID estable (ej. cm-nivel-1)' } },
+        ...imagePair('image', 'imageUrl', 'Imagen card'),
+        { name: 'title', type: 'text', required: true, label: 'Título' },
+        { name: 'description', type: 'textarea', required: true, label: 'Descripción' },
+        { name: 'category', type: 'text', label: 'Categoría' },
         {
           name: 'course',
           type: 'relationship',
           relationTo: 'courses',
-          required: true,
           admin: {
-            description: 'Card + /capacitaciones/{slug}',
+            hidden: true,
+          },
+        },
+        {
+          name: 'editarPagina',
+          type: 'ui',
+          admin: {
+            components: {
+              Field: '/admin/EditarPaginaFormacion#EditarPaginaFormacion',
+            },
           },
         },
       ],

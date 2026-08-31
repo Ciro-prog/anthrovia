@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { pageSectionBlocks } from '../blocks/pageSections'
+import { syncFormacionesCourses } from '../hooks/syncFormacionesCourses'
 
 const previewBase = () =>
   (process.env.PREVIEW_URL || process.env.FRONTEND_URL || 'https://anthroviahr.com').replace(
@@ -33,6 +34,9 @@ export const Pages: CollectionConfig = {
   },
   versions: {
     drafts: true,
+  },
+  hooks: {
+    afterChange: [syncFormacionesCourses],
   },
   access: {
     read: ({ req: { user } }) => {

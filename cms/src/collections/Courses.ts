@@ -18,7 +18,7 @@ export const Courses: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', 'category', 'updatedAt'],
     description:
-      'Cada capacitación es una card en /capacitaciones y la página «conocer más». Borrar el doc quita la card y el /capacitaciones/slug.',
+      'La card (título, imagen, texto) se edita en Páginas → Formaciones. Acá editá «conocer más». Una card nueva nace con la plantilla de Community Manager Nivel I.',
     livePreview: {
       url: ({ data }) => {
         const slug = typeof data?.slug === 'string' ? data.slug : ''
@@ -45,21 +45,31 @@ export const Courses: CollectionConfig = {
               unique: true,
               index: true,
               admin: {
-                description: 'URL: /capacitaciones/{slug}',
+                description: 'URL: /capacitaciones/{slug}. No cambia si renombrás la card.',
+                readOnly: true,
               },
             },
             {
               name: 'courseId',
               type: 'text',
-              admin: { description: 'ID estable (ej. course-cm-nivel-1)' },
+              admin: { description: 'ID estable (ej. course-cm-nivel-1)', readOnly: true },
             },
-            { name: 'category', type: 'text', label: 'Categoría (card)' },
+            {
+              name: 'category',
+              type: 'text',
+              label: 'Categoría (card)',
+              admin: { readOnly: true },
+            },
             {
               name: 'description',
               type: 'textarea',
               label: 'Descripción (card)',
+              admin: { readOnly: true },
             },
-            ...imagePair('image', 'imageUrl', 'Imagen card'),
+            ...imagePair('image', 'imageUrl', 'Imagen card').map((field) => ({
+              ...field,
+              admin: { ...field.admin, readOnly: true },
+            })),
           ],
         },
         {

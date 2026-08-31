@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import { Link } from "react-router-dom"
 import { CourseBlock, CourseBlockButton } from "@/types/cms"
 import { motion } from "framer-motion"
@@ -1073,53 +1074,59 @@ export function CourseBlockRenderer({ blocks }: { blocks: CourseBlock[] }) {
     <>
       {blocks.map((block, index) => {
         const key = `${block.type}-${index}`
+        const cms = { "data-cms-field": `blocks.${index}` } as const
+        const wrap = (node: ReactNode) => (
+          <div key={key} {...cms}>
+            {node}
+          </div>
+        )
         switch (block.type) {
           case "hero":
-            return <CourseHero key={key} block={block} />
+            return wrap(<CourseHero block={block} />)
           case "richText":
-            return <CourseRichText key={key} block={block} />
+            return wrap(<CourseRichText block={block} />)
           case "contextSplit":
-            return <CourseContextSplit key={key} block={block} />
+            return wrap(<CourseContextSplit block={block} />)
           case "desireFear":
-            return <CourseDesireFear key={key} block={block} />
+            return wrap(<CourseDesireFear block={block} />)
           case "beforeAfter":
-            return <CourseBeforeAfter key={key} block={block} />
+            return wrap(<CourseBeforeAfter block={block} />)
           case "triad":
-            return <CourseTriad key={key} block={block} />
+            return wrap(<CourseTriad block={block} />)
           case "pathway":
-            return <CoursePathway key={key} block={block} />
+            return wrap(<CoursePathway block={block} />)
           case "toolsSplit":
-            return <CourseToolsSplit key={key} block={block} />
+            return wrap(<CourseToolsSplit block={block} />)
           case "philosophy":
-            return <CoursePhilosophy key={key} block={block} />
+            return wrap(<CoursePhilosophy block={block} />)
           case "testimonials":
-            return <CourseTestimonials key={key} block={block} />
+            return wrap(<CourseTestimonials block={block} />)
           case "teacherBand":
-            return <CourseTeacherBand key={key} block={block} />
+            return wrap(<CourseTeacherBand block={block} />)
           case "investmentCard":
-            return <CourseInvestmentCard key={key} block={block} />
+            return wrap(<CourseInvestmentCard block={block} />)
           case "bonuses":
-            return <CourseBonuses key={key} block={block} />
+            return wrap(<CourseBonuses block={block} />)
           case "closingCta":
-            return <CourseClosingCta key={key} block={block} />
+            return wrap(<CourseClosingCta block={block} />)
           case "twoColumn":
-            return <CourseTwoColumn key={key} block={block} />
+            return wrap(<CourseTwoColumn block={block} />)
           case "iconGrid":
-            return <CourseIconGrid key={key} block={block} />
+            return wrap(<CourseIconGrid block={block} />)
           case "splitMedia":
-            return <CourseSplitMedia key={key} block={block} />
+            return wrap(<CourseSplitMedia block={block} />)
           case "darkBand":
-            return <CourseDarkBand key={key} block={block} />
+            return wrap(<CourseDarkBand block={block} />)
           case "tags":
-            return <CourseTags key={key} block={block} />
+            return wrap(<CourseTags block={block} />)
           case "instructors":
-            return <CourseInstructors key={key} block={block} />
+            return wrap(<CourseInstructors block={block} />)
           case "faq":
-            return <CourseFaq key={key} block={block} />
+            return wrap(<CourseFaq block={block} />)
           case "pricing":
-            return <CoursePricing key={key} block={block} />
+            return wrap(<CoursePricing block={block} />)
           case "scheduleCta":
-            return <CourseScheduleCta key={key} block={block} />
+            return wrap(<CourseScheduleCta block={block} />)
           default:
             return null
         }

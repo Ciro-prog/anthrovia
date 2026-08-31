@@ -95,3 +95,17 @@
     letter-spacing: 0.05em;
   }
 }
+
+.cms-preview-focus {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 6px;
+  border-radius: 8px;
+}
+
+.cms-preview-focus-media {
+  outline: 3px solid hsl(var(--primary));
+  outline-offset: 4px;
+  border-radius: 12px;
+  box-shadow: 0 0 0 8px hsl(var(--primary) / 0.22);
+  position: relative;
+}

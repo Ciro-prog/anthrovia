@@ -11,16 +11,17 @@ CMS self-hosted (**Payload 3 + Postgres**) para editar la web Anthrovia: página
 1. `/admin` → **Páginas**. Tienen que aparecer **Home** y **Capacitaciones** (publicadas).
 2. Si ves **No Pages found**, el seed no corrió (migración rota o filtro solo Drafts). En la lista: **Published** o **All**. En logs: `Page creada: home` / `learning`.
 3. Editá un texto (sin Publish) → **Live Preview** (panel derecho / ojo) = borrador en la SPA real. **Ver publicado** / Preview = lo que ya está en Vercel (no muestra drafts).
-4. Cada bloque = sección. Las **Cards servicios** son tarjetas de la home.
-5. Si el borrador está bien → **Publish**. Recién ahí anthroviahr.com y “Ver publicado” muestran el cambio.
+4. Cada bloque = sección. Las **Cards servicios** son tarjetas de la home. **Formaciones** = cards (título, imagen, texto).
+5. Si el borrador está bien → **Publish**. Recién ahí anthroviahr.com y “Ver publicado” muestran el cambio. Al publicar Formaciones se crea `/capacitaciones/{slug-del-título}` y la página «conocer más» (plantilla Community Manager Nivel I en cards nuevas).
+6. En la card: **Editar página** abre los bloques (FAQ, etc.). Liderazgo Emocional sigue en `#contacto`.
 
-**Capacitaciones (colección):** cada doc es una card en `/capacitaciones` y la página «conocer más» (`/capacitaciones/{slug}`). Editá título/imagen/descripción (card) y los bloques (página). Borrar el doc quita la card y el detalle. En Páginas → Formaciones solo elegís cuáles se ven y el orden.
+**Capacitaciones (colección):** editá «conocer más». La card se edita en Páginas → Formaciones.
 
 | Página CMS | URL en Vercel | Qué editás |
 |---|---|---|
 | Home (`slug: home`) | https://anthroviahr.com/ | Hero, servicios (tarjetas), about, contacto, footer |
-| Capacitaciones (`slug: learning`) | https://anthroviahr.com/capacitaciones | Hero, formaciones (orden de cards), in company, about, contacto |
-| Colección **Capacitaciones** | https://anthroviahr.com/capacitaciones/{slug} | Card + bloques «conocer más». Borrar el doc quita la card y el detalle. |
+| Capacitaciones (`slug: learning`) | https://anthroviahr.com/capacitaciones | Hero, formaciones (cards), in company, about, contacto |
+| Colección **Capacitaciones** | https://anthroviahr.com/capacitaciones/{slug} | Bloques «conocer más». Cards nuevas: plantilla CM Nivel I. |
 
 **Live Preview** carga `?preview=1` **dentro del admin** y recibe el formulario (draft). Abrir `?preview=1` en una pestaña nueva **no** muestra el borrador. “Ver publicado” **no** sustituye al iframe.
 

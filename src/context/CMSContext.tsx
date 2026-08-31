@@ -11,6 +11,7 @@ import {
 } from '../lib/cmsApi'
 import { mapCmsBlocksToSections } from '../lib/mapCmsSections'
 import { mapCmsCourseBlocks } from '../lib/mapCmsCourseBlocks'
+import { usePreviewFieldFocus } from '../lib/usePreviewFieldFocus'
 
 interface CMSContextType {
   content: SiteContent
@@ -53,6 +54,8 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     depth: 2,
     initialData: { slug: previewSlug, sections: [] },
   })
+
+  usePreviewFieldFocus(liveData, isPreview)
 
   useEffect(() => {
     let cancelled = false

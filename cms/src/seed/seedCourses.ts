@@ -3,9 +3,25 @@ import { courseBlocksToPayload } from './courseToBlock'
 import coursesSnapshot from './coursesContent.json'
 import siteContent from './siteContent.json'
 
+type SiteFormacion = {
+  id?: string
+  title?: string
+  description?: string
+  category?: string
+  imageUrl?: string
+  link?: string
+}
+
+const siteFormaciones: SiteFormacion[] =
+  (
+    siteContent.learning as {
+      type?: string
+      formaciones?: SiteFormacion[]
+    }[]
+  ).find((s) => s.type === 'services')?.formaciones || []
+
 const cardBySlug: Record<string, { category: string; description: string; imageUrl: string }> = {}
-for (const f of (siteContent.learning as { type?: string; formaciones?: { link?: string; category?: string; description?: string; imageUrl?: string }[] }[])
-  .find((s) => s.type === 'services')?.formaciones || []) {
+for (const f of siteFormaciones) {
   const slug = String(f.link || '').replace('/capacitaciones/', '')
   if (slug && !slug.startsWith('#')) {
     cardBySlug[slug] = {
@@ -21,6 +37,14 @@ type CourseSnap = {
   slug: string
   title: string
   blocks: (Record<string, unknown> & { type: string })[]
+}
+
+function rowHasTitle(row: unknown): boolean {
+  return Boolean(row && typeof row === 'object' && 'title' in row && (row as { title?: string }).title)
+}
+
+function rowHasCourse(row: unknown): boolean {
+  return Boolean(row && typeof row === 'object' && 'course' in row && (row as { course?: unknown }).course)
 }
 
 export async function seedCourses(
@@ -95,17 +119,9 @@ export async function seedCourses(
 
   const services = page.sections.find((s) => s.blockType === 'services')
   const current = Array.isArray(services?.formaciones) ? services.formaciones : []
-  const alreadyLinked = current.some(
-    (row) => row && typeof row === 'object' && 'course' in (row as object),
-  )
-  if (alreadyLinked && current.length > 0) return ids
+  const alreadyReady = current.length > 0 && current.every(rowHasTitle) && current.some(rowHasCourse)
+  if (alreadyReady) return ids
 
-  const order = [
-    'community-manager-nivel-1',
-    'community-manager-pro',
-    'hablar-en-publico',
-    'academia-desarrollo-comercial',
-  ]
   const allCourses = await payload.find({
     collection: 'courses',
     limit: 50,
@@ -113,10 +129,19 @@ export async function seedCourses(
     depth: 0,
   })
   const bySlug = new Map(allCourses.docs.map((c) => [String(c.slug), c.id]))
-  const formaciones = order
-    .map((slug) => bySlug.get(slug))
-    .filter(Boolean)
-    .map((id) => ({ course: id }))
+
+  const formaciones = siteFormaciones.map((f) => {
+    const slug = String(f.link || '').replace('/capacitaciones/', '')
+    const courseId = slug && !slug.startsWith('#') ? bySlug.get(slug) : undefined
+    return {
+      itemId: f.id || '',
+      title: f.title || '',
+      description: f.description || '',
+      category: f.category || '',
+      imageUrl: f.imageUrl || '',
+      ...(courseId ? { course: courseId } : {}),
+    }
+  })
 
   if (formaciones.length === 0) return ids
 
@@ -130,8 +155,9 @@ export async function seedCourses(
     data: { sections: nextSections, _status: 'published' } as never,
     overrideAccess: true,
     draft: false,
+    context: { skipFormacionesSync: true },
   })
-  log('Page learning: formaciones vinculadas a Capacitaciones')
+  log('Page learning: formaciones (cards) + cursos vinculados')
 
   return ids
 }

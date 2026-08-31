@@ -75,7 +75,10 @@ export const ServicesSection = ({
                 <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 duration-700" />
                 <div className="relative z-10 flex-grow flex flex-col">
                   {service.imageUrl ? (
-                    <div className="w-full h-40 rounded-2xl overflow-hidden mb-8 -mt-2">
+                    <div
+                      className="w-full h-40 rounded-2xl overflow-hidden mb-8 -mt-2"
+                      data-cms-field={`services.${index}.image`}
+                    >
                       <img
                         src={service.imageUrl}
                         alt={service.title}
@@ -85,14 +88,21 @@ export const ServicesSection = ({
                   ) : (
                     <div
                       className={`w-16 h-16 rounded-2xl ${iconBg} flex items-center justify-center mb-8 transform transition-transform duration-300 group-hover:scale-110`}
+                      data-cms-field={`services.${index}.image`}
                     >
                       <Icon className="w-8 h-8" />
                     </div>
                   )}
-                  <h3 className="font-heading text-headline-md text-on-surface mb-4 group-hover:text-primary transition-colors">
+                  <h3
+                    className="font-heading text-headline-md text-on-surface mb-4 group-hover:text-primary transition-colors"
+                    data-cms-field={`services.${index}.title`}
+                  >
                     {service.title}
                   </h3>
-                  <p className="font-body text-body-md text-on-surface-variant mb-6">
+                  <p
+                    className="font-body text-body-md text-on-surface-variant mb-6"
+                    data-cms-field={`services.${index}.description`}
+                  >
                     {service.description}
                   </p>
 
@@ -207,10 +217,16 @@ function LearningServices({ data }: { data: ServicesSectionContent }) {
       <section id="formaciones" className="w-full py-16 md:py-24 lg:py-section-gap px-margin-mobile lg:px-margin-desktop bg-surface-container-low">
         <div className="max-w-container-max mx-auto flex flex-col gap-12 md:gap-16">
           <div className="flex flex-col lg:flex-row justify-between items-start gap-6 lg:gap-16">
-            <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface lg:w-1/2">
+            <h2
+              className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface lg:w-1/2"
+              data-cms-field="formacionesTitle"
+            >
               {data.formacionesTitle || data.title}
             </h2>
-            <p className="font-body text-body-lg text-on-surface-variant lg:w-1/2">
+            <p
+              className="font-body text-body-lg text-on-surface-variant lg:w-1/2"
+              data-cms-field="formacionesDescription"
+            >
               {data.formacionesDescription || data.description}
             </p>
           </div>
@@ -225,15 +241,33 @@ function LearningServices({ data }: { data: ServicesSectionContent }) {
                 transition={{ delay: index * 0.05 }}
                 className="group bg-surface flex flex-col rounded-2xl overflow-hidden shadow-soft hover:shadow-ethereal transition-all duration-300"
               >
-                <div className="h-48 bg-surface-variant relative overflow-hidden">
+                <div
+                  className="h-48 bg-surface-variant relative overflow-hidden"
+                  data-cms-field={`formaciones.${index}.image`}
+                >
                   <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={item.imageUrl} alt={item.title} />
                   <div className="absolute top-4 left-4 bg-surface px-3 py-1 rounded-full z-20">
-                    <span className="font-label-md text-primary text-xs uppercase">{item.category}</span>
+                    <span
+                      className="font-label-md text-primary text-xs uppercase"
+                      data-cms-field={`formaciones.${index}.category`}
+                    >
+                      {item.category}
+                    </span>
                   </div>
                 </div>
                 <div className="p-6 md:p-8 flex flex-col flex-grow">
-                  <h3 className="font-heading text-xl md:text-headline-md text-on-surface mb-4 group-hover:text-primary transition-colors">{item.title}</h3>
-                  <p className="font-body text-body-md text-on-surface-variant mb-8 flex-grow">{item.description}</p>
+                  <h3
+                    className="font-heading text-xl md:text-headline-md text-on-surface mb-4 group-hover:text-primary transition-colors"
+                    data-cms-field={`formaciones.${index}.title`}
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    className="font-body text-body-md text-on-surface-variant mb-8 flex-grow"
+                    data-cms-field={`formaciones.${index}.description`}
+                  >
+                    {item.description}
+                  </p>
                   {(item.link || "#contacto").startsWith("/") ? (
                     <Link to={item.link!} className="font-label-md text-primary inline-flex items-center gap-1 self-start group/link">
                       Conocer más <ArrowRight className="h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
