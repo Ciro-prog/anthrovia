@@ -5,6 +5,8 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  // Permite CMS_URL en Vercel (además del prefijo VITE_ habitual)
+  envPrefix: ['VITE_', 'CMS_'],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

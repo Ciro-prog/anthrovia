@@ -2,7 +2,11 @@ import { CoursePageContent, SectionContent, SiteContent } from '@/types/cms'
 import { initialContent } from '@/data/initialContent'
 import { coursesData } from '@/data/coursesContent'
 
-const CMS_URL = (import.meta.env.VITE_CMS_URL as string | undefined)?.replace(/\/$/, '') || ''
+const CMS_URL = (
+  (import.meta.env.CMS_URL as string | undefined) ||
+  (import.meta.env.VITE_CMS_URL as string | undefined) ||
+  ''
+).replace(/\/$/, '')
 
 /** Keys that hold image/video/media URLs — empty CMS values keep local /ethos/ defaults. */
 const MEDIA_KEYS = new Set([
@@ -245,7 +249,7 @@ export type LeadPayload = {
 
 export async function submitLead(data: LeadPayload): Promise<{ ok: boolean; error?: string }> {
   if (!CMS_URL) {
-    return { ok: false, error: 'CMS no configurado (VITE_CMS_URL)' }
+    return { ok: false, error: 'CMS no configurado (CMS_URL)' }
   }
   try {
     const res = await fetch(`${CMS_URL}/api/leads`, {
@@ -282,7 +286,7 @@ export type BookingPayload = {
 
 export async function submitBooking(data: BookingPayload): Promise<{ ok: boolean; error?: string }> {
   if (!CMS_URL) {
-    return { ok: false, error: 'CMS no configurado (VITE_CMS_URL)' }
+    return { ok: false, error: 'CMS no configurado (CMS_URL)' }
   }
   try {
     const res = await fetch(`${CMS_URL}/api/bookings`, {

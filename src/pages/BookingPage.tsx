@@ -93,7 +93,7 @@ export const BookingPage = () => {
         {!isCmsConfigured() && (
           <div className="p-6 rounded-xl bg-surface-container-low border border-outline-variant mb-8">
             <p className="font-body text-body-md text-on-surface-variant">
-              El CMS no está configurado todavía. Definí <code className="text-primary">VITE_CMS_URL</code> apuntando
+              El CMS no está configurado todavía. Definí <code className="text-primary">CMS_URL</code> apuntando
               al servidor (puerto 60518) para habilitar la agenda.
             </p>
           </div>

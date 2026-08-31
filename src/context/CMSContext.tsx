@@ -33,7 +33,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const remote = await fetchSiteContent()
         if (!cancelled) {
           setContent(remote)
-          setCmsOnline(Boolean(import.meta.env.VITE_CMS_URL))
+          setCmsOnline(Boolean(import.meta.env.CMS_URL || import.meta.env.VITE_CMS_URL))
         }
       } catch (err) {
         console.warn('CMS load failed, using local content', err)
