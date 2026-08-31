@@ -93,9 +93,20 @@ Al primer arranque Payload corre las **migraciones de producción** (`src/migrat
 
 Definilos en `.env` del VPS antes del `up --build`. Después abrí `/admin` e iniciá sesión.
 
-**Importante (schema blocks):** este repo reemplazó la migración inicial. En el VPS, si Postgres ya tenía datos del schema anterior, hace falta un reset de volumen una vez (`down -v`) y luego `up --build` + seed de páginas.
+**Importante (schema / migraciones):**
 
-Si el schema fallaba antes (volumen Postgres vacío / `users` inexistente), reconstruí:
+Payload guarda en `payload_migrations` qué migraciones ya corrieron: **la 2.ª vez no vuelve a crear tablas**. Si ves `already exists` (p.ej. `enum_courses_cohort_status`), el volumen quedó a medias (migración cortada): hay que limpiar Postgres una vez:
+
+```bash
+docker compose -f docker-compose.prod.yml down -v
+docker volume ls | grep -E 'cms|pgdata'   # no debería quedar cms_*pgdata
+docker compose -f docker-compose.prod.yml up -d --build
+docker logs -f cms-cms-1
+```
+
+Éxito en logs: `Migrated: 20260831_041819_initial`, `Admin creado` / `Page creada`, sin `already exists`. Luego `/admin`.
+
+Si el schema fallaba antes (volumen vacío / `users` inexistente), reconstruí:
 
 ```bash
 docker compose -f docker-compose.prod.yml up -d --build
