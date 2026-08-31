@@ -61,4 +61,64 @@ export default buildConfig({
       fileSize: 20_000_000,
     },
   },
+  onInit: async (payload) => {
+    const email = process.env.SEED_ADMIN_EMAIL || 'admin@anthroviahr.com'
+    const password = process.env.SEED_ADMIN_PASSWORD || 'AnthroviaAdmin2026!'
+
+    const existing = await payload.find({
+      collection: 'users',
+      limit: 1,
+      overrideAccess: true,
+    })
+
+    if (existing.totalDocs === 0) {
+      await payload.create({
+        collection: 'users',
+        data: {
+          email,
+          password,
+          name: 'Admin Anthrovia',
+        },
+        overrideAccess: true,
+      })
+      payload.logger.info(`Admin creado: ${email}`)
+    }
+
+    const eventTypes = await payload.find({
+      collection: 'event-types',
+      where: { slug: { equals: 'llamada-15' } },
+      limit: 1,
+      overrideAccess: true,
+    })
+
+    if (eventTypes.totalDocs === 0) {
+      await payload.create({
+        collection: 'event-types',
+        data: {
+          title: 'Llamada de 15 minutos',
+          slug: 'llamada-15',
+          description:
+            'Agendá una llamada personalizada para conocer tus objetivos y ver si la formación es para vos.',
+          durationMinutes: 15,
+          active: true,
+        },
+        overrideAccess: true,
+      })
+      payload.logger.info('Event type creado: llamada-15')
+    }
+
+    try {
+      await payload.updateGlobal({
+        slug: 'site-settings',
+        data: {
+          siteName: 'Anthrovia HR',
+          bookingEnabled: true,
+          defaultEventTypeSlug: 'llamada-15',
+        },
+        overrideAccess: true,
+      })
+    } catch {
+      // global puede fallar si el schema aún no está listo; se puede editar en admin
+    }
+  },
 })

@@ -56,7 +56,12 @@ Arranque **producción** (Postgres **no** expuesto al host; solo `60518`):
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 
-Al primer arranque Payload crea las tablas en Postgres (`push: true`). Después abrí `/admin` y creá el usuario.
+Al primer arranque Payload crea las tablas y el usuario admin (si no hay ninguno):
+
+- Email: `SEED_ADMIN_EMAIL` (default `admin@anthroviahr.com`)
+- Password: `SEED_ADMIN_PASSWORD` (default `AnthroviaAdmin2026!`)
+
+Definilos en `.env` del VPS antes del `up --build`. Después abrí `/admin` e iniciá sesión.
 
 Si ves `relation "users" does not exist`, reconstruí con el config actualizado y reiniciá:
 
@@ -65,6 +70,8 @@ docker compose -f docker-compose.prod.yml up -d --build
 docker compose -f docker-compose.prod.yml logs -f cms
 ```
 
+- Admin: `http://IP_PUBLICA:60518/admin`
+- API: `http://IP_PUBLICA:60518/api/...`
 ### Primera configuración
 
 1. Usuario admin (wizard o seed local).
