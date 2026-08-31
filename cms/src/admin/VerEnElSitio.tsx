@@ -36,14 +36,14 @@ export function VerEnElSitioField() {
           marginBottom: 6,
         }}
       >
-        Ver en el sitio
+        Ver publicado (Vercel)
       </div>
       <a href={href} target="_blank" rel="noreferrer">
         {href}
       </a>
       <p style={{ margin: '8px 0 0', fontSize: 13, color: 'var(--theme-elevation-600)' }}>
-        Home = inicio · Capacitaciones = /capacitaciones. En la lista, filtro Published o All (no
-        solo Drafts).
+        Esto es lo ya publicado. El borrador (antes de Publish) está en{' '}
+        <strong>Live Preview</strong> (panel derecho / icono de ojo), no en este link.
       </p>
     </div>
   )

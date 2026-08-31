@@ -10,16 +10,16 @@ CMS self-hosted (**Payload 3 + Postgres**) para editar la web Anthrovia: página
 
 1. `/admin` → **Páginas**. Tienen que aparecer **Home** y **Capacitaciones** (publicadas).
 2. Si ves **No Pages found**, el seed no corrió (migración rota o filtro solo Drafts). En la lista: **Published** o **All**. En logs: `Page creada: home` / `learning`.
-3. Abrí una página → **Ver en el sitio** (arriba) abre Vercel. **Live Preview** (panel derecho) es el iframe `?preview=1`.
+3. Editá un texto (sin Publish) → **Live Preview** (panel derecho / ojo) = borrador en la SPA real. **Ver publicado** / Preview = lo que ya está en Vercel (no muestra drafts).
 4. Cada bloque = sección. Las **Cards servicios** y **Formaciones** son las tarjetas (título + imagen).
-5. **Publish** publica; si el CMS cae, la web sigue con contenido local `/ethos`.
+5. Si el borrador está bien → **Publish**. Recién ahí anthroviahr.com y “Ver publicado” muestran el cambio.
 
 | Página CMS | URL en Vercel | Qué editás |
 |---|---|---|
 | Home (`slug: home`) | https://anthroviahr.com/ | Hero, servicios (tarjetas), about, contacto, footer |
 | Capacitaciones (`slug: learning`) | https://anthroviahr.com/capacitaciones | Hero, formaciones (tarjetas con imagen), in company, about, contacto |
 
-**Ver en el sitio** vs Live Preview: el botón/link abre la SPA publicada (mapa de dónde cae el cambio). El iframe necesita `CMS_URL=http://pampaservers.com:60518` en Vercel + redeploy del front. Si el iframe está bloqueado, usá **Ver en el sitio**.
+**Live Preview** carga `?preview=1` **dentro del admin** y recibe el formulario (draft). Abrir `?preview=1` en una pestaña nueva **no** muestra el borrador. “Ver publicado” **no** sustituye al iframe.
 
 Tras el primer deploy con blocks: si el volume de Postgres ya existía con el schema viejo, resetealo una vez:
 
@@ -75,17 +75,18 @@ cd cms
 cp .env.example .env
 ```
 
-Editá `.env` (mínimo). La URL pública **no** puede ser `localhost` si abrís el admin desde otra máquina:
+Editá `cms/.env` en el **VPS** (estas **no** van en Vercel). La URL pública **no** puede ser `localhost` si abrís el admin desde otra máquina:
 
 ```
 PAYLOAD_SECRET=un-secreto-largo-aleatorio
 PAYLOAD_PUBLIC_SERVER_URL=http://pampaservers.com:60518
 NEXT_PUBLIC_SERVER_URL=http://pampaservers.com:60518
 PREVIEW_URL=https://anthroviahr.com
-CORS_ORIGINS=https://tu-dominio.vercel.app,https://anthroviahr.com,http://localhost:5173
+NEXT_PUBLIC_PREVIEW_URL=https://anthroviahr.com
+CORS_ORIGINS=https://anthroviahr.com,https://tu-dominio.vercel.app,http://localhost:5173
 ```
 
-`NEXT_PUBLIC_SERVER_URL` se incrusta en el JS del admin en **build time**. Si la cambiás, hace falta `--build` (no alcanza `up -d`).
+`NEXT_PUBLIC_*` se incrusta en el JS del admin en **build time**. Si cambiás `NEXT_PUBLIC_*` o `PREVIEW_URL`, hace falta `--build` (no alcanza `up -d`).
 
 Arranque **producción** (Postgres **no** expuesto al host; solo `60518`):
 
@@ -169,13 +170,22 @@ docker compose up -d --build
 
 ## Front (Vercel)
 
-En el proyecto de la SPA (Vercel → Environment Variables):
+`CMS_URL` va **solo** en el proyecto de la SPA (Vercel → Settings → Environment Variables → Production). **No** la pongas en `cms/.env` del VPS.
 
 ```
 CMS_URL=http://pampaservers.com:60518
 ```
 
-(`vite.config` también acepta `VITE_CMS_URL`.) Sin esa variable: contenido + imágenes locales; el Live Preview del admin no refleja el CMS. Tras cambiarla, redeploy del front.
+Sin `CMS_URL`: contenido local `/ethos` y Live Preview apunta a `localhost` → no ves el borrador. Tras agregarla, **redeploy** del front.
+
+En local del front: `CMS_URL` o `VITE_CMS_URL` (no uses `VITE_*` en Vercel).
+
+| Dónde | Variable | Valor |
+|---|---|---|
+| Vercel (SPA) | `CMS_URL` | `http://pampaservers.com:60518` |
+| VPS `cms/.env` | `PREVIEW_URL` | `https://anthroviahr.com` |
+| VPS `cms/.env` | `CORS_ORIGINS` | debe incluir `https://anthroviahr.com` |
+| VPS `cms/.env` | `PAYLOAD_PUBLIC_SERVER_URL` / `NEXT_PUBLIC_SERVER_URL` | `http://pampaservers.com:60518` |
 
 ## API pública
 

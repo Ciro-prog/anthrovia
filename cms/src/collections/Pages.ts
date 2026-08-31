@@ -19,7 +19,8 @@ export const Pages: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
     description:
-      'Home = https://anthroviahr.com/ · Capacitaciones = https://anthroviahr.com/capacitaciones. En la lista usá Published o All (no solo Drafts).',
+      'Live Preview (panel derecho / ojo) = borrador antes de Publish. Preview / Ver publicado = lo que ya está en Vercel. Home = anthroviahr.com/ · Capacitaciones = /capacitaciones. Lista: Published o All.',
+    // URL pública (publicado). El borrador solo se ve en livePreview (iframe).
     preview: ({ slug }) => `${previewBase()}${publicPathForSlug(slug)}`,
     livePreview: {
       url: ({ data }) => {
@@ -77,7 +78,7 @@ export const Pages: CollectionConfig = {
       blocks: pageSectionBlocks,
       admin: {
         description:
-          'Cada bloque es una sección del sitio. Las tarjetas (servicios / formaciones) llevan título + imagen. Publicá cuando esté OK.',
+          'Cada bloque es una sección del sitio. Editá y mirá el borrador en Live Preview; Publish recién cuando esté OK.',
       },
     },
   ],
