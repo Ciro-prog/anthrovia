@@ -1,6 +1,5 @@
 import type { CollectionConfig } from 'payload'
 import { coursePageBlocks } from '../blocks/courseBlocks'
-import { imagePair } from '../blocks/fields'
 
 const previewBase = () =>
   (process.env.PREVIEW_URL || process.env.FRONTEND_URL || 'https://anthroviahr.com').replace(
@@ -66,10 +65,19 @@ export const Courses: CollectionConfig = {
               label: 'Descripción (card)',
               admin: { readOnly: true },
             },
-            ...imagePair('image', 'imageUrl', 'Imagen card').map((field) => ({
-              ...field,
-              admin: { ...field.admin, readOnly: true },
-            })),
+            {
+              name: 'image',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Imagen card (subir)',
+              admin: { readOnly: true },
+            },
+            {
+              name: 'imageUrl',
+              type: 'text',
+              label: 'Imagen card (path / URL)',
+              admin: { readOnly: true, description: 'Fallback si no hay upload.' },
+            },
           ],
         },
         {
