@@ -21,11 +21,25 @@ async function run(cmd, args, env) {
   return new Promise((resolve, reject) => {
     const child = spawn(cmd, args, {
       cwd: root,
-      env: { ...process.env, ...env },
-      stdio: 'inherit',
+      env: { ...process.env, ...env, CI: 'true' },
+      stdio: ['pipe', 'inherit', 'inherit'],
       shell: true,
     })
+    // Responde Enter a prompts interactivos de drizzle (create column, etc.)
+    const pump = setInterval(() => {
+      try {
+        child.stdin?.write('\n')
+      } catch {
+        // ignore
+      }
+    }, 500)
     child.on('exit', (code) => {
+      clearInterval(pump)
+      try {
+        child.stdin?.end()
+      } catch {
+        // ignore
+      }
       if (code === 0) resolve()
       else reject(new Error(`${cmd} ${args.join(' ')} exited ${code}`))
     })

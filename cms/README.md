@@ -3,8 +3,35 @@
 CMS self-hosted (**Payload 3 + Postgres**) para editar la web Anthrovia: páginas, capacitaciones, media, leads y agenda.
 
 - Corre solo en el **VPS** (Docker, puerto **`60518`**).
-- La SPA queda en **Vercel** y consume esta API (`VITE_CMS_URL`).
+- La SPA queda en **Vercel** y consume esta API (`CMS_URL`).
 - **No hace falta** subir el monorepo completo al servidor: solo esta carpeta `cms/`.
+
+## Editar páginas (fase 1)
+
+1. `/admin` → **Pages** → `home` o `learning`.
+2. Cada bloque = sección (Hero, Services, About, Contact, Footer/Settings, …).
+3. Textos editables + **upload** de imagen (preview en admin).
+4. **Live Preview** (panel derecho) muestra la SPA con `?preview=1`.
+5. **Publish** publica; si el CMS cae, la web sigue con contenido local `/ethos`.
+
+Tras el primer deploy con blocks: si el volume de Postgres ya existía con el schema viejo, resetealo una vez:
+
+```bash
+docker compose -f docker-compose.prod.yml down
+docker volume ls | grep pgdata   # ubicar el volumen
+docker compose -f docker-compose.prod.yml down -v   # borra datos DB
+docker compose -f docker-compose.prod.yml up -d --build
+# luego seed páginas (desde el host con DATABASE_URI interno, o:
+docker compose -f docker-compose.prod.yml exec cms node --import tsx scripts/seed.ts
+```
+
+(En la imagen prod puede no haber `tsx`; alternativa: correr seed en local apuntando al DB, o crear las pages a mano en admin y pegar contenido. Lo más simple: `npm run seed` en un entorno con acceso a la DB, o recrear pages desde admin usando los bloques.)
+
+Para seed desde el repo en una máquina con acceso:
+
+```bash
+cd cms && npm run seed
+```
 
 ## Imágenes
 
@@ -47,7 +74,8 @@ Editá `.env` (mínimo). La URL pública **no** puede ser `localhost` si abrís 
 PAYLOAD_SECRET=un-secreto-largo-aleatorio
 PAYLOAD_PUBLIC_SERVER_URL=http://pampaservers.com:60518
 NEXT_PUBLIC_SERVER_URL=http://pampaservers.com:60518
-CORS_ORIGINS=https://tu-dominio.vercel.app,https://anthroviahr.com
+PREVIEW_URL=https://anthroviahr.com
+CORS_ORIGINS=https://tu-dominio.vercel.app,https://anthroviahr.com,http://localhost:5173
 ```
 
 `NEXT_PUBLIC_SERVER_URL` se incrusta en el JS del admin en **build time**. Si la cambiás, hace falta `--build` (no alcanza `up -d`).
@@ -64,6 +92,8 @@ Al primer arranque Payload corre las **migraciones de producción** (`src/migrat
 - Password: `SEED_ADMIN_PASSWORD` (default `AnthroviaAdmin2026!`)
 
 Definilos en `.env` del VPS antes del `up --build`. Después abrí `/admin` e iniciá sesión.
+
+**Importante (schema blocks):** este repo reemplazó la migración inicial. En el VPS, si Postgres ya tenía datos del schema anterior, hace falta un reset de volumen una vez (`down -v`) y luego `up --build` + seed de páginas.
 
 Si el schema fallaba antes (volumen Postgres vacío / `users` inexistente), reconstruí:
 

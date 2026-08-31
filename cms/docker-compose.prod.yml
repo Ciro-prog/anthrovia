@@ -30,6 +30,7 @@ services:
       PAYLOAD_PUBLIC_SERVER_URL: ${PAYLOAD_PUBLIC_SERVER_URL:?Set PAYLOAD_PUBLIC_SERVER_URL e.g. http://pampaservers.com:60518}
       NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL:?Set NEXT_PUBLIC_SERVER_URL e.g. http://pampaservers.com:60518}
       CORS_ORIGINS: ${CORS_ORIGINS:?Set CORS_ORIGINS with your Vercel domain}
+      PREVIEW_URL: ${PREVIEW_URL:-https://anthroviahr.com}
       SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@anthroviahr.com}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-AnthroviaAdmin2026!}
     volumes:

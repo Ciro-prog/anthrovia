@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@payloadcms/live-preview-react": "^3.49.1",
     "@supabase/supabase-js": "^2.86.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

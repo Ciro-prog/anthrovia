@@ -1,18 +1,38 @@
 import type { CollectionConfig } from 'payload'
+import { pageSectionBlocks } from '../blocks/pageSections'
 
-/**
- * Páginas del sitio (home, learning, etc.).
- * `sections` es JSON editable: array de secciones tipadas como en el front.
- * El editor puede agregar/reordenar/ocultar secciones desde el admin.
- */
+const previewBase = () =>
+  (process.env.PREVIEW_URL || process.env.FRONTEND_URL || 'https://anthroviahr.com').replace(
+    /\/$/,
+    '',
+  )
+
 export const Pages: CollectionConfig = {
   slug: 'pages',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'slug', 'updatedAt'],
+    defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
+    livePreview: {
+      url: ({ data }) => {
+        const base = previewBase()
+        const path = data?.slug === 'learning' ? '/capacitaciones' : '/'
+        const slug = typeof data?.slug === 'string' ? data.slug : 'home'
+        return `${base}${path}?preview=1&slug=${encodeURIComponent(slug)}`
+      },
+    },
+  },
+  versions: {
+    drafts: true,
   },
   access: {
-    read: () => true,
+    read: ({ req: { user } }) => {
+      if (user) return true
+      return {
+        _status: {
+          equals: 'published',
+        },
+      }
+    },
   },
   fields: [
     {
@@ -27,16 +47,17 @@ export const Pages: CollectionConfig = {
       unique: true,
       index: true,
       admin: {
-        description: 'home | learning | etc.',
+        description: 'home | learning',
       },
     },
     {
       name: 'sections',
-      type: 'json',
+      type: 'blocks',
       required: true,
+      blocks: pageSectionBlocks,
       admin: {
         description:
-          'Array de secciones (hero, services, about, contact, ...). Incluí isVisible para ocultar.',
+          'Secciones de la página. Subí imágenes para ver preview; publicá cuando esté OK.',
       },
     },
   ],

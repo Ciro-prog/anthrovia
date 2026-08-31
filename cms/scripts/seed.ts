@@ -1,11 +1,21 @@
 import 'dotenv/config'
+import { readFileSync } from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { sectionsToBlocks } from '../src/seed/sectionToBlock.ts'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+type Snapshot = {
+  home: Record<string, unknown>[]
+  learning: Record<string, unknown>[]
+}
 
 /**
- * Seed mínimo (admin + event-type + settings).
- * Para páginas/cursos: pegá el JSON desde el front o usá el panel admin.
- * Con el CMS arriba: npm run seed
+ * Seed: admin + event-type + settings + páginas home/learning con contenido real.
+ * npm run seed
  */
 async function seed() {
   const payload = await getPayload({ config })
@@ -13,11 +23,12 @@ async function seed() {
   const email = process.env.SEED_ADMIN_EMAIL || 'admin@anthroviahr.com'
   const password = process.env.SEED_ADMIN_PASSWORD || 'AnthroviaAdmin2026!'
 
-  const existingUsers = await payload.find({ collection: 'users', limit: 1 })
+  const existingUsers = await payload.find({ collection: 'users', limit: 1, overrideAccess: true })
   if (existingUsers.totalDocs === 0) {
     await payload.create({
       collection: 'users',
       data: { email, password, name: 'Admin Anthrovia' },
+      overrideAccess: true,
     })
     console.log('Admin creado:', email)
   } else {
@@ -28,6 +39,7 @@ async function seed() {
     collection: 'event-types',
     where: { slug: { equals: 'llamada-15' } },
     limit: 1,
+    overrideAccess: true,
   })
   if (!et.docs[0]) {
     await payload.create({
@@ -40,6 +52,7 @@ async function seed() {
         durationMinutes: 15,
         active: true,
       },
+      overrideAccess: true,
     })
     console.log('Event type: llamada-15')
   }
@@ -51,25 +64,65 @@ async function seed() {
       bookingEnabled: true,
       defaultEventTypeSlug: 'llamada-15',
     },
+    overrideAccess: true,
   })
 
-  // Placeholders de páginas si no existen (el front usa fallback local hasta que edites)
-  for (const page of [
-    { slug: 'home', title: 'Home', sections: [] },
-    { slug: 'learning', title: 'Capacitaciones', sections: [] },
-  ]) {
+  const snapshotPath = path.resolve(__dirname, '../src/seed/siteContent.json')
+  const snapshot = JSON.parse(readFileSync(snapshotPath, 'utf8')) as Snapshot
+
+  const pages = [
+    {
+      slug: 'home',
+      title: 'Home',
+      sections: sectionsToBlocks(snapshot.home as never),
+    },
+    {
+      slug: 'learning',
+      title: 'Capacitaciones',
+      sections: sectionsToBlocks(snapshot.learning as never),
+    },
+  ]
+
+  for (const page of pages) {
     const found = await payload.find({
       collection: 'pages',
       where: { slug: { equals: page.slug } },
       limit: 1,
+      overrideAccess: true,
+      depth: 0,
     })
-    if (!found.docs[0]) {
-      await payload.create({ collection: 'pages', data: page })
-      console.log('Page placeholder:', page.slug)
+    const existing = found.docs[0] as { id: string | number; sections?: unknown[] } | undefined
+    const empty =
+      !existing || !Array.isArray(existing.sections) || existing.sections.length === 0
+
+    if (!existing) {
+      await payload.create({
+        collection: 'pages',
+        data: {
+          ...page,
+          _status: 'published',
+        } as never,
+        overrideAccess: true,
+      })
+      console.log('Page creada:', page.slug, `(${page.sections.length} secciones)`)
+    } else if (empty) {
+      await payload.update({
+        collection: 'pages',
+        id: existing.id,
+        data: {
+          title: page.title,
+          sections: page.sections,
+          _status: 'published',
+        } as never,
+        overrideAccess: true,
+      })
+      console.log('Page actualizada (estaba vacía):', page.slug)
+    } else {
+      console.log('Page ya tiene contenido, skip:', page.slug)
     }
   }
 
-  console.log('Seed OK. Abrí /admin y cargá sections/blocks o dejá el fallback del front.')
+  console.log('Seed OK. Editá en /admin → Pages → Live Preview → Publish.')
   process.exit(0)
 }
 

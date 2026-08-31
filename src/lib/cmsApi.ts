@@ -1,6 +1,7 @@
 import { CoursePageContent, SectionContent, SiteContent } from '@/types/cms'
 import { initialContent } from '@/data/initialContent'
 import { coursesData } from '@/data/coursesContent'
+import { mapCmsBlocksToSections } from '@/lib/mapCmsSections'
 
 const CMS_URL = (
   (import.meta.env.CMS_URL as string | undefined) ||
@@ -30,7 +31,8 @@ type PayloadList<T> = {
 type PageDoc = {
   slug: string
   title: string
-  sections: SectionContent[]
+  sections: unknown
+  _status?: string
 }
 
 type CourseDoc = {
@@ -53,6 +55,11 @@ export function getCmsBaseUrl() {
   return CMS_URL
 }
 
+export function isPreviewMode(): boolean {
+  if (typeof window === 'undefined') return false
+  return new URLSearchParams(window.location.search).get('preview') === '1'
+}
+
 /** Usa la URL del CMS si viene con valor; si no, el fallback local (/ethos/...). */
 export function resolveMediaUrl(
   value: string | null | undefined,
@@ -70,7 +77,6 @@ function isPlainObject(v: unknown): v is Record<string, unknown> {
 
 /**
  * Deep-merge: remote gana en textos/flags; campos de media vacíos conservan el local.
- * Así siempre hay imagen (/ethos/...) hasta que el CMS suba un reemplazo.
  */
 export function mergeWithMediaFallback<T>(base: T, remote: T): T {
   if (remote === null || remote === undefined) return base
@@ -133,7 +139,6 @@ async function cmsFetch<T>(path: string, init?: RequestInit): Promise<T | null> 
   }
 }
 
-/** Fusiona secciones CMS por id; media vacía → default local. */
 function mergeSections(base: SectionContent[], remote?: SectionContent[]): SectionContent[] {
   if (!remote || remote.length === 0) return base
   const byId = new Map(remote.map((s) => [s.id, s]))
@@ -163,10 +168,72 @@ function mergeCourses(
   })
 }
 
+function pageSectionsFromDoc(doc: PageDoc | undefined): SectionContent[] {
+  if (!doc?.sections) return []
+  const first = Array.isArray(doc.sections) ? doc.sections[0] : null
+  if (
+    first &&
+    typeof first === 'object' &&
+    'type' in first &&
+    !('blockType' in first)
+  ) {
+    return doc.sections as SectionContent[]
+  }
+  return mapCmsBlocksToSections(doc.sections, CMS_URL)
+}
+
+/** Aplica secciones remotas (p.ej. live preview) sobre el contenido base. */
+export function applyRemoteSections(
+  base: SiteContent,
+  remoteSections: SectionContent[],
+  scope: 'home' | 'learning' | 'all' = 'all',
+): SiteContent {
+  let sections = [...base.sections]
+
+  if (scope === 'home' || scope === 'all') {
+    const homeIds = new Set(
+      initialContent.sections
+        .filter((s) => !s.id.startsWith('learning-') && s.type !== 'courses')
+        .map((s) => s.id),
+    )
+    const homeRemote = remoteSections.filter(
+      (s) => homeIds.has(s.id) || (!s.id.startsWith('learning-') && s.type !== 'courses'),
+    )
+    if (homeRemote.length) {
+      const homeBase = sections.filter((s) => homeIds.has(s.id))
+      const homeMerged = mergeSections(homeBase, homeRemote)
+      const byId = new Map(homeMerged.map((s) => [s.id, s]))
+      sections = sections.map((s) => (homeIds.has(s.id) ? byId.get(s.id) || s : s))
+      for (const s of homeMerged) {
+        if (!sections.find((x) => x.id === s.id)) sections.push(s)
+      }
+    }
+  }
+
+  if (scope === 'learning' || scope === 'all') {
+    const learningRemote = remoteSections.filter(
+      (s) => s.id.startsWith('learning-') || s.id === 'contact',
+    )
+    if (learningRemote.length) {
+      sections = sections.map((s) => {
+        if (!s.id.startsWith('learning-') && s.id !== 'contact') return s
+        const remote = learningRemote.find((r) => r.id === s.id)
+        return remote ? mergeWithMediaFallback(s, remote) : s
+      })
+      for (const s of learningRemote) {
+        if (!sections.find((x) => x.id === s.id)) sections.push(s)
+      }
+    }
+  }
+
+  return { sections }
+}
+
 export async function fetchSiteContent(): Promise<SiteContent> {
+  const depth = 'depth=2'
   const [home, learning, coursesRes] = await Promise.all([
-    cmsFetch<PayloadList<PageDoc>>('/api/pages?where[slug][equals]=home&limit=1'),
-    cmsFetch<PayloadList<PageDoc>>('/api/pages?where[slug][equals]=learning&limit=1'),
+    cmsFetch<PayloadList<PageDoc>>(`/api/pages?where[slug][equals]=home&limit=1&${depth}`),
+    cmsFetch<PayloadList<PageDoc>>(`/api/pages?where[slug][equals]=learning&limit=1&${depth}`),
     cmsFetch<PayloadList<CourseDoc>>('/api/courses?limit=50&depth=0'),
   ])
 
@@ -179,37 +246,16 @@ export async function fetchSiteContent(): Promise<SiteContent> {
     }
   }
 
-  const homeSections = home?.docs[0]?.sections
-  const learningSections = learning?.docs[0]?.sections
-
   let sections = [...initialContent.sections]
 
-  if (homeSections && Array.isArray(homeSections) && homeSections.length > 0) {
-    const homeIds = new Set(
-      initialContent.sections
-        .filter((s) => !s.id.startsWith('learning-') && s.type !== 'courses')
-        .map((s) => s.id)
-    )
-    const homeRemote = homeSections.filter((s) => homeIds.has(s.id) || !s.id.startsWith('learning-'))
-    const homeBase = sections.filter((s) => homeIds.has(s.id))
-    const homeMerged = mergeSections(homeBase, homeRemote)
-    const homeMergedById = new Map(homeMerged.map((s) => [s.id, s]))
-    sections = sections.map((s) => (homeIds.has(s.id) ? homeMergedById.get(s.id) || s : s))
-    for (const s of homeMerged) {
-      if (!sections.find((x) => x.id === s.id)) sections.push(s)
-    }
+  const homeMapped = pageSectionsFromDoc(home?.docs[0])
+  if (homeMapped.length > 0) {
+    ;({ sections } = applyRemoteSections({ sections }, homeMapped, 'home'))
   }
 
-  if (learningSections && Array.isArray(learningSections) && learningSections.length > 0) {
-    sections = sections.map((s) => {
-      if (!s.id.startsWith('learning-') && s.id !== 'contact') return s
-      const remote = learningSections.find((r) => r.id === s.id)
-      if (!remote) return s
-      return mergeWithMediaFallback(s, remote)
-    })
-    for (const s of learningSections) {
-      if (!sections.find((x) => x.id === s.id)) sections.push(s)
-    }
+  const learningMapped = pageSectionsFromDoc(learning?.docs[0])
+  if (learningMapped.length > 0) {
+    ;({ sections } = applyRemoteSections({ sections }, learningMapped, 'learning'))
   }
 
   const remoteCourses = coursesRes?.docs?.map((c) => ({
