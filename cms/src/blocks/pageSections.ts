@@ -186,15 +186,6 @@ export const ServicesBlock: Block = {
             hidden: true,
           },
         },
-        {
-          name: 'editarPagina',
-          type: 'ui',
-          admin: {
-            components: {
-              Field: '/admin/EditarPaginaFormacion#EditarPaginaFormacion',
-            },
-          },
-        },
       ],
     },
     {

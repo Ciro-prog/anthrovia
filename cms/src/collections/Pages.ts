@@ -36,7 +36,7 @@ export const Pages: CollectionConfig = {
     drafts: true,
   },
   hooks: {
-    afterChange: [syncFormacionesCourses],
+    beforeChange: [syncFormacionesCourses],
   },
   access: {
     read: ({ req: { user } }) => {
