@@ -8,3 +8,4 @@ media/**
 *.log
 payload-types.ts
 .tmp-pg-migrate
+.tmp-pg-dev
