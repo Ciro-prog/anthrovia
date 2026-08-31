@@ -114,6 +114,7 @@ export function mapCmsBlocksToSections(
                 title: String(s.title || ''),
                 description: String(s.description || ''),
                 color: String(s.color || 'primary'),
+                imageUrl: mediaUrl(cmsBase, s.image, s.imageUrl as string) || undefined,
                 category: s.category as 'companies' | 'individuals' | undefined,
                 includesLabel: String(s.includesLabel || '') || undefined,
                 includes: unwrapItems(s.includes),

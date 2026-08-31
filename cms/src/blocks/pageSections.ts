@@ -54,9 +54,14 @@ const buttonFields: Field[] = [
 
 export const HeroBlock: Block = {
   slug: 'hero',
-  labels: { singular: 'Hero', plural: 'Heros' },
+  labels: { singular: 'Hero (cabecera)', plural: 'Heros' },
   fields: [
-    sectionId,
+    {
+      ...sectionId,
+      admin: {
+        description: 'hero = cabecera de anthroviahr.com/ · learning-hero = /capacitaciones',
+      },
+    },
     isVisible,
     { name: 'badge', type: 'text' },
     { name: 'title', type: 'text', required: true },
@@ -92,9 +97,15 @@ export const HeroBlock: Block = {
 
 export const ServicesBlock: Block = {
   slug: 'services',
-  labels: { singular: 'Services / Formaciones', plural: 'Services' },
+  labels: { singular: 'Servicios / Formaciones', plural: 'Servicios' },
   fields: [
-    sectionId,
+    {
+      ...sectionId,
+      admin: {
+        description:
+          'services = anthroviahr.com/#servicios · learning-services = /capacitaciones#formaciones',
+      },
+    },
     isVisible,
     { name: 'eyebrow', type: 'text' },
     { name: 'title', type: 'text', required: true },
@@ -112,10 +123,18 @@ export const ServicesBlock: Block = {
       name: 'services',
       type: 'array',
       labels: { singular: 'Card servicio', plural: 'Cards servicios' },
+      admin: {
+        initCollapsed: true,
+        description: 'Tarjetas de https://anthroviahr.com/#servicios',
+        components: {
+          RowLabel: '/admin/CardRowLabel#CardRowLabel',
+        },
+      },
       fields: [
-        { name: 'iconName', type: 'text', required: true },
+        ...imagePair('image', 'imageUrl', 'Imagen card'),
         { name: 'title', type: 'text', required: true },
         { name: 'description', type: 'textarea', required: true },
+        { name: 'iconName', type: 'text', required: true },
         { name: 'color', type: 'text', defaultValue: 'primary' },
         { name: 'category', type: 'text' },
         { name: 'includesLabel', type: 'text' },
@@ -145,12 +164,19 @@ export const ServicesBlock: Block = {
       name: 'formaciones',
       type: 'array',
       labels: { singular: 'Formación', plural: 'Formaciones' },
+      admin: {
+        initCollapsed: true,
+        description: 'Tarjetas con imagen en https://anthroviahr.com/capacitaciones#formaciones',
+        components: {
+          RowLabel: '/admin/CardRowLabel#CardRowLabel',
+        },
+      },
       fields: [
-        { name: 'itemId', type: 'text', required: true, label: 'ID' },
+        ...imagePair('image', 'imageUrl', 'Imagen card'),
         { name: 'title', type: 'text', required: true },
         { name: 'description', type: 'textarea', required: true },
         { name: 'category', type: 'text', required: true },
-        ...imagePair('image', 'imageUrl', 'Imagen card'),
+        { name: 'itemId', type: 'text', required: true, label: 'ID' },
         { name: 'link', type: 'text' },
       ],
     },
@@ -194,9 +220,14 @@ export const ServicesBlock: Block = {
 
 export const AboutBlock: Block = {
   slug: 'about',
-  labels: { singular: 'About', plural: 'About' },
+  labels: { singular: 'About (quiénes somos)', plural: 'About' },
   fields: [
-    sectionId,
+    {
+      ...sectionId,
+      admin: {
+        description: 'about = anthroviahr.com · learning-about = /capacitaciones',
+      },
+    },
     isVisible,
     { name: 'title', type: 'text', required: true },
     { name: 'eyebrow', type: 'text' },
@@ -263,9 +294,14 @@ export const AboutBlock: Block = {
 
 export const ContactBlock: Block = {
   slug: 'contact',
-  labels: { singular: 'Contact', plural: 'Contact' },
+  labels: { singular: 'Contacto', plural: 'Contacto' },
   fields: [
-    sectionId,
+    {
+      ...sectionId,
+      admin: {
+        description: 'contact = pie de página / WhatsApp (anthroviahr.com/#contacto)',
+      },
+    },
     isVisible,
     { name: 'title', type: 'text', required: true },
     { name: 'description', type: 'textarea', required: true },
@@ -324,7 +360,12 @@ export const SettingsBlock: Block = {
   slug: 'settings',
   labels: { singular: 'Footer / Settings', plural: 'Settings' },
   fields: [
-    sectionId,
+    {
+      ...sectionId,
+      admin: {
+        description: 'settings = textos del footer en todas las páginas',
+      },
+    },
     isVisible,
     { name: 'cvUrl', type: 'text', required: true },
     { name: 'cvText', type: 'text', required: true },

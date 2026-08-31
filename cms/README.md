@@ -8,11 +8,18 @@ CMS self-hosted (**Payload 3 + Postgres**) para editar la web Anthrovia: página
 
 ## Editar páginas (fase 1)
 
-1. `/admin` → **Pages** → `home` o `learning`.
-2. Cada bloque = sección (Hero, Services, About, Contact, Footer/Settings, …).
-3. Textos editables + **upload** de imagen (preview en admin).
-4. **Live Preview** (panel derecho) muestra la SPA con `?preview=1`.
+1. `/admin` → **Páginas**. Tienen que aparecer **Home** y **Capacitaciones** (publicadas).
+2. Si ves **No Pages found**, el seed no corrió (migración rota o filtro solo Drafts). En la lista: **Published** o **All**. En logs: `Page creada: home` / `learning`.
+3. Abrí una página → **Ver en el sitio** (arriba) abre Vercel. **Live Preview** (panel derecho) es el iframe `?preview=1`.
+4. Cada bloque = sección. Las **Cards servicios** y **Formaciones** son las tarjetas (título + imagen).
 5. **Publish** publica; si el CMS cae, la web sigue con contenido local `/ethos`.
+
+| Página CMS | URL en Vercel | Qué editás |
+|---|---|---|
+| Home (`slug: home`) | https://anthroviahr.com/ | Hero, servicios (tarjetas), about, contacto, footer |
+| Capacitaciones (`slug: learning`) | https://anthroviahr.com/capacitaciones | Hero, formaciones (tarjetas con imagen), in company, about, contacto |
+
+**Ver en el sitio** vs Live Preview: el botón/link abre la SPA publicada (mapa de dónde cae el cambio). El iframe necesita `CMS_URL=http://pampaservers.com:60518` en Vercel + redeploy del front. Si el iframe está bloqueado, usá **Ver en el sitio**.
 
 Tras el primer deploy con blocks: si el volume de Postgres ya existía con el schema viejo, resetealo una vez:
 
@@ -124,9 +131,9 @@ docker compose -f docker-compose.prod.yml logs -f cms
 Si el login falla con `ERR_CONNECTION_REFUSED` a `localhost:60518`, el `.env` del VPS todavía tiene localhost o no se rebuildió tras corregirlo.
 ### Primera configuración
 
-1. Usuario admin (wizard o seed local).
-2. **Pages** `home` / `learning` → `sections` (JSON; `isVisible` para ocultar).
-3. **Courses** → `blocks` + cohortes.
+1. Usuario admin (wizard o seed). En logs: `Admin creado`, `Page creada: home`, `Page creada: learning`.
+2. **Páginas** `Home` / `Capacitaciones` → bloques (no JSON). Filtro **Published** o **All**.
+3. **Courses** → `blocks` + cohortes (JSON; otra fase).
 4. **Media** → reemplazos de imagen (si no subís nada, siguen `/ethos/` en la web).
 5. **Leads** / **Bookings** → consultas y agenda.
 
@@ -162,11 +169,13 @@ docker compose up -d --build
 
 ## Front (Vercel)
 
+En el proyecto de la SPA (Vercel → Environment Variables):
+
 ```
-VITE_CMS_URL=http://IP_PUBLICA:60518
+CMS_URL=http://pampaservers.com:60518
 ```
 
-Sin esa variable: contenido + imágenes locales; form por WhatsApp.
+(`vite.config` también acepta `VITE_CMS_URL`.) Sin esa variable: contenido + imágenes locales; el Live Preview del admin no refleja el CMS. Tras cambiarla, redeploy del front.
 
 ## API pública
 

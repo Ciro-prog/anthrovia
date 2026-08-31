@@ -14,8 +14,7 @@ import { EventTypes } from './collections/EventTypes'
 import { Bookings } from './collections/Bookings'
 import { SiteSettings } from './globals/SiteSettings'
 import { migrations } from './migrations'
-import { sectionsToBlocks } from './seed/sectionToBlock'
-import siteContent from './seed/siteContent.json'
+import { seedPages } from './seed/seedPages'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -124,55 +123,14 @@ export default buildConfig({
         // global puede fallar si el schema aún no está listo; se puede editar en admin
       }
 
-      const pagesToSeed = [
-        {
-          slug: 'home',
-          title: 'Home',
-          sections: sectionsToBlocks(siteContent.home as never),
-        },
-        {
-          slug: 'learning',
-          title: 'Capacitaciones',
-          sections: sectionsToBlocks(siteContent.learning as never),
-        },
-      ]
-
-      for (const page of pagesToSeed) {
-        const found = await payload.find({
-          collection: 'pages',
-          where: { slug: { equals: page.slug } },
-          limit: 1,
-          overrideAccess: true,
-          depth: 0,
-        })
-        const existing = found.docs[0] as { id: number | string; sections?: unknown[] } | undefined
-        const empty =
-          !existing || !Array.isArray(existing.sections) || existing.sections.length === 0
-
-        if (!existing) {
-          await payload.create({
-            collection: 'pages',
-            data: { ...page, _status: 'published' } as never,
-            overrideAccess: true,
-          })
-          payload.logger.info(`Page creada: ${page.slug}`)
-        } else if (empty) {
-          await payload.update({
-            collection: 'pages',
-            id: existing.id,
-            data: {
-              title: page.title,
-              sections: page.sections,
-              _status: 'published',
-            } as never,
-            overrideAccess: true,
-          })
-          payload.logger.info(`Page seed (vacía): ${page.slug}`)
-        }
-      }
+      await seedPages(payload)
     } catch (err) {
+      const extra =
+        typeof err === 'object' && err && 'data' in err
+          ? ` ${JSON.stringify((err as { data: unknown }).data)}`
+          : ''
       payload.logger.error(
-        `onInit seed falló (el proceso sigue): ${err instanceof Error ? err.message : String(err)}`,
+        `onInit seed falló (el proceso sigue): ${err instanceof Error ? err.message : String(err)}${extra}`,
       )
     }
   },

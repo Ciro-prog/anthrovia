@@ -36,6 +36,7 @@ export interface ServiceItem {
   title: string;
   description: string;
   color: string;
+  imageUrl?: string;
   category?: 'companies' | 'individuals';
   includes?: string[];
   includesLabel?: string;

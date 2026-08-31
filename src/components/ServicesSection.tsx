@@ -74,11 +74,21 @@ export const ServicesSection = ({
               >
                 <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-bl-[100px] -z-0 transition-transform group-hover:scale-110 duration-700" />
                 <div className="relative z-10 flex-grow flex flex-col">
-                  <div
-                    className={`w-16 h-16 rounded-2xl ${iconBg} flex items-center justify-center mb-8 transform transition-transform duration-300 group-hover:scale-110`}
-                  >
-                    <Icon className="w-8 h-8" />
-                  </div>
+                  {service.imageUrl ? (
+                    <div className="w-full h-40 rounded-2xl overflow-hidden mb-8 -mt-2">
+                      <img
+                        src={service.imageUrl}
+                        alt={service.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className={`w-16 h-16 rounded-2xl ${iconBg} flex items-center justify-center mb-8 transform transition-transform duration-300 group-hover:scale-110`}
+                    >
+                      <Icon className="w-8 h-8" />
+                    </div>
+                  )}
                   <h3 className="font-heading text-headline-md text-on-surface mb-4 group-hover:text-primary transition-colors">
                     {service.title}
                   </h3>

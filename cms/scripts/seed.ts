@@ -1,17 +1,7 @@
 import 'dotenv/config'
-import { readFileSync } from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { sectionsToBlocks } from '../src/seed/sectionToBlock.ts'
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-
-type Snapshot = {
-  home: Record<string, unknown>[]
-  learning: Record<string, unknown>[]
-}
+import { seedPages } from '../src/seed/seedPages.ts'
 
 /**
  * Seed: admin + event-type + settings + páginas home/learning con contenido real.
@@ -67,62 +57,9 @@ async function seed() {
     overrideAccess: true,
   })
 
-  const snapshotPath = path.resolve(__dirname, '../src/seed/siteContent.json')
-  const snapshot = JSON.parse(readFileSync(snapshotPath, 'utf8')) as Snapshot
+  await seedPages(payload, console.log, console.error)
 
-  const pages = [
-    {
-      slug: 'home',
-      title: 'Home',
-      sections: sectionsToBlocks(snapshot.home as never),
-    },
-    {
-      slug: 'learning',
-      title: 'Capacitaciones',
-      sections: sectionsToBlocks(snapshot.learning as never),
-    },
-  ]
-
-  for (const page of pages) {
-    const found = await payload.find({
-      collection: 'pages',
-      where: { slug: { equals: page.slug } },
-      limit: 1,
-      overrideAccess: true,
-      depth: 0,
-    })
-    const existing = found.docs[0] as { id: string | number; sections?: unknown[] } | undefined
-    const empty =
-      !existing || !Array.isArray(existing.sections) || existing.sections.length === 0
-
-    if (!existing) {
-      await payload.create({
-        collection: 'pages',
-        data: {
-          ...page,
-          _status: 'published',
-        } as never,
-        overrideAccess: true,
-      })
-      console.log('Page creada:', page.slug, `(${page.sections.length} secciones)`)
-    } else if (empty) {
-      await payload.update({
-        collection: 'pages',
-        id: existing.id,
-        data: {
-          title: page.title,
-          sections: page.sections,
-          _status: 'published',
-        } as never,
-        overrideAccess: true,
-      })
-      console.log('Page actualizada (estaba vacía):', page.slug)
-    } else {
-      console.log('Page ya tiene contenido, skip:', page.slug)
-    }
-  }
-
-  console.log('Seed OK. Editá en /admin → Pages → Live Preview → Publish.')
+  console.log('Seed OK. Editá en /admin → Páginas → Ver en el sitio / Live Preview → Publish.')
   process.exit(0)
 }
 

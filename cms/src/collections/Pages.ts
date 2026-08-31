@@ -7,15 +7,24 @@ const previewBase = () =>
     '',
   )
 
+const publicPathForSlug = (slug: unknown) => (slug === 'learning' ? '/capacitaciones' : '/')
+
 export const Pages: CollectionConfig = {
   slug: 'pages',
+  labels: {
+    singular: 'Página',
+    plural: 'Páginas',
+  },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
+    description:
+      'Home = https://anthroviahr.com/ · Capacitaciones = https://anthroviahr.com/capacitaciones. En la lista usá Published o All (no solo Drafts).',
+    preview: ({ slug }) => `${previewBase()}${publicPathForSlug(slug)}`,
     livePreview: {
       url: ({ data }) => {
         const base = previewBase()
-        const path = data?.slug === 'learning' ? '/capacitaciones' : '/'
+        const path = publicPathForSlug(data?.slug)
         const slug = typeof data?.slug === 'string' ? data.slug : 'home'
         return `${base}${path}?preview=1&slug=${encodeURIComponent(slug)}`
       },
@@ -36,9 +45,19 @@ export const Pages: CollectionConfig = {
   },
   fields: [
     {
+      name: 'verEnElSitio',
+      type: 'ui',
+      admin: {
+        components: {
+          Field: '/admin/VerEnElSitio#VerEnElSitioField',
+        },
+      },
+    },
+    {
       name: 'title',
       type: 'text',
       required: true,
+      label: 'Título',
     },
     {
       name: 'slug',
@@ -47,17 +66,18 @@ export const Pages: CollectionConfig = {
       unique: true,
       index: true,
       admin: {
-        description: 'home | learning',
+        description: 'home → anthroviahr.com/ · learning → anthroviahr.com/capacitaciones',
       },
     },
     {
       name: 'sections',
       type: 'blocks',
       required: true,
+      label: 'Secciones',
       blocks: pageSectionBlocks,
       admin: {
         description:
-          'Secciones de la página. Subí imágenes para ver preview; publicá cuando esté OK.',
+          'Cada bloque es una sección del sitio. Las tarjetas (servicios / formaciones) llevan título + imagen. Publicá cuando esté OK.',
       },
     },
   ],

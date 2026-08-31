@@ -17,8 +17,10 @@ ENV DATABASE_URI=postgresql://anthrovia:anthrovia@localhost:5432/anthrovia_cms
 # NEXT_PUBLIC_* se incrusta en el JS del cliente en build time — pasar URL pública real
 ARG NEXT_PUBLIC_SERVER_URL=http://localhost:60518
 ARG PAYLOAD_PUBLIC_SERVER_URL=http://localhost:60518
+ARG NEXT_PUBLIC_PREVIEW_URL=https://anthroviahr.com
 ENV NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL
 ENV PAYLOAD_PUBLIC_SERVER_URL=$PAYLOAD_PUBLIC_SERVER_URL
+ENV NEXT_PUBLIC_PREVIEW_URL=$NEXT_PUBLIC_PREVIEW_URL
 RUN npm run build
 
 FROM node:22-bookworm-slim AS runner

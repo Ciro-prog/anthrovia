@@ -56,6 +56,7 @@ export function sectionToBlock(section: AnySection): Record<string, unknown> | n
         titleColor: section.titleColor || '',
         descriptionColor: section.descriptionColor || '',
         services: services.map((s: Record<string, unknown>) => ({
+          imageUrl: s.imageUrl || '',
           iconName: s.iconName,
           title: s.title,
           description: s.description,
