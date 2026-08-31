@@ -13,6 +13,7 @@ import { Leads } from './collections/Leads'
 import { EventTypes } from './collections/EventTypes'
 import { Bookings } from './collections/Bookings'
 import { SiteSettings } from './globals/SiteSettings'
+import { migrations } from './migrations'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -43,10 +44,9 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
-    // En Docker NODE_ENV=production desactiva el push automático;
-    // sin migraciones previas las tablas no existen. Forzamos push
-    // para crear/actualizar el schema al arrancar (VPS single-node).
-    push: true,
+    // Producción: schema vía prodMigrations (no push / drizzle-kit en runtime).
+    push: false,
+    prodMigrations: migrations,
   }),
   sharp,
   cors: corsOrigins,
@@ -62,31 +62,6 @@ export default buildConfig({
     },
   },
   onInit: async (payload) => {
-    // #region agent log
-    const _dbg = (message: string, hypothesisId: string, data: Record<string, unknown>) => {
-      const payloadLog = {
-        sessionId: '8b02e2',
-        runId: 'post-fix',
-        hypothesisId,
-        location: 'payload.config.ts:onInit',
-        message,
-        data,
-        timestamp: Date.now(),
-      }
-      console.log(`[debug-8b02e2] ${JSON.stringify(payloadLog)}`)
-      fetch('http://127.0.0.1:7640/ingest/2686e6b7-0f9d-4f39-850f-ee78e21b59a3', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '8b02e2' },
-        body: JSON.stringify(payloadLog),
-      }).catch(() => {})
-    }
-    _dbg('onInit start', 'A', {
-      nodeEnv: process.env.NODE_ENV,
-      hasDatabaseUri: Boolean(process.env.DATABASE_URI),
-      dbHostHint: (process.env.DATABASE_URI || '').replace(/:[^:@/]+@/, ':***@').slice(0, 80),
-    })
-    // #endregion
-
     try {
       const email = process.env.SEED_ADMIN_EMAIL || 'admin@anthroviahr.com'
       const password = process.env.SEED_ADMIN_PASSWORD || 'AnthroviaAdmin2026!'
@@ -96,10 +71,6 @@ export default buildConfig({
         limit: 1,
         overrideAccess: true,
       })
-
-      // #region agent log
-      _dbg('users find ok', 'A', { totalDocs: existing.totalDocs })
-      // #endregion
 
       if (existing.totalDocs === 0) {
         await payload.create({
@@ -112,9 +83,6 @@ export default buildConfig({
           overrideAccess: true,
         })
         payload.logger.info(`Admin creado: ${email}`)
-        // #region agent log
-        _dbg('admin created', 'C', { email })
-        // #endregion
       }
 
       const eventTypes = await payload.find({
@@ -153,17 +121,10 @@ export default buildConfig({
       } catch {
         // global puede fallar si el schema aún no está listo; se puede editar en admin
       }
-
-      // #region agent log
-      _dbg('onInit complete', 'A', { ok: true })
-      // #endregion
     } catch (err) {
-      // #region agent log
-      _dbg('onInit error', 'A', {
-        error: err instanceof Error ? err.message : String(err),
-      })
-      // #endregion
-      throw err
+      payload.logger.error(
+        `onInit seed falló (el proceso sigue): ${err instanceof Error ? err.message : String(err)}`,
+      )
     }
   },
 })

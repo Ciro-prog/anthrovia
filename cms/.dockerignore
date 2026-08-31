@@ -6,4 +6,4 @@ dist
 media/*
 !media/.gitkeep
 *.log
-# seed se corre en host/dev; el patch SÍ debe entrar en la imagen
+.tmp-pg-migrate

@@ -7,3 +7,4 @@ media/**
 !media/.gitkeep
 *.log
 payload-types.ts
+.tmp-pg-migrate

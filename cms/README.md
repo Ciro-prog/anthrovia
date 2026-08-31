@@ -56,21 +56,21 @@ Arranque **producción** (Postgres **no** expuesto al host; solo `60518`):
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 
-Al primer arranque Payload crea las tablas y el usuario admin (si no hay ninguno):
+Al primer arranque Payload corre las **migraciones de producción** (`src/migrations` → `prodMigrations`) y crea el usuario admin (si no hay ninguno):
 
 - Email: `SEED_ADMIN_EMAIL` (default `admin@anthroviahr.com`)
 - Password: `SEED_ADMIN_PASSWORD` (default `AnthroviaAdmin2026!`)
 
 Definilos en `.env` del VPS antes del `up --build`. Después abrí `/admin` e iniciá sesión.
 
-Si ves `relation "users" does not exist`, la causa es que Payload **no hace push del schema en `NODE_ENV=production`**. La imagen aplica un patch (`scripts/patch-payload-push.mjs`) para respetar `push: true`. Reconstruí:
+Si el schema fallaba antes (volumen Postgres vacío / `users` inexistente), reconstruí:
 
 ```bash
 docker compose -f docker-compose.prod.yml up -d --build
 docker compose -f docker-compose.prod.yml logs -f cms
 ```
 
-Buscá en los logs: `[patch-payload-push]`, `Admin creado`, o `[debug-8b02e2]`.
+Éxito esperado en logs: migración aplicada, `Admin creado: …`, sin `drizzle-kit/api` ni `relation "users" does not exist`.
 
 - Admin: `http://IP_PUBLICA:60518/admin`
 - Usuario: `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` (defaults en `.env.example`)
@@ -92,7 +92,7 @@ Buscá en los logs: `[patch-payload-push]`, `Admin creado`, o `[debug-8b02e2]`.
 
 ## Dev local
 
-`docker-compose.yml` (sin `.prod`) expone Postgres en `localhost:5433` para seed/dev:
+`docker-compose.yml` (sin `.prod`) expone Postgres en `localhost:5433` para seed/dev. El schema se aplica con migraciones (`push: false`):
 
 ```bash
 cd cms
@@ -100,9 +100,12 @@ cp .env.example .env
 # DATABASE_URI=postgresql://anthrovia:anthrovia@localhost:5433/anthrovia_cms
 docker compose up -d postgres
 npm install
+npx payload migrate
 npm run seed   # opcional
 npm run dev    # http://localhost:3000/admin
 ```
+
+Sin Docker local, para generar una migración nueva: `npm i -D embedded-postgres` y `node scripts/gen-initial-migration.mjs nombre`.
 
 O stack completo en `:60518`:
 
