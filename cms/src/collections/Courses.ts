@@ -34,9 +34,14 @@ export const Courses: CollectionConfig = {
       type: 'tabs',
       tabs: [
         {
-          label: 'Card (grilla)',
+          label: 'Conocer más (página)',
           fields: [
-            { name: 'title', type: 'text', required: true, label: 'Título' },
+            {
+              name: 'title',
+              type: 'text',
+              required: true,
+              label: 'Título',
+            },
             {
               name: 'slug',
               type: 'text',
@@ -48,6 +53,20 @@ export const Courses: CollectionConfig = {
                 readOnly: true,
               },
             },
+            {
+              name: 'blocks',
+              type: 'blocks',
+              label: 'Secciones de la página',
+              blocks: coursePageBlocks,
+              admin: {
+                description: 'Contenido de /capacitaciones/{slug}. Publicá y se ve en «conocer más».',
+              },
+            },
+          ],
+        },
+        {
+          label: 'Card (grilla)',
+          fields: [
             {
               name: 'courseId',
               type: 'text',
@@ -77,20 +96,6 @@ export const Courses: CollectionConfig = {
               type: 'text',
               label: 'Imagen card (path / URL)',
               admin: { readOnly: true, description: 'Fallback si no hay upload.' },
-            },
-          ],
-        },
-        {
-          label: 'Conocer más (página)',
-          fields: [
-            {
-              name: 'blocks',
-              type: 'blocks',
-              label: 'Secciones de la página',
-              blocks: coursePageBlocks,
-              admin: {
-                description: 'Contenido de /capacitaciones/{slug}. Publicá y se ve en «conocer más».',
-              },
             },
           ],
         },

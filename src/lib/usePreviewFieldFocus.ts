@@ -10,6 +10,12 @@ const MEDIA_KEYS = new Set([
   'videoUrl',
 ])
 
+function afterPaint(fn: () => void) {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(fn)
+  })
+}
+
 function pathsFromDiff(prev: unknown, next: unknown, prefix = ''): string[] {
   if (Object.is(prev, next)) return []
   if (typeof next !== 'object' || next === null || typeof prev !== 'object' || prev === null) {
@@ -82,12 +88,15 @@ function focusPath(path: string) {
   el.classList.add(media ? 'cms-preview-focus-media' : 'cms-preview-focus')
   window.setTimeout(() => {
     el.classList.remove('cms-preview-focus', 'cms-preview-focus-media')
-  }, 1600)
+  }, 2200)
 }
 
 function messagePath(data: unknown): string | null {
   if (!data || typeof data !== 'object') return null
   const rec = data as Record<string, unknown>
+  if (rec.type === 'anthrovia-field-focus' && typeof rec.path === 'string' && rec.path.trim()) {
+    return rec.path
+  }
   for (const key of ['fieldPath', 'fieldSchemaPath', 'path', 'editedField']) {
     const v = rec[key]
     if (typeof v === 'string' && v.trim()) return v
@@ -103,9 +112,7 @@ export function usePreviewFieldFocus(liveData: unknown, enabled: boolean) {
 
     const onMessage = (event: MessageEvent) => {
       const path = messagePath(event.data)
-      if (path) {
-        requestAnimationFrame(() => focusPath(path))
-      }
+      if (path) afterPaint(() => focusPath(path))
     }
     window.addEventListener('message', onMessage)
 
@@ -114,9 +121,7 @@ export function usePreviewFieldFocus(liveData: unknown, enabled: boolean) {
     if (prev !== undefined && liveData) {
       const changed = pathsFromDiff(prev, liveData)
       const best = changed.sort((a, b) => b.length - a.length)[0]
-      if (best) {
-        requestAnimationFrame(() => focusPath(best))
-      }
+      if (best) afterPaint(() => focusPath(best))
     }
 
     return () => window.removeEventListener('message', onMessage)

@@ -26,6 +26,8 @@ export function CardRowLabel() {
       {' · '}
       <a
         href={`/admin/collections/courses/${courseId}`}
+        target="_blank"
+        rel="noreferrer"
         onClick={(e) => e.stopPropagation()}
         style={{ fontWeight: 600 }}
       >

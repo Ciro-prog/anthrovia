@@ -34,6 +34,9 @@ export default buildConfig({
     meta: {
       titleSuffix: ' · Anthrovia CMS',
     },
+    components: {
+      afterNavLinks: ['/admin/PreviewFieldBridge#PreviewFieldBridge'],
+    },
   },
   collections: [Users, Media, Pages, Courses, Leads, EventTypes, Bookings],
   globals: [SiteSettings],

@@ -39,6 +39,42 @@ type CourseSnap = {
   blocks: (Record<string, unknown> & { type: string })[]
 }
 
+function blocksAreEmpty(blocks: unknown): boolean {
+  return !Array.isArray(blocks) || blocks.length === 0
+}
+
+async function backfillEmptyCourseBlocks(
+  payload: Payload,
+  log: (msg: string) => void,
+  logError: (msg: string) => void,
+) {
+  const all = await payload.find({
+    collection: 'courses',
+    limit: 50,
+    overrideAccess: true,
+    depth: 0,
+  })
+  const bySlug = new Map((coursesSnapshot as CourseSnap[]).map((c) => [c.slug, c]))
+
+  for (const doc of all.docs) {
+    const slug = String(doc.slug || '')
+    const snap = bySlug.get(slug)
+    if (!snap || !blocksAreEmpty(doc.blocks)) continue
+    try {
+      await payload.update({
+        collection: 'courses',
+        id: doc.id,
+        data: { blocks: courseBlocksToPayload(snap.blocks) } as never,
+        overrideAccess: true,
+      })
+      log(`Course blocks rellenados: ${slug}`)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      logError(`Course backfill falló (${slug}): ${msg}`)
+    }
+  }
+}
+
 function rowHasTitle(row: unknown): boolean {
   return Boolean(row && typeof row === 'object' && 'title' in row && (row as { title?: string }).title)
 }
@@ -70,6 +106,7 @@ export async function seedCourses(
     })
     for (const doc of all.docs) ids.push(Number(doc.id))
     log(`Courses ya existen (${all.totalDocs}), skip create`)
+    await backfillEmptyCourseBlocks(payload, log, logError)
   } else {
     for (const course of coursesSnapshot as CourseSnap[]) {
       try {

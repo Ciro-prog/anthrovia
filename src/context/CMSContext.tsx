@@ -46,8 +46,16 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const previewSlug = useMemo(() => {
     if (typeof window === 'undefined') return 'home'
-    return new URLSearchParams(window.location.search).get('slug') || 'home'
+    const q = new URLSearchParams(window.location.search).get('slug')
+    if (q) return q
+    const course = window.location.pathname.match(/^\/capacitaciones\/([^/]+)/)
+    if (course) return course[1]
+    if (window.location.pathname.startsWith('/capacitaciones')) return 'learning'
+    return 'home'
   }, [])
+
+  const isCoursePreview =
+    typeof window !== 'undefined' && /^\/capacitaciones\/[^/]+/.test(window.location.pathname)
 
   const { data: liveData } = useLivePreview<PreviewPageDoc>({
     serverURL: cmsBase || 'http://localhost:60518',
@@ -83,12 +91,13 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [cmsBase])
 
-  // Live Preview: página (sections) o capacitación (blocks)
+  // Live Preview: página (sections) o capacitación (blocks). No pisar con arrays vacíos.
   useEffect(() => {
     if (!isPreview || !liveData) return
 
-    if (liveData.blocks) {
-      const mapped = mapCmsCourseBlocks(liveData.blocks, cmsBase)
+    const liveBlocks = Array.isArray(liveData.blocks) ? liveData.blocks : null
+    if ((isCoursePreview || liveBlocks) && liveBlocks && liveBlocks.length > 0) {
+      const mapped = mapCmsCourseBlocks(liveBlocks, cmsBase)
       if (!mapped.length) return
       const slug = String(liveData.slug || previewSlug)
       setContent((prev) => ({
@@ -111,12 +120,13 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return
     }
 
-    if (!liveData.sections) return
-    const mapped = mapCmsBlocksToSections(liveData.sections, cmsBase)
+    const liveSections = Array.isArray(liveData.sections) ? liveData.sections : null
+    if (!liveSections || liveSections.length === 0) return
+    const mapped = mapCmsBlocksToSections(liveSections, cmsBase)
     if (!mapped.length) return
     const scope = liveData.slug === 'learning' || previewSlug === 'learning' ? 'learning' : 'home'
     setContent((prev) => applyRemoteSections(prev, mapped, scope))
-  }, [isPreview, liveData, cmsBase, previewSlug])
+  }, [isPreview, liveData, cmsBase, previewSlug, isCoursePreview])
 
   const updateSection = (sectionId: string, newContent: Partial<SectionContent>) => {
     setContent((prev) => ({
