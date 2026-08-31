@@ -7,6 +7,7 @@ import { NewsDetailPage } from './pages/NewsDetailPage'
 import { ApplicationPage } from './pages/ApplicationPage'
 import DossierPage from './pages/DossierPage'
 import DossierModulesPage from './pages/DossierModulesPage'
+import { BookingPage } from './pages/BookingPage'
 import { ScrollToTop } from './components/ScrollToTop'
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/capacitaciones" element={<LearningPage />} />
         <Route path="/capacitaciones/:slug" element={<CoursePage />} />
+        <Route path="/agendar" element={<BookingPage />} />
         <Route path="/news" element={<NewsPage />} />
         <Route path="/news/:id" element={<NewsDetailPage />} />
         <Route path="/postulacion" element={<ApplicationPage />} />

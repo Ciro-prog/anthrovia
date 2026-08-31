@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: anthrovia
+      POSTGRES_PASSWORD: anthrovia
+      POSTGRES_DB: anthrovia_cms
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U anthrovia -d anthrovia_cms"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  cms:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "60518:3000"
+    environment:
+      DATABASE_URI: postgresql://anthrovia:anthrovia@postgres:5432/anthrovia_cms
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:-cambia-este-secreto-por-uno-largo-y-aleatorio}
+      PAYLOAD_PUBLIC_SERVER_URL: ${PAYLOAD_PUBLIC_SERVER_URL:-http://localhost:60518}
+      NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL:-http://localhost:60518}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,https://anthroviahr.com}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@anthroviahr.com}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-AnthroviaAdmin2026!}
+    volumes:
+      - media:/app/media
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  media:

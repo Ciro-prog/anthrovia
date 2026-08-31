@@ -6,6 +6,8 @@ import { motion } from "framer-motion"
 import { useCMS } from "@/context/CMSContext"
 import { ContactSectionContent, ServicesSectionContent } from "@/types/cms"
 import { MessageCircle, Linkedin, Send, ArrowRight, Mail } from "lucide-react"
+import { isCmsConfigured, submitLead } from "@/lib/cmsApi"
+import { Link } from "react-router-dom"
 
 interface ContactSectionProps {
   showCustomTraining?: boolean
@@ -41,6 +43,8 @@ export const ContactSection = ({
     service: "",
     message: ""
   })
+  const [submitState, setSubmitState] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const [submitError, setSubmitError] = useState("")
 
   useEffect(() => {
     const applyServiceFromUrl = () => {
@@ -73,11 +77,34 @@ export const ContactSection = ({
     }
   }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSubmitState("loading")
+    setSubmitError("")
+
+    if (isCmsConfigured()) {
+      const result = await submitLead({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        service: formData.service,
+        message: formData.message,
+        source: showCustomTraining ? "learning-contact" : "home-contact",
+      })
+      if (result.ok) {
+        setSubmitState("success")
+        setFormData({ name: "", email: "", phone: "", service: "", message: "" })
+        return
+      }
+      setSubmitError(result.error || "No se pudo enviar")
+      setSubmitState("error")
+    }
+
+    // Fallback: WhatsApp si no hay CMS o falló el POST
     const message = `Hola, mi nombre es ${formData.name}. Email: ${formData.email}. WhatsApp: ${formData.phone}. Me interesa: ${formData.service}. ${formData.message}`
     const whatsappUrl = `https://wa.me/${contactData.whatsappNumber}?text=${encodeURIComponent(message)}`
-    window.open(whatsappUrl, '_blank')
+    window.open(whatsappUrl, "_blank")
+    if (!isCmsConfigured()) setSubmitState("idle")
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -238,14 +265,33 @@ export const ContactSection = ({
                   />
                 </div>
 
-                <div className="mt-2">
-                  <Button
-                    type="submit"
-                    className="w-full md:w-auto inline-flex items-center justify-center bg-primary text-on-primary px-10 py-4 h-auto rounded-full font-label-md uppercase tracking-widest hover:bg-primary-container"
-                  >
-                    Enviar mensaje
-                    <Send className="ml-2 w-4 h-4" />
-                  </Button>
+                <div className="mt-2 flex flex-col gap-3">
+                  {submitState === "success" && (
+                    <p className="font-body text-body-md text-primary">
+                      ¡Gracias! Recibimos tu consulta. Te contactamos pronto.
+                    </p>
+                  )}
+                  {submitState === "error" && (
+                    <p className="font-body text-body-md text-error">
+                      No pudimos guardar en el CMS ({submitError}). Se abrió WhatsApp como alternativa.
+                    </p>
+                  )}
+                  <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                    <Button
+                      type="submit"
+                      disabled={submitState === "loading"}
+                      className="w-full md:w-auto inline-flex items-center justify-center bg-primary text-on-primary px-10 py-4 h-auto rounded-full font-label-md uppercase tracking-widest hover:bg-primary-container disabled:opacity-60"
+                    >
+                      {submitState === "loading" ? "Enviando…" : "Enviar mensaje"}
+                      <Send className="ml-2 w-4 h-4" />
+                    </Button>
+                    <Link
+                      to="/agendar"
+                      className="inline-flex items-center justify-center px-8 py-4 rounded-full border border-outline font-label-md text-label-md uppercase tracking-widest text-on-surface hover:border-primary hover:text-primary transition-colors"
+                    >
+                      Agendar llamada
+                    </Link>
+                  </div>
                 </div>
               </form>
             </motion.div>

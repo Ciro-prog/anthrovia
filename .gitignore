@@ -30,6 +30,8 @@ dist-ssr
 .env
 .env.*
 *.env
+!.env.example
+!cms/.env.example
 
 # Design mockups / Stitch exports (local only)
 diseño/

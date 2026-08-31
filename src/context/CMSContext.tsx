@@ -1,103 +1,80 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { SiteContent, SectionContent } from '../types/cms';
-import { initialContent } from '../data/initialContent';
-// import { supabase } from '../lib/supabase';
+import React, { createContext, useContext, useState, useEffect } from 'react'
+import { SiteContent, SectionContent } from '../types/cms'
+import { initialContent } from '../data/initialContent'
+import { coursesData } from '../data/coursesContent'
+import { fetchSiteContent } from '../lib/cmsApi'
 
 interface CMSContextType {
-  content: SiteContent;
-  updateSection: (sectionId: string, newContent: Partial<SectionContent>) => void;
-  saveContent: () => Promise<void>;
-  isLoading: boolean;
+  content: SiteContent
+  updateSection: (sectionId: string, newContent: Partial<SectionContent>) => void
+  saveContent: () => Promise<void>
+  isLoading: boolean
+  cmsOnline: boolean
 }
 
-export const CMSContext = createContext<CMSContextType | undefined>(undefined);
+export const CMSContext = createContext<CMSContextType | undefined>(undefined)
+
+const fallbackContent: SiteContent = {
+  sections: initialContent.sections.map((s) =>
+    s.type === 'courses' ? { ...s, courses: s.courses?.length ? s.courses : coursesData } : s
+  ),
+}
 
 export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [content, setContent] = useState<SiteContent>(initialContent);
-  // const [isLoading, setIsLoading] = useState(false);
+  const [content, setContent] = useState<SiteContent>(fallbackContent)
+  const [isLoading, setIsLoading] = useState(true)
+  const [cmsOnline, setCmsOnline] = useState(false)
 
-  // Load from Supabase on mount (DISABLED for now to avoid fetch errors)
   useEffect(() => {
-    /*
-    const fetchContent = async () => {
-      setIsLoading(true);
+    let cancelled = false
+    const load = async () => {
+      setIsLoading(true)
       try {
-        const { data, error } = await supabase
-          .from('sections')
-          .select('*');
-
-        if (error) {
-          console.error('Error fetching content:', error);
-          return;
-        }
-
-        if (data && data.length > 0) {
-          const sections = data.map(row => row.content as SectionContent);
-          const mergedSections = initialContent.sections.map(initSection => {
-            const dbSection = sections.find(s => s.id === initSection.id);
-            return dbSection || initSection;
-          });
-          setContent({ sections: mergedSections });
+        const remote = await fetchSiteContent()
+        if (!cancelled) {
+          setContent(remote)
+          setCmsOnline(Boolean(import.meta.env.VITE_CMS_URL))
         }
       } catch (err) {
-        console.error('Unexpected error:', err);
+        console.warn('CMS load failed, using local content', err)
+        if (!cancelled) {
+          setContent(fallbackContent)
+          setCmsOnline(false)
+        }
       } finally {
-        setIsLoading(false);
+        if (!cancelled) setIsLoading(false)
       }
-    };
-
-    fetchContent();
-    */
-  }, []);
+    }
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const updateSection = (sectionId: string, newContent: Partial<SectionContent>) => {
-    setContent(prev => ({
+    setContent((prev) => ({
       ...prev,
-      sections: prev.sections.map(section => 
-        section.id === sectionId ? { ...section, ...newContent } as SectionContent : section
-      )
-    }));
-  };
+      sections: prev.sections.map((section) =>
+        section.id === sectionId ? ({ ...section, ...newContent } as SectionContent) : section
+      ),
+    }))
+  }
 
   const saveContent = async () => {
-    console.warn("Save functionality is disabled as Supabase integration is inactive.");
-    alert("Funcionalidad de guardado desactivada temporalmente.");
-    /*
-    setIsLoading(true);
-    try {
-      const updates = content.sections.map(section => {
-        return supabase
-          .from('sections')
-          .upsert({ 
-            id: section.id, 
-            type: section.type,
-            content: section,
-            updated_at: new Date().toISOString()
-          });
-      });
-
-      await Promise.all(updates);
-      alert("Contenido guardado en Supabase!");
-    } catch (err) {
-      console.error('Error saving content:', err);
-      alert("Error al guardar.");
-    } finally {
-      setIsLoading(false);
-    }
-    */
-  };
+    console.warn('El guardado se hace desde el panel admin del CMS (puerto 60518).')
+  }
 
   return (
-    <CMSContext.Provider value={{ content, updateSection, saveContent, isLoading: false }}>
+    <CMSContext.Provider value={{ content, updateSection, saveContent, isLoading, cmsOnline }}>
       {children}
     </CMSContext.Provider>
-  );
-};
+  )
+}
 
 export const useCMS = () => {
-  const context = useContext(CMSContext);
+  const context = useContext(CMSContext)
   if (context === undefined) {
-    throw new Error('useCMS must be used within a CMSProvider');
+    throw new Error('useCMS must be used within a CMSProvider')
   }
-  return context;
-};
+  return context
+}
