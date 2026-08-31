@@ -5,16 +5,20 @@
  */
 import fs from 'node:fs'
 import path from 'node:path'
-import { createRequire } from 'node:module'
+import { fileURLToPath } from 'node:url'
 
-const require = createRequire(import.meta.url)
-const pkgDir = path.dirname(require.resolve('@payloadcms/db-postgres/package.json'))
-const target = path.join(pkgDir, 'dist', 'connect.js')
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const target = path.join(root, 'node_modules', '@payloadcms', 'db-postgres', 'dist', 'connect.js')
 
 const before =
   "process.env.NODE_ENV !== 'production' && process.env.PAYLOAD_MIGRATING !== 'true' && this.push !== false"
 const after =
   "(process.env.NODE_ENV !== 'production' || this.push === true) && process.env.PAYLOAD_MIGRATING !== 'true' && this.push !== false"
+
+if (!fs.existsSync(target)) {
+  console.error('[patch-payload-push] file not found:', target)
+  process.exit(1)
+}
 
 let src = fs.readFileSync(target, 'utf8')
 if (src.includes(after)) {
