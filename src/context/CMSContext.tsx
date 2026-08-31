@@ -10,6 +10,7 @@ import {
   isPreviewMode,
 } from '../lib/cmsApi'
 import { mapCmsBlocksToSections } from '../lib/mapCmsSections'
+import { mapCmsCourseBlocks } from '../lib/mapCmsCourseBlocks'
 
 interface CMSContextType {
   content: SiteContent
@@ -30,7 +31,9 @@ const fallbackContent: SiteContent = {
 
 type PreviewPageDoc = {
   slug?: string
+  title?: string
   sections?: unknown
+  blocks?: unknown
 }
 
 export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -77,9 +80,35 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [cmsBase])
 
-  // Live Preview desde el admin Payload (iframe ?preview=1)
+  // Live Preview: página (sections) o capacitación (blocks)
   useEffect(() => {
-    if (!isPreview || !liveData?.sections) return
+    if (!isPreview || !liveData) return
+
+    if (liveData.blocks) {
+      const mapped = mapCmsCourseBlocks(liveData.blocks, cmsBase)
+      if (!mapped.length) return
+      const slug = String(liveData.slug || previewSlug)
+      setContent((prev) => ({
+        ...prev,
+        sections: prev.sections.map((section) => {
+          if (section.type !== 'courses') return section
+          const courses = [...section.courses]
+          const idx = courses.findIndex((c) => c.slug === slug)
+          const next = {
+            id: idx >= 0 ? courses[idx].id : `preview-${slug}`,
+            slug,
+            title: liveData.title || (idx >= 0 ? courses[idx].title : slug),
+            blocks: mapped,
+          }
+          if (idx >= 0) courses[idx] = next
+          else courses.push(next)
+          return { ...section, courses }
+        }),
+      }))
+      return
+    }
+
+    if (!liveData.sections) return
     const mapped = mapCmsBlocksToSections(liveData.sections, cmsBase)
     if (!mapped.length) return
     const scope = liveData.slug === 'learning' || previewSlug === 'learning' ? 'learning' : 'home'

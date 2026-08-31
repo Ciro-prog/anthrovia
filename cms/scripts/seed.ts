@@ -2,6 +2,7 @@ import 'dotenv/config'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { seedPages } from '../src/seed/seedPages.ts'
+import { seedCourses } from '../src/seed/seedCourses.ts'
 
 /**
  * Seed: admin + event-type + settings + páginas home/learning con contenido real.
@@ -58,8 +59,9 @@ async function seed() {
   })
 
   await seedPages(payload, console.log, console.error)
+  await seedCourses(payload, console.log, console.error)
 
-  console.log('Seed OK. Editá en /admin → Páginas → Ver en el sitio / Live Preview → Publish.')
+  console.log('Seed OK. Páginas + Capacitaciones. «Conocer más» se edita en Capacitaciones.')
   process.exit(0)
 }
 

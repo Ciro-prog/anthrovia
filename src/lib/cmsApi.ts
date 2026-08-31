@@ -2,6 +2,7 @@ import { CoursePageContent, SectionContent, SiteContent } from '@/types/cms'
 import { initialContent } from '@/data/initialContent'
 import { coursesData } from '@/data/coursesContent'
 import { mapCmsBlocksToSections } from '@/lib/mapCmsSections'
+import { mapCmsCourseBlocks } from '@/lib/mapCmsCourseBlocks'
 
 const CMS_URL = (
   (import.meta.env.CMS_URL as string | undefined) ||
@@ -40,7 +41,11 @@ type CourseDoc = {
   title: string
   slug: string
   courseId?: string
-  blocks: CoursePageContent['blocks']
+  category?: string
+  description?: string
+  image?: { url?: string | null } | number | null
+  imageUrl?: string
+  blocks: unknown
   cohortStartDate?: string
   inscriptionDeadline?: string
   spots?: number
@@ -156,10 +161,10 @@ function mergeCourses(
   local: CoursePageContent[],
   remote?: CoursePageContent[]
 ): CoursePageContent[] {
-  if (!remote || remote.length === 0) return local
-  const bySlug = new Map(local.map((c) => [c.slug, c]))
+  // undefined = el fetch falló → fallback local. [] = CMS respondió vacío (borrados).
+  if (remote === undefined) return local
   return remote.map((r) => {
-    const base = bySlug.get(r.slug)
+    const base = local.find((c) => c.slug === r.slug)
     if (!base) return r
     return mergeWithMediaFallback(base, {
       ...r,
@@ -234,7 +239,7 @@ export async function fetchSiteContent(): Promise<SiteContent> {
   const [home, learning, coursesRes] = await Promise.all([
     cmsFetch<PayloadList<PageDoc>>(`/api/pages?where[slug][equals]=home&limit=1&${depth}`),
     cmsFetch<PayloadList<PageDoc>>(`/api/pages?where[slug][equals]=learning&limit=1&${depth}`),
-    cmsFetch<PayloadList<CourseDoc>>('/api/courses?limit=50&depth=0'),
+    cmsFetch<PayloadList<CourseDoc>>('/api/courses?limit=50&depth=2'),
   ])
 
   if (!home && !learning && !coursesRes) {
@@ -258,12 +263,14 @@ export async function fetchSiteContent(): Promise<SiteContent> {
     ;({ sections } = applyRemoteSections({ sections }, learningMapped, 'learning'))
   }
 
-  const remoteCourses = coursesRes?.docs?.map((c) => ({
-    id: c.courseId || `course-${c.slug}`,
-    slug: c.slug,
-    title: c.title,
-    blocks: (c.blocks || []) as CoursePageContent['blocks'],
-  })) as CoursePageContent[] | undefined
+  const remoteCourses = coursesRes
+    ? (coursesRes.docs.map((c) => ({
+        id: c.courseId || `course-${c.slug}`,
+        slug: c.slug,
+        title: c.title,
+        blocks: mapCmsCourseBlocks(c.blocks, CMS_URL),
+      })) as CoursePageContent[])
+    : undefined
 
   const mergedCourses = mergeCourses(coursesData, remoteCourses)
 

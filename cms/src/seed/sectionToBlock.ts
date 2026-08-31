@@ -40,7 +40,6 @@ export function sectionToBlock(section: AnySection): Record<string, unknown> | n
     case 'services': {
       const services = Array.isArray(section.services) ? section.services : []
       const modalidades = Array.isArray(section.modalidades) ? section.modalidades : []
-      const formaciones = Array.isArray(section.formaciones) ? section.formaciones : []
       const inCompany = (section.inCompany || {}) as Record<string, unknown>
       const coming = (section.formacionesComingSoon || {}) as Record<string, unknown>
       return {
@@ -71,14 +70,7 @@ export function sectionToBlock(section: AnySection): Record<string, unknown> | n
         modalidades,
         formacionesTitle: section.formacionesTitle || '',
         formacionesDescription: section.formacionesDescription || '',
-        formaciones: formaciones.map((f: Record<string, unknown>) => ({
-          itemId: f.id,
-          title: f.title,
-          description: f.description,
-          category: f.category,
-          imageUrl: f.imageUrl || '',
-          link: f.link || '',
-        })),
+        formaciones: [],
         formacionesComingSoon: {
           title: coming.title || '',
           description: coming.description || '',

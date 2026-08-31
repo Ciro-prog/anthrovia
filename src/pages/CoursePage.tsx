@@ -7,7 +7,7 @@ import { CourseBlockRenderer } from "@/components/learning/CourseBlockRenderer"
 
 export const CoursePage = () => {
   const { slug } = useParams<{ slug: string }>()
-  const { content } = useCMS()
+  const { content, isLoading } = useCMS()
 
   const coursesSection = content.sections.find((s) => s.type === "courses") as
     | CoursesSectionContent
@@ -16,6 +16,7 @@ export const CoursePage = () => {
   const course = coursesSection?.courses.find((c) => c.slug === slug)
 
   if (!course) {
+    if (isLoading) return null
     return <Navigate to="/capacitaciones" replace />
   }
 

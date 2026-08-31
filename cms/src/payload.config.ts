@@ -15,6 +15,7 @@ import { Bookings } from './collections/Bookings'
 import { SiteSettings } from './globals/SiteSettings'
 import { migrations } from './migrations'
 import { seedPages } from './seed/seedPages'
+import { seedCourses } from './seed/seedCourses'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -124,6 +125,7 @@ export default buildConfig({
       }
 
       await seedPages(payload)
+      await seedCourses(payload)
     } catch (err) {
       const extra =
         typeof err === 'object' && err && 'data' in err

@@ -1,0 +1,796 @@
+[
+  {
+    "id": "course-academia-comercial",
+    "slug": "academia-desarrollo-comercial",
+    "title": "Academia de Desarrollo Comercial",
+    "blocks": [
+      {
+        "type": "hero",
+        "title": "¿Sabés qué tienen en común un vendedor, un emprendedor y alguien que está buscando trabajo?",
+        "paragraphs": [
+          "Los tres necesitan saber vender. Y no necesariamente un producto.",
+          "El vendedor vende una solución. El emprendedor vende una idea. El profesional vende su experiencia. Y quien busca trabajo necesita comunicar por qué deberían elegirlo."
+        ],
+        "highlight": "Porque muchas oportunidades no se pierden por falta de experiencia, sino porque a veces no sabemos comunicar lo que podemos aportar. Y ahí está el problema.",
+        "imageUrl": "/ethos/courses/academia-desarrollo-comercial/hero.jpg"
+      },
+      {
+        "type": "twoColumn",
+        "background": "low",
+        "left": {
+          "eyebrow": "El mito",
+          "title": "No necesitás \"tener cara de vendedor\".",
+          "body": "Vender no significa presionar. No significa manipular. No significa hablar sin parar. Vender es entender necesidades, comunicar valor, generar confianza y ayudar a tomar decisiones. Y esas habilidades pueden servirte mucho más allá de un trabajo en ventas."
+        },
+        "right": {
+          "eyebrow": "La realidad",
+          "title": "Porque las habilidades comerciales no se quedan en el área de ventas.",
+          "body": "Te sirven para una entrevista. Para negociar un sueldo. Para presentar una propuesta. Para conseguir un cliente. Para defender una idea. Para emprender. Para liderar. En otras palabras: aprender a vender también es aprender a generar oportunidades."
+        }
+      },
+      {
+        "type": "splitMedia",
+        "title": "Pensá en tu próxima oportunidad.",
+        "body": "Dos personas tienen una experiencia similar. Las dos cumplen con los requisitos. Pero una sabe explicar lo que puede aportar, genera confianza y comunica su valor con seguridad. ¿A cuál elegirías? Eso también es vender. Y es exactamente el tipo de habilidad que podés entrenar.",
+        "imageUrl": "/ethos/courses/academia-desarrollo-comercial/hero.jpg",
+        "imagePosition": "left"
+      },
+      {
+        "type": "iconGrid",
+        "title": "No es un talento con el que se nace. Es una habilidad que se entrena.",
+        "background": "container",
+        "items": [
+          {
+            "iconName": "Briefcase",
+            "title": "Buscás trabajo",
+            "description": "Y querés llegar mejor preparado a entrevistas y procesos de selección.",
+            "tone": "secondary"
+          },
+          {
+            "iconName": "RefreshCw",
+            "title": "Querés cambiar de rubro",
+            "description": "Y buscás sumar nuevas competencias a tu perfil.",
+            "tone": "secondary"
+          },
+          {
+            "iconName": "TrendingUp",
+            "title": "Ya trabajás en ventas",
+            "description": "Y querés profesionalizar tus habilidades.",
+            "tone": "primary"
+          },
+          {
+            "iconName": "Rocket",
+            "title": "Tenés un emprendimiento",
+            "description": "Y querés comunicar mejor tu propuesta y generar más oportunidades.",
+            "tone": "primary"
+          }
+        ]
+      },
+      {
+        "type": "darkBand",
+        "title": "Y hoy hay una herramienta que cambió las reglas del juego. La inteligencia artificial.",
+        "body": "Hoy podés utilizarla para preparar una entrevista, practicar una conversación comercial, simular un cliente, analizar objeciones o mejorar tu comunicación. La pregunta ya no es si vas a utilizar IA… es si vas a aprender a utilizarla antes o después que los demás.",
+        "imageUrl": "/ethos/bg-network.png"
+      },
+      {
+        "type": "richText",
+        "title": "Saber qué hacer no significa necesariamente saber hacerlo.",
+        "body": "No es un curso para mirar y tomar apuntes. Es un entrenamiento. Vas a practicar. Simular situaciones. Resolver casos. Recibir feedback. Y volver a intentarlo. Hasta convertir conceptos en habilidades.",
+        "background": "surface"
+      },
+      {
+        "type": "splitMedia",
+        "title": "Academia de Desarrollo Comercial",
+        "body": "Una formación práctica para desarrollar habilidades comerciales, fortalecer tu perfil profesional y aprender a utilizar Inteligencia Artificial como herramienta de trabajo.",
+        "imageUrl": "/ethos/courses/academia-desarrollo-comercial/hero.jpg",
+        "imagePosition": "right"
+      },
+      {
+        "type": "tags",
+        "title": "Y tu perfil profesional también se entrena.",
+        "body": "Porque conseguir oportunidades no depende solamente de lo que sabés hacer. También importa cómo lo comunicás. Por eso vas a trabajar:",
+        "tags": [
+          "CV",
+          "LinkedIn",
+          "Entrevistas",
+          "Posicionamiento profesional"
+        ],
+        "asideTitle": "Mentoría dedicada",
+        "asideBody": "Incluye mentoría individual online con profesional de RR.HH. para potenciar tu perfil específico."
+      },
+      {
+        "type": "instructors",
+        "title": "Una formación con dos miradas complementarias.",
+        "people": [
+          {
+            "name": "Mauricio Ramos",
+            "role": "Desarrollo Comercial",
+            "bio": "Formador especializado en desarrollo comercial, con experiencia en ventas y capacitación de equipos comerciales. A lo largo de su trayectoria ha capacitado a más de 2.000 personas, combinando experiencia directa en el ámbito comercial con un enfoque práctico orientado a resultados.",
+            "imageUrl": "/ethos/courses/academia-desarrollo-comercial/mauricio.jpg"
+          },
+          {
+            "name": "Betsabé Sánchez",
+            "role": "Empleabilidad y perfil profesional",
+            "bio": "Profesional de RR.HH. con experiencia en reclutamiento y selección, liderando procesos de alto volumen para distintas posiciones. Su experiencia aporta una mirada estratégica sobre lo que las empresas buscan y la importancia de saber comunicar la propia experiencia y el valor profesional.",
+            "imageUrl": "/ethos/courses/academia-desarrollo-comercial/betsabe.png"
+          }
+        ]
+      },
+      {
+        "type": "scheduleCta",
+        "title": "Cuatro encuentros. Una habilidad que puede llevarte mucho más lejos.",
+        "body": "No podemos prometerte un trabajo. Pero sí podemos ayudarte a estar mejor preparado para cuando aparezca una oportunidad.",
+        "metaTitle": "Academia de Desarrollo Comercial",
+        "metaBody": "Entrenamiento práctico en habilidades comerciales, empleabilidad e IA.",
+        "chips": [
+          "Presencial / Online",
+          "Certificado",
+          "Mentoría",
+          "Red de oportunidades"
+        ],
+        "buttons": [
+          {
+            "text": "Quiero inscribirme",
+            "link": "/capacitaciones#contacto",
+            "variant": "primary"
+          },
+          {
+            "text": "Quiero más información",
+            "link": "/capacitaciones#contacto",
+            "variant": "outline"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "course-cm-nivel-1",
+    "slug": "community-manager-nivel-1",
+    "title": "Community Manager Operativo · Nivel I",
+    "blocks": [
+      {
+        "type": "hero",
+        "layout": "editorial",
+        "title": "Convertite en el Community Manager que las empresas necesitan en 2026.",
+        "titleItalic": "empresas necesitan",
+        "paragraphs": [
+          "Aprendé a gestionar redes sociales de manera profesional, integrando estrategia, creatividad e Inteligencia Artificial para multiplicar tus resultados.",
+          "Aunque hoy no tengas experiencia, no sepas diseñar o nunca hayas trabajado profesionalmente con redes."
+        ],
+        "checks": [
+          "No necesitás conocimientos previos",
+          "Metodología Human-First + IA",
+          "Acceso de por vida"
+        ],
+        "buttons": [
+          {
+            "text": "Quiero convertirme en CM",
+            "link": "/capacitaciones#contacto",
+            "variant": "primary"
+          }
+        ]
+      },
+      {
+        "type": "contextSplit",
+        "title": "Una nueva profesión digital está creciendo.",
+        "titleItalic": "creciendo",
+        "paragraphs": [
+          "Cada vez más negocios necesitan mejorar su presencia online. Pero ya no buscan solamente personas que publiquen contenido o respondan mensajes.",
+          "El rol del Community Manager evolucionó.",
+          "Hoy las empresas necesitan profesionales capaces de comprender una marca, conocer a su audiencia, desarrollar estrategias, crear contenido, analizar resultados y utilizar nuevas herramientas para trabajar de manera más eficiente.",
+          "La IA está transformando la forma de crear contenidos, estrategias y procesos. Pero la tecnología, por sí sola, no reemplaza el criterio profesional.",
+          "La verdadera ventaja está en saber combinar:"
+        ],
+        "formulaLabel": "la fórmula",
+        "formulaItems": [
+          {
+            "iconName": "Target",
+            "label": "Estrategia"
+          },
+          {
+            "iconName": "Palette",
+            "label": "Creatividad"
+          },
+          {
+            "iconName": "Bot",
+            "label": "IA"
+          }
+        ],
+        "closing": "Porque las empresas no necesitan solamente personas que sepan usar herramientas. Necesitan profesionales que sepan utilizarlas para pensar, resolver problemas y generar resultados.",
+        "imageUrl": "/ethos/courses/community-manager-nivel-1/context.jpg"
+      },
+      {
+        "type": "desireFear",
+        "title": "Quizás llegaste hasta acá porque estás buscando una nueva oportunidad...",
+        "desire": {
+          "title": "Lo que deseás",
+          "items": [
+            "Cambiar de trabajo o reinventarte profesionalmente.",
+            "Tener la libertad de trabajar desde cualquier lugar del mundo.",
+            "Crear tus propios clientes y tener más independencia.",
+            "Aprender una habilidad con demanda y actualizarte frente al avance de la IA."
+          ]
+        },
+        "fear": {
+          "title": "Lo que te frena",
+          "items": [
+            "\"No tengo experiencia\"",
+            "\"Me abruma la cantidad de herramientas nuevas y la IA.\"",
+            "\"No sé cómo conseguir mis primeros clientes.\"",
+            "\"Tengo miedo de no ser lo suficientemente creativ@.\""
+          ]
+        }
+      },
+      {
+        "type": "pathway",
+        "eyebrow": "El Camino",
+        "intro": [
+          "Una formación diseñada para quienes quieren aprender una profesión actual y desarrollar las habilidades necesarias para trabajar con redes sociales de manera profesional.",
+          "Durante 5 semanas vas a recorrer el camino que sigue un Community Manager: Desde entender cómo funciona la profesión, hasta crear contenido, analizar resultados, utilizar Inteligencia Artificial y prepararte para ofrecer tus servicios."
+        ],
+        "forYouLabel": "Esta formación es para vos si:",
+        "forYou": [
+          "Estás empezando desde cero.",
+          "Querés cambiar de rumbo profesional.",
+          "Buscás una habilidad que puedas aplicar laboralmente.",
+          "Querés trabajar con clientes o de forma independiente.",
+          "Querés aprender cómo se trabaja en el mercado actual."
+        ],
+        "note": "No se trata solamente de aprender redes sociales. Se trata de aprender a trabajar como Community Manager.",
+        "stepsTitle": "Los 5 Pasos para convertirte en un Community Manager profesional:",
+        "stepsTitleItalic": "Community Manager profesional:",
+        "aside": "Una metodología estructurada para llevarte de cero a estratega digital en tiempo récord.",
+        "steps": [
+          {
+            "title": "Aprendé a pensar como un Community Manager profesional.",
+            "paragraphs": [
+              "Antes de crear contenido, necesitás entender la profesión.",
+              "Vas a conocer cómo funciona el rol del Community Manager en empresas y como freelancer, que son las dos modalidades más buscadas. Es decir, vas a poder trabajar dentro de una empresa, o iniciar tu propio emprendimiento de forma independiente. Además, veremos qué necesita una marca para comunicar mejor y cómo organizar un sistema de trabajo profesional, utilizando herramientas modernas y actualizadas.",
+              "Aprenderás a analizar una identidad de marca, comprender audiencias y crear una base sólida para gestionar clientes."
+            ],
+            "result": "Saber cómo funciona realmente la profesión y las diferencias con otros roles similares, como Social Media Manager o Content Creator, y qué diferencia a un Community Manager profesional de alguien que solamente publica contenido.",
+            "imageUrl": "/ethos/courses/community-manager-nivel-1/step-1.jpg"
+          },
+          {
+            "title": "Creá contenido estratégico que conecte y genere resultados.",
+            "paragraphs": [
+              "Crear contenido no es publicar por publicar.",
+              "Un buen Community Manager sabe qué comunicar, para quién y con qué objetivo.",
+              "Vas a aprender a desarrollar ideas, escribir textos atractivos, crear diseños profesionales sin ser diseñador y planificar contenido para distintas plataformas.",
+              "También vas a conocer cómo trabajar con formatos actuales como reels, historias, carruseles y tendencias."
+            ],
+            "result": "Transformar una idea en una estrategia de contenido lista para una marca.",
+            "imageUrl": "/ethos/courses/community-manager-nivel-1/step-2.jpg",
+            "imageFirst": true
+          },
+          {
+            "title": "Aprendé a medir resultados y demostrar tu valor.",
+            "paragraphs": [
+              "Los likes no siempre significan resultados.",
+              "Un profesional necesita saber interpretar datos y demostrar el impacto de su trabajo.",
+              "Vas a aprender a analizar métricas, entender qué funciona, crear reportes profesionales y comunicar resultados a clientes.",
+              "También vas a conocer cómo gestionar comentarios, mensajes y situaciones difíciles en redes."
+            ],
+            "result": "Tomar decisiones basadas en información y mostrarle a un cliente el valor de tu trabajo.",
+            "imageUrl": "/ethos/courses/community-manager-nivel-1/step-3.jpg"
+          },
+          {
+            "title": "Potenciá tu trabajo con Inteligencia Artificial.",
+            "paragraphs": [
+              "La IA se convirtió en una herramienta clave para los profesionales digitales. Vas a aprender cómo utilizarla para acelerar procesos, generar mejores ideas y optimizar tu trabajo diario. Te enseñaremos a utilizar varias de ellas, dependiendo del tipo de trabajo para el que la necesites.",
+              "Desde crear estrategias y contenidos hasta investigar tendencias, organizar información y mejorar diseños.",
+              "Aquí vas a contar con un FACTOR DIFERENCIAL: el acceso a QuantumTraffic, una herramienta de IA propia, desarrollada por nosotros para facilitar el trabajo de búsqueda de contenido (sin que suene a IA) y tambien el diseño de publicaciones y carruseles."
+            ],
+            "result": "Vas a tener una ventaja competitiva: saber utilizar la IA para potenciar tu trabajo, optimizar tus resultados y destacarte profesionalmente.",
+            "imageUrl": "/ethos/courses/community-manager-nivel-1/step-4.jpg",
+            "imageFirst": true
+          },
+          {
+            "title": "Transformá tus conocimientos en una oportunidad profesional.",
+            "paragraphs": [
+              "Aprender es importante. Pero saber cómo aplicar lo aprendido es lo que genera oportunidades.",
+              "Vas a conocer cómo crear tus servicios, definir propuestas profesionales con presupuestos, crear tu portfolio para presentar tu trabajo y cómo comenzar a buscar clientes.",
+              "Aprenderás estrategias de contacto, comunicación y primeros pasos como Community Manager freelance."
+            ],
+            "result": "Tener mayor claridad para comenzar a desarrollar tu camino profesional.",
+            "imageUrl": "/ethos/courses/community-manager-nivel-1/step-5.jpg",
+            "highlight": true
+          }
+        ]
+      },
+      {
+        "type": "toolsSplit",
+        "title": "Las herramientas que están transformando el trabajo del Community Manager.",
+        "categories": [
+          {
+            "title": "Estrategia y creación",
+            "tools": "ChatGPT, Claude AI, Perplexity"
+          },
+          {
+            "title": "Diseño y edición",
+            "tools": "Canva AI, CapCut AI"
+          },
+          {
+            "title": "Organización",
+            "tools": "Notion AI, Gamma"
+          },
+          {
+            "title": "Nuevas posibilidades",
+            "tools": "ElevenLabs, HeyGen, Lovable, Trickle"
+          }
+        ],
+        "paragraphs": [
+          "Estas son algunas de las herramientas con las que trabajaremos en profundidad. Además, conocerás otras que pueden resultar útiles para tareas específicas. El objetivo no es solo saber qué hace cada una, sino comprender cuál utilizar en cada situación, cuándo conviene aplicarla y cómo integrarla de manera efectiva a un flujo de trabajo profesional.",
+          "La tecnología avanza, pero el criterio humano es lo que marca la diferencia. Aprender a usar estas herramientas te dará velocidad, pero tu visión estratégica te dará el valor."
+        ],
+        "imageUrl": "/ethos/courses/community-manager-nivel-1/tools.jpg"
+      },
+      {
+        "type": "philosophy",
+        "title": "No creamos cursos. Formamos profesionales.",
+        "paragraphs": [
+          "En Anthrovia HR creemos que aprender una nueva habilidad tiene valor cuando puede convertirse en una oportunidad real.",
+          "Por eso esta formación combina:"
+        ],
+        "emphasis": "Conocimiento actualizado + herramientas prácticas + mirada profesional.",
+        "paragraphsAfter": [
+          "Nuestro objetivo no es que termines con información acumulada.",
+          "Queremos que desarrolles una capacidad que puedas aplicar, mostrar y utilizar en el mercado laboral.",
+          "Porque una formación vale más cuando te prepara para lo que viene después."
+        ]
+      },
+      {
+        "type": "testimonials",
+        "title": "Testimonios",
+        "items": [
+          {
+            "quote": "\"El enfoque estratégico y la incorporación de IA desde el día uno cambiaron por completo mi forma de ver la creación de contenido. Hoy gestiono mis propios clientes con mucha más seguridad.\"",
+            "author": "Andrea P."
+          },
+          {
+            "quote": "\"No tenía experiencia previa y pensaba que no iba a poder. La estructura del programa y el acompañamiento constante me dieron las bases para empezar mi camino como freelancer.\"",
+            "author": "Sol D."
+          }
+        ]
+      },
+      {
+        "type": "teacherBand",
+        "title": "Aprendé junto a un profesional que conoce las necesidades del mercado actual.",
+        "lead": "Esta formación está diseñada y dictada por:",
+        "name": "Mauricio Ramos",
+        "role": "Community Manager / Experto en Redes Sociales con IA / Desarrollador de webapps y paginas web con IA",
+        "experienceLabel": "Profesional con experiencia en:",
+        "experience": [
+          "Comunicación digital",
+          "Estrategia de contenidos",
+          "Gestión de redes sociales",
+          "Inteligencia Artificial aplicada al trabajo digital",
+          "Creador de webapps y landing pages con herramientas de IA"
+        ],
+        "paragraphs": [
+          "Durante el programa vas a aprender desde una mirada práctica, basada en cómo se trabaja realmente en el día a día."
+        ],
+        "emphasis": "Porque conocer herramientas es importante. Pero entender cómo utilizarlas para generar resultados es lo que convierte el conocimiento en una profesión.",
+        "imageUrl": "/ethos/courses/community-manager-nivel-1/teacher.jpg"
+      },
+      {
+        "type": "investmentCard",
+        "title": "Todo lo que necesitás para comenzar tu camino como Community Manager.",
+        "badge": "Promoción especial de lanzamiento",
+        "inclusions": [
+          "Acceso de por vida a todo el material.",
+          "Soporte y acompañamiento durante las 5 semanas.",
+          "Plantillas, recursos y material de consulta descargable."
+        ],
+        "priceOld": "$57,000",
+        "priceNew": "$28,500",
+        "discountBadge": "50% OFF"
+      },
+      {
+        "type": "bonuses",
+        "title": "Bonus Exclusivos",
+        "items": [
+          {
+            "label": "Bonus 1",
+            "title": "Kit profesional del Community Manager",
+            "description": "Recursos y plantillas para organizar tu trabajo, planificar contenido y presentar tus servicios.",
+            "valueLabel": "Valor: us$ 47"
+          },
+          {
+            "label": "Bonus 2",
+            "title": "Biblioteca de prompts para Community Managers",
+            "description": "Prompts preparados para ayudarte a crear estrategias, ideas, copys y contenidos utilizando Inteligencia Artificial.",
+            "valueLabel": "Valor: us$ 37"
+          },
+          {
+            "label": "Bonus 3",
+            "title": "Guía para conseguir tus primeros clientes",
+            "description": "Recursos para comenzar a presentar tus servicios, contactar negocios y generar nuevas oportunidades.",
+            "valueLabel": "Valor: us$ 25"
+          },
+          {
+            "label": "Bonus 4 ⭐",
+            "title": "Acceso a QuantumTraffic",
+            "description": "Membresía PREMIUM por dos meses a la plataforma digital QUANTUMTRAFFIC, herramienta única creada por nosotros, que te permite generar contenido automático para tu nicho, y crear las publicaciones y carruseles para tus clientes, en semiautomático.",
+            "valueLabel": "Valor: us$ 58 (membresía mensual de us$29)",
+            "featured": true
+          }
+        ],
+        "footer": "Todos los bonos por un total de us$ 167, incluídos en tu único pago de $ar 28.500"
+      },
+      {
+        "type": "faq",
+        "title": "Preguntas Frecuentes",
+        "items": [
+          {
+            "question": "¿Necesito conocimientos previos?",
+            "answer": "No. El programa está diseñado para llevarte desde cero hasta un nivel profesional, paso a paso."
+          },
+          {
+            "question": "¿Necesito saber diseño?",
+            "answer": "No. Vas a aprender herramientas y metodologías para crear contenido profesional sin necesidad de ser diseñador."
+          },
+          {
+            "question": "¿Necesito conocimientos de Inteligencia Artificial?",
+            "answer": "No. Vas a aprender desde las bases cómo utilizarla aplicada al trabajo del Community Manager."
+          },
+          {
+            "question": "¿Tiene certificado?",
+            "answer": "Sí, al finalizar y aprobar el proyecto final recibirás un certificado de finalización."
+          },
+          {
+            "question": "¿Voy a poder trabajar al finalizar?",
+            "answer": "La formación está orientada a desarrollar habilidades aplicables al mercado y prepararte para comenzar a ofrecer servicios profesionales."
+          },
+          {
+            "question": "¿Es solamente teoría?",
+            "answer": "No. El enfoque está pensado para comprender cómo funciona el trabajo real y cómo aplicar lo aprendido."
+          },
+          {
+            "question": "¿Puedo hacerlo si tengo poco tiempo?",
+            "answer": "Sí. La modalidad está diseñada para que puedas avanzar incorporando los conocimientos de manera progresiva."
+          }
+        ]
+      },
+      {
+        "type": "richText",
+        "title": "Tu próxima oportunidad profesional puede empezar con una nueva habilidad.",
+        "body": "El mercado digital sigue creciendo. Las marcas necesitan profesionales preparados. Y la combinación entre redes sociales e Inteligencia Artificial abre nuevas posibilidades para quienes deciden aprender hoy. No necesitás saberlo todo para comenzar. Necesitás una formación que te guíe.",
+        "align": "center",
+        "background": "low"
+      },
+      {
+        "type": "closingCta",
+        "title": "El mercado necesita profesionales preparados. Ese podés ser vos.",
+        "titleItalic": "Ese podés ser vos.",
+        "primary": {
+          "text": "Quiero inscribirme ahora",
+          "link": "/capacitaciones#contacto",
+          "variant": "primary"
+        },
+        "doubtTitle": "¿Todavía tenés dudas?",
+        "doubtBody": "Agendá una llamada personalizada de 15 minutos. Podemos conocer tus objetivos, responder tus preguntas y ayudarte a entender si esta formación es para vos.",
+        "secondary": {
+          "text": "Agendar llamada",
+          "link": "/capacitaciones#contacto",
+          "variant": "outline"
+        }
+      }
+    ]
+  },
+  {
+    "id": "course-cm-pro",
+    "slug": "community-manager-pro",
+    "title": "Community Manager PRO",
+    "blocks": [
+      {
+        "type": "hero",
+        "layout": "editorial",
+        "title": "Dejá de ser quien publica. Convertite en quien diseña la estrategia.",
+        "paragraphs": [
+          "Formación avanzada en Community Management, Inteligencia Artificial y Marketing Digital. Elevá tu perfil profesional al siguiente nivel."
+        ],
+        "buttons": [
+          {
+            "text": "Quiero conocer el programa",
+            "link": "/capacitaciones#contacto",
+            "variant": "primary"
+          }
+        ]
+      },
+      {
+        "type": "richText",
+        "title": "El CM que solo \"publica\" tiene un problema.",
+        "titleItalic": "problema",
+        "body": "Negocio + Estrategia + Contenido + IA + Marketing + Análisis + Posicionamiento. Hoy, competir con herramientas inteligentes que pueden generar decenas de posteos en segundos es una batalla perdida si tu único valor es \"subir contenido\". El mercado ya no busca operadores técnicos; busca profesionales capaces de pensar estratégicamente. Necesitás entender el modelo de negocio, interpretar datos y utilizar la tecnología como un amplificador de tu criterio.",
+        "background": "low"
+      },
+      {
+        "type": "beforeAfter",
+        "title": "¿Qué pasa cuando dejás de ser \"el que maneja las redes\"?",
+        "body": "Evolucionás de ser un tomador de pedidos a un consultor estratégico de negocios.",
+        "before": {
+          "title": "El Operador (Antes)",
+          "items": [
+            "Recibe órdenes sobre qué publicar.",
+            "Cobra por cantidad de posteos.",
+            "Compite por precio en un mercado saturado.",
+            "Mide el éxito en \"likes\"."
+          ]
+        },
+        "after": {
+          "title": "El Estratega (Pro)",
+          "items": [
+            "Propone estrategias alineadas a objetivos comerciales.",
+            "Cobra por el valor y resultados generados.",
+            "Se posiciona como un socio indispensable.",
+            "Mide el éxito en conversión y ROI."
+          ]
+        }
+      },
+      {
+        "type": "splitMedia",
+        "title": "IA: No para hacer más posts. Para hacer más negocio.",
+        "body": "Aprenderás a integrar la Inteligencia Artificial como tu asistente estratégico. La clave no es la herramienta, sino la decisión humana que la dirige.",
+        "imageUrl": "/ethos/courses/community-manager-pro/split.jpg",
+        "imagePosition": "right",
+        "background": "surface"
+      },
+      {
+        "type": "darkBand",
+        "title": "Y hay un paso más: construir tu propia Agencia Unipersonal.",
+        "body": "Dejarás de pensar como un freelancer desbordado para operar como un negocio escalable: sistemas, flujos y automatizaciones que te permitan crecer sin multiplicar tu carga horaria.",
+        "imageUrl": "/ethos/courses/community-manager-pro/split.jpg"
+      },
+      {
+        "type": "iconGrid",
+        "title": "8 módulos. Una visión mucho más amplia del profesional digital.",
+        "description": "8 módulos · 2 horas cada uno · 100% online.",
+        "background": "container",
+        "items": [
+          {
+            "iconName": "Target",
+            "title": "Dejar de competir solo por precio",
+            "description": "Aumentá el valor de tus servicios con una mirada de negocio."
+          },
+          {
+            "iconName": "LineChart",
+            "title": "Desarrollar estrategias",
+            "description": "Aprendé a diseñar estrategias, no solo a ejecutar publicaciones."
+          },
+          {
+            "iconName": "Sparkles",
+            "title": "Incorporar IA profesionalmente",
+            "description": "Usá IA como asistente estratégico, no solo como generador de posts.",
+            "tone": "primary"
+          },
+          {
+            "iconName": "Building2",
+            "title": "Construir tu agencia unipersonal",
+            "description": "Dejá de pensar como un freelancer desbordado para operar como un negocio escalable: sistemas, flujos y automatizaciones.",
+            "tone": "primary"
+          }
+        ]
+      },
+      {
+        "type": "philosophy",
+        "title": "No se trata de aprender más herramientas.",
+        "paragraphs": [
+          "Se trata de convertirte en un profesional más valioso.",
+          "El mercado está cambiando. La IA está cambiando. Las redes están cambiando. Y el trabajo del Community Manager también."
+        ],
+        "emphasis": "El CM básico aprende el oficio. El CM PRO aprende a convertir ese oficio en una profesión y, si quiere, en un negocio."
+      },
+      {
+        "type": "scheduleCta",
+        "title": "Community Manager PRO",
+        "body": "El siguiente nivel empieza cuando dejás de pensar como operador y empezás a pensar como estratega. Si todavía no tenés formación inicial de Community Manager o experiencia equivalente, te sugerimos comenzar por nuestra Formación Inicial.",
+        "metaTitle": "Programa avanzado",
+        "metaBody": "8 módulos · 2 horas · 100% online",
+        "chips": [
+          "100% online",
+          "8 módulos",
+          "Nivel avanzado"
+        ],
+        "buttons": [
+          {
+            "text": "Quiero ser Community Manager PRO",
+            "link": "/capacitaciones#contacto",
+            "variant": "primary"
+          },
+          {
+            "text": "Ver formación inicial",
+            "link": "/capacitaciones/community-manager-nivel-1",
+            "variant": "outline"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "course-hablar-publico",
+    "slug": "hablar-en-publico",
+    "title": "Hablar en Público",
+    "blocks": [
+      {
+        "type": "hero",
+        "layout": "editorial",
+        "title": "HABLAR EN PÚBLICO",
+        "paragraphs": [
+          "No se trata solamente de perder el miedo. Se trata de aprender a comunicar, conectar y conducir."
+        ],
+        "buttons": [
+          {
+            "text": "Quiero conocer la formación",
+            "link": "/capacitaciones#contacto",
+            "variant": "primary"
+          }
+        ]
+      },
+      {
+        "type": "richText",
+        "title": "Cuando llega el momento de hablar",
+        "paragraphs": [
+          "¿Qué pasa cuando todas las miradas se dirigen a vos? ¿Sentís que tu mensaje llega con la fuerza que imaginaste?",
+          "Ese instante en el que tomás la palabra define mucho más que la transmisión de información. Es el momento donde tu conocimiento se vuelve visible, donde tu liderazgo se pone a prueba y donde la conexión con los demás puede cambiar el rumbo de una decisión.",
+          "La preparación técnica es importante, pero no alcanza. El mensaje más brillante pierde valor si no encuentra la forma adecuada de ser entregado."
+        ],
+        "body": "",
+        "background": "low"
+      },
+      {
+        "type": "iconGrid",
+        "title": "Una habilidad. Muchos escenarios.",
+        "description": "La comunicación estratégica no se limita a un escenario con micrófono.",
+        "background": "surface",
+        "items": [
+          {
+            "iconName": "Presentation",
+            "title": "Presentaciones",
+            "description": "Presentaciones de resultados y reportes clave."
+          },
+          {
+            "iconName": "Users",
+            "title": "Reuniones de equipo",
+            "description": "Reuniones donde se necesita alinear visiones."
+          },
+          {
+            "iconName": "Shield",
+            "title": "Defensa de proyectos",
+            "description": "Defensa de proyectos ante clientes o directorios."
+          },
+          {
+            "iconName": "Mic",
+            "title": "Charlas y eventos",
+            "description": "Conferencias, charlas y eventos formales."
+          }
+        ]
+      },
+      {
+        "type": "triad",
+        "title": "Y hay una diferencia que cambia todo",
+        "items": [
+          {
+            "title": "HABLAR",
+            "body": "Es emitir palabras. Muchas personas hablan, pocas logran que esas palabras tengan un destino claro y un impacto medible."
+          },
+          {
+            "title": "PRESENTAR",
+            "body": "Es mostrar información. Es útil, sí, pero a menudo pone el foco en el material (las diapositivas, los datos) y deja al presentador en un rol secundario de \"relator\"."
+          },
+          {
+            "title": "FACILITAR",
+            "body": "Es el nivel más alto. Significa hacer fácil lo complejo, guiar el proceso de comprensión del otro, gestionar la energía del grupo e involucrarlos para que el mensaje no solo se escuche, sino que se apropie.",
+            "featured": true
+          }
+        ]
+      },
+      {
+        "type": "iconGrid",
+        "title": "¿Qué vas a desarrollar?",
+        "description": "Un recorrido integral por las 7 dimensiones clave de la comunicación estratégica.",
+        "background": "container",
+        "items": [
+          {
+            "iconName": "Brain",
+            "title": "Presencia y seguridad",
+            "description": "Cómo prepararte mentalmente, gestionar la ansiedad y proyectar seguridad desde el primer segundo."
+          },
+          {
+            "iconName": "BookOpen",
+            "title": "Narrativa",
+            "description": "La diferencia entre un montón de datos y una historia que captura la atención. Marcos narrativos efectivos."
+          },
+          {
+            "iconName": "AudioLines",
+            "title": "Voz",
+            "description": "Volumen, tono, pausas y matices. Cómo usar tu voz como un instrumento para enfatizar ideas."
+          },
+          {
+            "iconName": "PersonStanding",
+            "title": "Cuerpo",
+            "description": "Gestos, postura, movimiento en el espacio y contacto visual estratégico."
+          },
+          {
+            "iconName": "MessageCircle",
+            "title": "Interacción",
+            "description": "Técnicas para hacer preguntas, generar participación y gestionar interrupciones o situaciones difíciles."
+          },
+          {
+            "iconName": "Layout",
+            "title": "Soportes",
+            "description": "Las diapositivas como apoyo, no como muletilla. Diseño minimalista y efectivo para acompañar tu mensaje."
+          }
+        ]
+      },
+      {
+        "type": "philosophy",
+        "title": "No se aprende a hablar en público solamente escuchando hablar",
+        "paragraphs": [
+          "Esta formación es un laboratorio. Un espacio seguro para experimentar, equivocarse y ajustar.",
+          "No buscamos que hables \"perfecto\": la perfección suele ser aburrida y artificial. Buscamos que encuentres tu propio estilo.",
+          "No hay una única forma correcta de comunicar. El objetivo es que seas la versión más auténtica, persuasiva y clara de vos mismo cuando tomás la palabra."
+        ]
+      },
+      {
+        "type": "splitMedia",
+        "title": "Una habilidad que te acompaña en diferentes ámbitos",
+        "body": "Profesionales y ejecutivos. Consultores y formadores. Quienes necesitan comunicar con claridad, seguridad y presencia frente a otras personas —en la empresa, en el aula o frente a un cliente.",
+        "imageUrl": "/ethos/courses/hablar-en-publico/split.jpg",
+        "imagePosition": "right"
+      },
+      {
+        "type": "iconGrid",
+        "title": "Una formación que se adapta a tu objetivo",
+        "background": "low",
+        "items": [
+          {
+            "iconName": "Users",
+            "title": "Abierta presencial",
+            "description": "Inmersión profunda en grupos reducidos con práctica intensiva."
+          },
+          {
+            "iconName": "Presentation",
+            "title": "Abierta online",
+            "description": "Enfoque en entornos virtuales y facilitación remota efectiva."
+          },
+          {
+            "iconName": "Mic",
+            "title": "Coaching individual 1:1",
+            "description": "Preparación personalizada para una presentación clave específica.",
+            "tone": "primary"
+          }
+        ]
+      },
+      {
+        "type": "teacherBand",
+        "title": "Facilitador",
+        "name": "Mauricio Ramos",
+        "role": "Formación en desarrollo de personas, comunicación y nuevas competencias profesionales.",
+        "paragraphs": [
+          "Realiza actividades de formación vinculadas al desarrollo de personas, comunicación y nuevas competencias profesionales."
+        ],
+        "imageUrl": "/ethos/mauricio.jpg"
+      },
+      {
+        "type": "scheduleCta",
+        "title": "¿Qué querés hacer con esta habilidad?",
+        "body": "El próximo momento en el que tengas que tomar la palabra está más cerca de lo que pensás. Preparate para que valga la pena. No se trata de aprender a parecer alguien que sabe hablar. Se trata de aprender a comunicar lo que sabés de una manera que otras personas puedan comprender, recordar y valorar.",
+        "metaTitle": "Hablar en Público",
+        "metaBody": "Práctica intensiva, feedback y desarrollo de estilo propio.",
+        "chips": [
+          "Grupos reducidos",
+          "In Company",
+          "Coaching 1:1"
+        ],
+        "buttons": [
+          {
+            "text": "Quiero más información",
+            "link": "/capacitaciones#contacto",
+            "variant": "primary"
+          }
+        ]
+      }
+    ]
+  }
+]

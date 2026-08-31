@@ -163,21 +163,22 @@ export const ServicesBlock: Block = {
     {
       name: 'formaciones',
       type: 'array',
-      labels: { singular: 'Formación', plural: 'Formaciones' },
+      labels: { singular: 'Card formación', plural: 'Formaciones' },
       admin: {
         initCollapsed: true,
-        description: 'Tarjetas con imagen en https://anthroviahr.com/capacitaciones#formaciones',
-        components: {
-          RowLabel: '/admin/CardRowLabel#CardRowLabel',
-        },
+        description:
+          'Elegí capacitaciones. El contenido de «conocer más» se edita en Capacitaciones. Borrar un curso quita la card.',
       },
       fields: [
-        ...imagePair('image', 'imageUrl', 'Imagen card'),
-        { name: 'title', type: 'text', required: true },
-        { name: 'description', type: 'textarea', required: true },
-        { name: 'category', type: 'text', required: true },
-        { name: 'itemId', type: 'text', required: true, label: 'ID' },
-        { name: 'link', type: 'text' },
+        {
+          name: 'course',
+          type: 'relationship',
+          relationTo: 'courses',
+          required: true,
+          admin: {
+            description: 'Card + /capacitaciones/{slug}',
+          },
+        },
       ],
     },
     {

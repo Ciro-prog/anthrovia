@@ -134,14 +134,32 @@ export function mapCmsBlocksToSections(
           formacionesTitle: String(raw.formacionesTitle || '') || undefined,
           formacionesDescription: String(raw.formacionesDescription || '') || undefined,
           formaciones: Array.isArray(raw.formaciones)
-            ? (raw.formaciones as Record<string, unknown>[]).map((f) => ({
-                id: String(f.itemId || f.id || ''),
-                title: String(f.title || ''),
-                description: String(f.description || ''),
-                category: String(f.category || ''),
-                imageUrl: mediaUrl(cmsBase, f.image, f.imageUrl as string),
-                link: String(f.link || '') || undefined,
-              }))
+            ? (raw.formaciones as Record<string, unknown>[])
+                .map((f) => {
+                  const related =
+                    f.course && typeof f.course === 'object'
+                      ? (f.course as Record<string, unknown>)
+                      : null
+                  const src = related || f
+                  const slug = String(src.slug || '')
+                  const title = String(src.title || f.title || '')
+                  if (!title && !slug) return null
+                  return {
+                    id: String(src.courseId || src.id || f.itemId || slug || title),
+                    title,
+                    description: String(src.description || f.description || ''),
+                    category: String(src.category || f.category || ''),
+                    imageUrl: mediaUrl(
+                      cmsBase,
+                      src.image || f.image,
+                      (src.imageUrl || f.imageUrl) as string,
+                    ),
+                    link: slug
+                      ? `/capacitaciones/${slug}`
+                      : String(f.link || '') || undefined,
+                  }
+                })
+                .filter((row): row is NonNullable<typeof row> => Boolean(row))
             : undefined,
           formacionesComingSoon:
             coming.title || coming.description
