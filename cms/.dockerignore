@@ -7,3 +7,5 @@ media/*
 !media/.gitkeep
 *.log
 .tmp-pg-migrate
+.tmp-pg-dev
+scripts/export*
