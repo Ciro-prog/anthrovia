@@ -44,18 +44,30 @@ export const HeroSection = ({ sectionId = "hero", variant = "home" }: HeroSectio
           >
             <div className="flex flex-col gap-4">
               {heroData.badge && (
-                <span className="font-label-md text-primary uppercase tracking-widest bg-primary-fixed/30 self-start px-4 py-1.5 rounded-full">
+                <span
+                  className="font-label-md text-primary uppercase tracking-widest bg-primary-fixed/30 self-start px-4 py-1.5 rounded-full"
+                  data-cms-field="badge"
+                >
                   {heroData.badge}
                 </span>
               )}
-              <h1 className="font-heading text-headline-lg-mobile lg:text-display-lg text-on-surface text-balance">
+              <h1
+                className="font-heading text-headline-lg-mobile lg:text-display-lg text-on-surface text-balance"
+                data-cms-field="title"
+              >
                 <span className="text-primary italic">{heroData.title}</span>
               </h1>
-              <h2 className="font-heading text-xl md:text-headline-md text-on-surface-variant max-w-lg text-balance">
+              <h2
+                className="font-heading text-xl md:text-headline-md text-on-surface-variant max-w-lg text-balance"
+                data-cms-field="subtitle"
+              >
                 {heroData.subtitle}
               </h2>
             </div>
-            <p className="font-body text-body-md md:text-body-lg text-on-surface-variant max-w-xl leading-relaxed">
+            <p
+              className="font-body text-body-md md:text-body-lg text-on-surface-variant max-w-xl leading-relaxed"
+              data-cms-field="description"
+            >
               {heroData.description}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 mt-2">
@@ -84,7 +96,10 @@ export const HeroSection = ({ sectionId = "hero", variant = "home" }: HeroSectio
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.15 }}
           >
-            <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-ethereal group">
+            <div
+              className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-ethereal group"
+              data-cms-field="image"
+            >
               <img
                 alt="Formación Anthrovia"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -124,22 +139,30 @@ export const HeroSection = ({ sectionId = "hero", variant = "home" }: HeroSectio
         >
           <div className="flex flex-col gap-4">
             {heroData.badge && (
-              <div className="inline-flex items-center gap-2">
+              <div className="inline-flex items-center gap-2" data-cms-field="badge">
                 <span className="w-8 h-px bg-primary block" />
                 <span className="font-label-md text-primary uppercase tracking-widest">
                   {heroData.badge}
                 </span>
               </div>
             )}
-            <h1 className="font-heading text-headline-lg-mobile md:text-display-lg text-on-surface leading-tight text-balance">
+            <h1
+              className="font-heading text-headline-lg-mobile md:text-display-lg text-on-surface leading-tight text-balance"
+              data-cms-field="title"
+            >
               {heroData.title}{" "}
               {heroData.titleHighlight && (
-                <span className="text-primary italic">{heroData.titleHighlight}</span>
+                <span className="text-primary italic" data-cms-field="titleHighlight">
+                  {heroData.titleHighlight}
+                </span>
               )}{" "}
-              {heroData.subtitle}
+              <span data-cms-field="subtitle">{heroData.subtitle}</span>
             </h1>
           </div>
-          <p className="font-body text-body-lg text-on-surface-variant max-w-2xl text-balance">
+          <p
+            className="font-body text-body-lg text-on-surface-variant max-w-2xl text-balance"
+            data-cms-field="description"
+          >
             {heroData.description}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mt-4">

@@ -7,6 +7,13 @@ const dirname = path.dirname(filename)
 
 export const Media: CollectionConfig = {
   slug: 'media',
+  labels: {
+    singular: 'Archivo',
+    plural: 'Fotos y archivos',
+  },
+  admin: {
+    description: 'Subí acá las fotos de las cards. Después las elegís en Páginas o Capacitaciones.',
+  },
   access: {
     read: () => true,
   },
@@ -32,6 +39,7 @@ export const Media: CollectionConfig = {
     {
       name: 'alt',
       type: 'text',
+      label: 'Texto alternativo (accesibilidad)',
     },
   ],
 }

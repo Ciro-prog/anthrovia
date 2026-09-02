@@ -2,6 +2,8 @@ import { Navbar } from "../components/Navbar"
 import { HeroSection } from "../components/HeroSection"
 import { ServicesSection } from "../components/ServicesSection"
 import { AboutSection } from "../components/AboutSection"
+import { PostsSection } from "../components/PostsSection"
+import { NewsSection } from "../components/NewsSection"
 import { ContactSection } from "../components/ContactSection"
 import { Footer } from "../components/Footer"
 
@@ -25,6 +27,8 @@ export const HomePage = () => {
         <HeroSection sectionId="hero" variant="home" />
         <ServicesSection sectionId="services" variant="home" />
         <AboutSection sectionId="about" variant="home" />
+        <PostsSection />
+        <NewsSection />
         <ContactSection showCustomTraining={false} />
         <Footer />
       </div>

@@ -1,9 +1,50 @@
 import { useParams, Navigate, Link } from "react-router-dom"
 import { useCMS } from "@/context/CMSContext"
-import { CoursesSectionContent } from "@/types/cms"
+import { CoursePageContent, CoursesSectionContent } from "@/types/cms"
 import { Navbar } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { CourseBlockRenderer } from "@/components/learning/CourseBlockRenderer"
+
+const COHORT_LABEL: Record<string, string> = {
+  open: "Inscripciones abiertas",
+  upcoming: "Próximamente",
+  full: "Cupos agotados",
+  closed: "Finalizado",
+}
+
+function formatCohortDate(value?: string) {
+  if (!value) return ""
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return ""
+  return date.toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })
+}
+
+function CourseCohortBadge({ course }: { course: CoursePageContent }) {
+  const status = course.cohortStatus
+  const start = formatCohortDate(course.cohortStartDate)
+  const spots = typeof course.spots === "number" ? course.spots : undefined
+  if (!status && !start && spots == null) return null
+
+  return (
+    <div className="mt-6 flex flex-wrap items-center gap-3" data-cms-field="cohortStatus">
+      {status && (
+        <span className="inline-flex items-center rounded-full bg-primary-fixed/40 text-on-primary-fixed-variant font-label-md text-xs uppercase tracking-widest px-3 py-1">
+          {COHORT_LABEL[status] || status}
+        </span>
+      )}
+      {start && (
+        <span className="font-body text-body-md text-on-surface-variant" data-cms-field="cohortStartDate">
+          Inicio: {start}
+        </span>
+      )}
+      {spots != null && (
+        <span className="font-body text-body-md text-on-surface-variant" data-cms-field="spots">
+          Cupos: {spots}
+        </span>
+      )}
+    </div>
+  )
+}
 
 export const CoursePage = () => {
   const { slug } = useParams<{ slug: string }>()
@@ -43,6 +84,7 @@ export const CoursePage = () => {
               <span className="material-symbols-outlined text-[18px]">arrow_back</span>
               Volver a capacitaciones
             </Link>
+            <CourseCohortBadge course={course} />
           </div>
           <CourseBlockRenderer blocks={course.blocks} />
         </main>

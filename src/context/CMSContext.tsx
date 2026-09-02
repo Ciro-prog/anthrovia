@@ -1,11 +1,15 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react'
 import { useLivePreview } from '@payloadcms/live-preview-react'
-import { SiteContent, SectionContent } from '../types/cms'
+import { SiteContent, SectionContent, SiteSettingsContent, ApplicationFormContent } from '../types/cms'
 import { initialContent } from '../data/initialContent'
 import { coursesData } from '../data/coursesContent'
+import { defaultApplicationForm } from '../data/applicationFormDefaults'
 import {
   applyRemoteSections,
+  defaultSiteSettings,
+  fetchApplicationForm,
   fetchSiteContent,
+  fetchSiteSettings,
   getCmsBaseUrl,
   isPreviewMode,
 } from '../lib/cmsApi'
@@ -15,6 +19,8 @@ import { usePreviewFieldFocus } from '../lib/usePreviewFieldFocus'
 
 interface CMSContextType {
   content: SiteContent
+  siteSettings: SiteSettingsContent
+  applicationForm: ApplicationFormContent
   updateSection: (sectionId: string, newContent: Partial<SectionContent>) => void
   saveContent: () => Promise<void>
   isLoading: boolean
@@ -33,12 +39,25 @@ const fallbackContent: SiteContent = {
 type PreviewPageDoc = {
   slug?: string
   title?: string
+  subtitle?: string
+  fields?: unknown
   sections?: unknown
   blocks?: unknown
+  bookingEnabled?: boolean
+  defaultEventTypeSlug?: string
+  whatsappNumber?: string
+  contactEmail?: string
+  siteName?: string
+  cohortStartDate?: string
+  inscriptionDeadline?: string
+  spots?: number
+  cohortStatus?: string
 }
 
 export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [content, setContent] = useState<SiteContent>(fallbackContent)
+  const [siteSettings, setSiteSettings] = useState<SiteSettingsContent>(defaultSiteSettings)
+  const [applicationForm, setApplicationForm] = useState<ApplicationFormContent>(defaultApplicationForm)
   const [isLoading, setIsLoading] = useState(true)
   const [cmsOnline, setCmsOnline] = useState(false)
   const isPreview = isPreviewMode()
@@ -70,9 +89,32 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const load = async () => {
       setIsLoading(true)
       try {
-        const remote = await fetchSiteContent()
+        const [remote, settings, form] = await Promise.all([
+          fetchSiteContent(),
+          fetchSiteSettings(),
+          fetchApplicationForm(),
+        ])
         if (!cancelled) {
           setContent(remote)
+          if (settings) {
+            setSiteSettings({
+              ...defaultSiteSettings,
+              ...settings,
+              dossierDays: settings.dossierDays?.length
+                ? settings.dossierDays
+                : defaultSiteSettings.dossierDays,
+              dossierSlots: settings.dossierSlots?.length
+                ? settings.dossierSlots
+                : defaultSiteSettings.dossierSlots,
+            })
+          }
+          if (form?.fields?.length) {
+            setApplicationForm({
+              title: form.title || defaultApplicationForm.title,
+              subtitle: form.subtitle || defaultApplicationForm.subtitle,
+              fields: form.fields,
+            })
+          }
           setCmsOnline(Boolean(cmsBase))
         }
       } catch (err) {
@@ -95,6 +137,14 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     if (!isPreview || !liveData) return
 
+    if (Array.isArray(liveData.fields)) {
+      setApplicationForm({
+        title: typeof liveData.title === 'string' ? liveData.title : defaultApplicationForm.title,
+        subtitle: typeof liveData.subtitle === 'string' ? liveData.subtitle : defaultApplicationForm.subtitle,
+        fields: liveData.fields as ApplicationFormContent['fields'],
+      })
+    }
+
     const liveBlocks = Array.isArray(liveData.blocks) ? liveData.blocks : null
     if ((isCoursePreview || liveBlocks) && liveBlocks && liveBlocks.length > 0) {
       const mapped = mapCmsCourseBlocks(liveBlocks, cmsBase)
@@ -111,6 +161,10 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             slug,
             title: liveData.title || (idx >= 0 ? courses[idx].title : slug),
             blocks: mapped,
+            cohortStartDate: liveData.cohortStartDate,
+            inscriptionDeadline: liveData.inscriptionDeadline,
+            spots: liveData.spots,
+            cohortStatus: liveData.cohortStatus,
           }
           if (idx >= 0) courses[idx] = next
           else courses.push(next)
@@ -118,6 +172,17 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }),
       }))
       return
+    }
+
+    if (typeof liveData.bookingEnabled === 'boolean' || liveData.contactEmail || liveData.whatsappNumber) {
+      setSiteSettings((prev) => ({
+        ...prev,
+        ...(typeof liveData.bookingEnabled === 'boolean' ? { bookingEnabled: liveData.bookingEnabled } : {}),
+        ...(liveData.defaultEventTypeSlug ? { defaultEventTypeSlug: liveData.defaultEventTypeSlug } : {}),
+        ...(liveData.whatsappNumber ? { whatsappNumber: liveData.whatsappNumber } : {}),
+        ...(liveData.contactEmail ? { contactEmail: liveData.contactEmail } : {}),
+        ...(liveData.siteName ? { siteName: liveData.siteName } : {}),
+      }))
     }
 
     const liveSections = Array.isArray(liveData.sections) ? liveData.sections : null
@@ -143,7 +208,16 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   return (
     <CMSContext.Provider
-      value={{ content, updateSection, saveContent, isLoading, cmsOnline, isPreview }}
+      value={{
+        content,
+        siteSettings,
+        applicationForm,
+        updateSection,
+        saveContent,
+        isLoading,
+        cmsOnline,
+        isPreview,
+      }}
     >
       {children}
     </CMSContext.Provider>

@@ -38,7 +38,10 @@ const FeaturedNewsCard = ({ article }: { article: NewsItem }) => {
           </span>
         </div>
 
-        <h3 className="text-2xl md:text-3xl font-heading text-on-surface mb-4 leading-tight group-hover:text-primary transition-colors text-balance">
+        <h3
+          className="text-2xl md:text-3xl font-heading text-on-surface mb-4 leading-tight group-hover:text-primary transition-colors text-balance"
+          data-cms-field="newsItems.0.title"
+        >
           {article.title}
         </h3>
 
@@ -90,7 +93,10 @@ const CompactNewsCard = ({ article, index }: { article: NewsItem; index: number 
             <span>•</span>
             <span className="normal-case tracking-normal font-body">{formatDate(article.date)}</span>
           </div>
-          <h4 className="text-base md:text-lg font-heading text-on-surface leading-snug group-hover:text-primary transition-colors mb-2 line-clamp-2">
+          <h4
+            className="text-base md:text-lg font-heading text-on-surface leading-snug group-hover:text-primary transition-colors mb-2 line-clamp-2"
+            data-cms-field={`newsItems.${index + 1}.title`}
+          >
             {article.title}
           </h4>
           <span className="text-sm font-label-md text-primary inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
@@ -129,10 +135,13 @@ export const NewsSection = () => {
             <span className="text-primary font-label-md tracking-widest uppercase text-sm mb-2 block">
               Noticias
             </span>
-            <h2 className="text-headline-lg-mobile md:text-headline-lg font-heading text-on-surface leading-tight">
-              Últimas Noticias
+            <h2
+              className="text-headline-lg-mobile md:text-headline-lg font-heading text-on-surface leading-tight"
+              data-cms-field="title"
+            >
+              {newsSection.title || "Últimas Noticias"}
             </h2>
-            <p className="text-body-lg font-body text-on-surface-variant mt-4">
+            <p className="text-body-lg font-body text-on-surface-variant mt-4" data-cms-field="subtitle">
               {newsSection.subtitle}
             </p>
           </div>

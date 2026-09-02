@@ -1,4 +1,11 @@
-import { CoursePageContent, SectionContent, SiteContent } from '@/types/cms'
+import {
+  ApplicationAnswer,
+  ApplicationFormContent,
+  CoursePageContent,
+  SectionContent,
+  SiteContent,
+  SiteSettingsContent,
+} from '@/types/cms'
 import { initialContent } from '@/data/initialContent'
 import { coursesData } from '@/data/coursesContent'
 import { mapCmsBlocksToSections } from '@/lib/mapCmsSections'
@@ -269,6 +276,10 @@ export async function fetchSiteContent(): Promise<SiteContent> {
         slug: c.slug,
         title: c.title,
         blocks: mapCmsCourseBlocks(c.blocks, CMS_URL),
+        cohortStartDate: c.cohortStartDate,
+        inscriptionDeadline: c.inscriptionDeadline,
+        spots: c.spots,
+        cohortStatus: c.cohortStatus,
       })) as CoursePageContent[])
     : undefined
 
@@ -298,11 +309,14 @@ export type LeadPayload = {
   service?: string
   message?: string
   source?: string
+  company?: string
+  preferredDay?: string
+  preferredSlot?: string
 }
 
 export async function submitLead(data: LeadPayload): Promise<{ ok: boolean; error?: string }> {
   if (!CMS_URL) {
-    return { ok: false, error: 'CMS no configurado (CMS_URL)' }
+    return { ok: false, error: 'No se pudo enviar. Probá de nuevo.' }
   }
   try {
     const res = await fetch(`${CMS_URL}/api/leads`, {
@@ -315,16 +329,18 @@ export async function submitLead(data: LeadPayload): Promise<{ ok: boolean; erro
         service: data.service || '',
         message: data.message || '',
         source: data.source || 'contact-form',
+        company: data.company || '',
+        preferredDay: data.preferredDay || '',
+        preferredSlot: data.preferredSlot || '',
         status: 'new',
       }),
     })
     if (!res.ok) {
-      const body = await res.text()
-      return { ok: false, error: body || `HTTP ${res.status}` }
+      return { ok: false, error: 'No se pudo enviar. Probá de nuevo.' }
     }
     return { ok: true }
-  } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : 'Error de red' }
+  } catch {
+    return { ok: false, error: 'No se pudo enviar. Probá de nuevo.' }
   }
 }
 
@@ -339,7 +355,7 @@ export type BookingPayload = {
 
 export async function submitBooking(data: BookingPayload): Promise<{ ok: boolean; error?: string }> {
   if (!CMS_URL) {
-    return { ok: false, error: 'CMS no configurado (CMS_URL)' }
+    return { ok: false, error: 'No se pudo enviar. Probá de nuevo.' }
   }
   try {
     const res = await fetch(`${CMS_URL}/api/bookings`, {
@@ -356,12 +372,11 @@ export async function submitBooking(data: BookingPayload): Promise<{ ok: boolean
       }),
     })
     if (!res.ok) {
-      const body = await res.text()
-      return { ok: false, error: body || `HTTP ${res.status}` }
+      return { ok: false, error: 'No se pudo enviar. Probá de nuevo.' }
     }
     return { ok: true }
-  } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : 'Error de red' }
+  } catch {
+    return { ok: false, error: 'No se pudo enviar. Probá de nuevo.' }
   }
 }
 
@@ -369,4 +384,91 @@ export async function fetchActiveEventTypes() {
   return cmsFetch<PayloadList<{ id: string | number; title: string; slug: string; durationMinutes: number }>>(
     '/api/event-types?where[active][equals]=true&limit=20'
   )
+}
+
+export async function fetchSiteSettings(): Promise<SiteSettingsContent | null> {
+  return cmsFetch<SiteSettingsContent>('/api/globals/site-settings')
+}
+
+export async function fetchApplicationForm(): Promise<ApplicationFormContent | null> {
+  return cmsFetch<ApplicationFormContent>('/api/globals/application-form')
+}
+
+export const defaultSiteSettings: SiteSettingsContent = {
+  siteName: 'Anthrovia HR',
+  bookingEnabled: true,
+  defaultEventTypeSlug: 'llamada-15',
+  dossierDays: ['lun', 'mar', 'mie', 'jue', 'vie'],
+  dossierSlots: [
+    { label: 'Mañana', start: '09:00', end: '13:00' },
+    { label: 'Tarde', start: '14:00', end: '18:00' },
+  ],
+}
+
+export type ApplicationPayload = {
+  email: string
+  firstName?: string
+  lastName?: string
+  age?: string
+  phone?: string
+  linkedin?: string
+  country?: string
+  province?: string
+  city?: string
+  residencyStatus?: string
+  educationLevel?: string
+  secondaryStatus?: string
+  careerRun?: string
+  salesExperienceYears?: string
+  healthSalesExperience?: string
+  healthSalesExperienceDesc?: string
+  isWorking?: string
+  currentRole?: string
+  lookingForChange?: string
+  willingToChange?: string
+  changeCondition?: string
+  startDate?: string
+  remoteWorkAgreement?: string
+  commissionSchemeAgreement?: string
+  desiredIncomeScheme?: string
+  contractTypeAgreement?: string
+  monotributo?: string
+  hasPC?: string
+  hasInternet?: string
+  consent?: boolean
+  answers?: ApplicationAnswer[]
+}
+
+export async function submitApplication(
+  data: ApplicationPayload,
+  cv?: File | null,
+): Promise<{ ok: boolean; error?: string }> {
+  if (!CMS_URL) {
+    return { ok: false, error: 'No se pudo enviar. Probá de nuevo.' }
+  }
+  try {
+    const payload = { ...data, status: 'new' }
+    let res: Response
+    if (cv) {
+      const form = new FormData()
+      form.append('_payload', JSON.stringify(payload))
+      form.append('cv', cv)
+      res = await fetch(`${CMS_URL}/api/applications`, {
+        method: 'POST',
+        body: form,
+      })
+    } else {
+      res = await fetch(`${CMS_URL}/api/applications`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+    }
+    if (!res.ok) {
+      return { ok: false, error: 'No se pudo enviar. Probá de nuevo.' }
+    }
+    return { ok: true }
+  } catch {
+    return { ok: false, error: 'No se pudo enviar. Probá de nuevo.' }
+  }
 }

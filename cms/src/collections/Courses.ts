@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { coursePageBlocks } from '../blocks/courseBlocks'
+import { removeCardAfterCourseDelete } from '../hooks/syncFormacionesCourses'
 
 const previewBase = () =>
   (process.env.PREVIEW_URL || process.env.FRONTEND_URL || 'https://anthroviahr.com').replace(
@@ -28,6 +29,9 @@ export const Courses: CollectionConfig = {
   access: {
     read: () => true,
     delete: ({ req: { user } }) => Boolean(user),
+  },
+  hooks: {
+    afterDelete: [removeCardAfterCourseDelete],
   },
   fields: [
     {

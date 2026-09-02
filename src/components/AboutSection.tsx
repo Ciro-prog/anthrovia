@@ -28,7 +28,10 @@ export const AboutSection = ({ sectionId = "about", variant = "home" }: AboutSec
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full border border-outline-variant/30 opacity-50 pointer-events-none" />
           <div className="relative z-10 w-full max-w-container-max mx-auto flex flex-col items-center text-center gap-12 md:gap-16">
             {aboutData.pillarsTitle && (
-              <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface leading-tight max-w-3xl text-balance">
+              <h2
+                className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface leading-tight max-w-3xl text-balance"
+                data-cms-field="pillarsTitle"
+              >
                 {aboutData.pillarsTitle.split("humana").map((part, i, arr) =>
                   i < arr.length - 1 ? (
                     <span key={i}>
@@ -82,6 +85,68 @@ export const AboutSection = ({ sectionId = "about", variant = "home" }: AboutSec
         </section>
       )}
 
+      {(aboutData.purpose?.title || aboutData.purpose?.description || aboutData.mission?.title || aboutData.mission?.description || (aboutData.values?.length ?? 0) > 0) && (
+        <section className="w-full px-margin-mobile lg:px-margin-desktop py-16 md:py-20 bg-surface-container-lowest">
+          <div className="w-full max-w-container-max mx-auto flex flex-col gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              {(aboutData.purpose?.title || aboutData.purpose?.description) && (
+                <div>
+                  <h3
+                    className="font-heading text-2xl md:text-3xl text-on-surface mb-4"
+                    data-cms-field="purpose.title"
+                  >
+                    {aboutData.purpose.title}
+                  </h3>
+                  <p
+                    className="font-body text-body-md md:text-body-lg text-on-surface-variant leading-relaxed"
+                    data-cms-field="purpose.description"
+                  >
+                    {aboutData.purpose.description}
+                  </p>
+                </div>
+              )}
+              {(aboutData.mission?.title || aboutData.mission?.description) && (
+                <div>
+                  <h3
+                    className="font-heading text-2xl md:text-3xl text-on-surface mb-4"
+                    data-cms-field="mission.title"
+                  >
+                    {aboutData.mission.title}
+                  </h3>
+                  <p
+                    className="font-body text-body-md md:text-body-lg text-on-surface-variant leading-relaxed"
+                    data-cms-field="mission.description"
+                  >
+                    {aboutData.mission.description}
+                  </p>
+                </div>
+              )}
+            </div>
+            {(aboutData.values?.length ?? 0) > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {aboutData.values.map((value, index) => {
+                  const Icon = getIcon(value.iconName)
+                  return (
+                    <div key={value.title || index} className="flex flex-col gap-3">
+                      {Icon && <Icon className="w-8 h-8 text-primary" />}
+                      <h4 className="font-heading text-xl text-on-surface" data-cms-field={`values.${index}.title`}>
+                        {value.title}
+                      </h4>
+                      <p
+                        className="font-body text-body-md text-on-surface-variant"
+                        data-cms-field={`values.${index}.description`}
+                      >
+                        {value.description}
+                      </p>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* Why Anthrovia / Founder */}
       <section
         id="anthrovia"
@@ -94,7 +159,10 @@ export const AboutSection = ({ sectionId = "about", variant = "home" }: AboutSec
                 ANTHROVIA
               </span>
             </div>
-            <div className="relative w-full aspect-[3/4] md:aspect-[4/5] rounded-[40px] overflow-hidden shadow-ethereal border-4 border-surface z-10 bg-surface-container">
+            <div
+              className="relative w-full aspect-[3/4] md:aspect-[4/5] rounded-[40px] overflow-hidden shadow-ethereal border-4 border-surface z-10 bg-surface-container"
+              data-cms-field="personImage"
+            >
               <img
                 alt={aboutData.personName || "Founder Anthrovia HR"}
                 className="w-full h-full object-cover object-top"
@@ -102,17 +170,23 @@ export const AboutSection = ({ sectionId = "about", variant = "home" }: AboutSec
               />
             </div>
             <div className="absolute -bottom-6 right-4 md:right-8 bg-surface-container-lowest p-5 rounded-2xl shadow-soft z-20 flex flex-col gap-1 border border-surface-variant">
-              <span className="font-label-md text-primary uppercase tracking-widest">
+              <span
+                className="font-label-md text-primary uppercase tracking-widest"
+                data-cms-field="personName"
+              >
                 {aboutData.personName}
               </span>
-              <span className="font-body text-sm text-on-surface-variant">
+              <span className="font-body text-sm text-on-surface-variant" data-cms-field="personRole">
                 {aboutData.personRole}
               </span>
             </div>
           </div>
 
           <div className="lg:col-span-7 flex flex-col gap-8 lg:pl-12 mt-16 lg:mt-0 relative z-10">
-            <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface leading-tight">
+            <h2
+              className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface leading-tight"
+              data-cms-field="title"
+            >
               {aboutData.title}
             </h2>
             <div className="flex flex-col gap-5">
@@ -168,22 +242,30 @@ function LearningAbout({ aboutData }: { aboutData: AboutSectionContent }) {
         >
           <div className="absolute -right-24 -top-24 w-96 h-96 bg-surface-container-low rounded-full opacity-50 z-0" />
           <div className="relative z-10 w-full">
-            <span className="font-label-md text-primary uppercase tracking-widest">
+            <span className="font-label-md text-primary uppercase tracking-widest" data-cms-field="eyebrow">
               {aboutData.eyebrow}
             </span>
             <div className="mt-4">
-              <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">
+              <h2
+                className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2"
+                data-cms-field="personName"
+              >
                 {name}
               </h2>
               {role && (
-                <p className="font-body text-body-lg text-on-surface-variant italic">{role}</p>
+                <p className="font-body text-body-lg text-on-surface-variant italic" data-cms-field="personRole">
+                  {role}
+                </p>
               )}
             </div>
             <div className="h-px w-16 bg-outline-variant/50 my-6" />
           </div>
           <div className="relative z-10 flex flex-col md:flex-row gap-8 lg:gap-12 items-start">
             <div className="w-full md:w-[220px] flex-shrink-0">
-              <div className="aspect-[3/4] rounded-xl overflow-hidden shadow-soft border border-surface-variant">
+              <div
+                className="aspect-[3/4] rounded-xl overflow-hidden shadow-soft border border-surface-variant"
+                data-cms-field="personImage"
+              >
                 <img alt={name} className="w-full h-full object-cover" src={image} />
               </div>
             </div>

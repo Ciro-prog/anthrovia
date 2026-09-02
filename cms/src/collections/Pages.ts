@@ -71,7 +71,8 @@ export const Pages: CollectionConfig = {
       unique: true,
       index: true,
       admin: {
-        description: 'home → anthroviahr.com/ · learning → anthroviahr.com/capacitaciones',
+        readOnly: true,
+        description: 'home = inicio · learning = /capacitaciones. No lo cambies.',
       },
     },
     {

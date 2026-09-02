@@ -1,4 +1,4 @@
-import type { CollectionBeforeChangeHook, Payload } from 'payload'
+import type { CollectionAfterDeleteHook, CollectionBeforeChangeHook, Payload } from 'payload'
 import { courseBlocksToPayload } from '../seed/courseToBlock'
 import { getCmNivel1TemplateBlocks } from '../seed/cmNivel1Template'
 
@@ -21,7 +21,7 @@ export function slugifyTitle(title: string): string {
     .replace(/^-+|-+$/g, '')
 }
 
-function courseIdOf(value: unknown): number | string | null {
+export function courseIdOf(value: unknown): number | string | null {
   if (typeof value === 'number' && Number.isFinite(value)) return value
   if (typeof value === 'string' && value.trim()) return value
   if (value && typeof value === 'object' && 'id' in value) {
@@ -96,13 +96,93 @@ async function findOrCreateCourse(
   return created.id
 }
 
-export const syncFormacionesCourses: CollectionBeforeChangeHook = async ({ data, req }) => {
+function formacionesFromSections(sections: unknown): Record<string, unknown>[] {
+  if (!Array.isArray(sections)) return []
+  const services = sections.find(
+    (s) => s && typeof s === 'object' && (s as { blockType?: string }).blockType === 'services',
+  ) as { formaciones?: unknown } | undefined
+  return Array.isArray(services?.formaciones) ? (services.formaciones as Record<string, unknown>[]) : []
+}
+
+function collectCourseIds(rows: Record<string, unknown>[]): Set<string> {
+  const ids = new Set<string>()
+  for (const row of rows) {
+    const id = courseIdOf(row.course)
+    if (id != null) ids.add(String(id))
+  }
+  return ids
+}
+
+async function publishedCourseIds(
+  payload: Payload,
+  pageId: number | string | undefined,
+): Promise<Set<string>> {
+  if (pageId == null) return new Set()
+  try {
+    const published = await payload.findByID({
+      collection: 'pages',
+      id: pageId,
+      depth: 1,
+      overrideAccess: true,
+      draft: false,
+    })
+    return collectCourseIds(formacionesFromSections(published.sections))
+  } catch {
+    return new Set()
+  }
+}
+
+async function deleteRemovedCourses(
+  payload: Payload,
+  originalDoc: { id?: number | string; sections?: unknown } | undefined,
+  data: { sections?: unknown },
+) {
+  const fromDoc = collectCourseIds(formacionesFromSections(originalDoc?.sections))
+  const fromPublished = await publishedCourseIds(payload, originalDoc?.id)
+  const prevIds = new Set([...fromDoc, ...fromPublished])
+  const nextIds = collectCourseIds(formacionesFromSections(data.sections))
+  for (const id of prevIds) {
+    if (nextIds.has(id)) continue
+    try {
+      const doc = await payload.findByID({
+        collection: 'courses',
+        id,
+        depth: 0,
+        overrideAccess: true,
+      })
+      await payload.delete({
+        collection: 'courses',
+        id,
+        overrideAccess: true,
+        context: { skipCardCleanup: true },
+      })
+      payload.logger.info(`Course borrado (card quitada): ${doc.slug}`)
+    } catch (err) {
+      payload.logger.error(
+        `Formaciones: no se pudo borrar course ${id}: ${err instanceof Error ? err.message : String(err)}`,
+      )
+    }
+  }
+}
+
+export const syncFormacionesCourses: CollectionBeforeChangeHook = async ({
+  data,
+  req,
+  originalDoc,
+  context,
+}) => {
+  if (context?.skipFormacionesSync) return data
   if (data.slug !== 'learning' || data._status !== 'published') return data
 
   const sections = data.sections
   if (!Array.isArray(sections)) return data
 
   const { payload } = req
+  await deleteRemovedCourses(
+    payload,
+    originalDoc as { id?: number | string; sections?: unknown } | undefined,
+    data,
+  )
 
   for (const section of sections) {
     if (!section || typeof section !== 'object') continue
@@ -149,4 +229,69 @@ export const syncFormacionesCourses: CollectionBeforeChangeHook = async ({ data,
   }
 
   return data
+}
+
+export const removeCardAfterCourseDelete: CollectionAfterDeleteHook = async ({
+  id,
+  req,
+  context,
+}) => {
+  if (context?.skipCardCleanup) return
+
+  const { payload } = req
+  let page:
+    | { id: number | string; sections?: unknown[]; _status?: string }
+    | undefined
+  try {
+    const found = await payload.find({
+      collection: 'pages',
+      where: { slug: { equals: 'learning' } },
+      limit: 1,
+      depth: 1,
+      overrideAccess: true,
+      draft: true,
+    })
+    page = found.docs[0] as typeof page
+  } catch (err) {
+    payload.logger.error(
+      `No se pudo leer la page learning al borrar course ${id}: ${err instanceof Error ? err.message : String(err)}`,
+    )
+    return
+  }
+  if (!page || !Array.isArray(page.sections)) return
+
+  const deletedId = String(id)
+  let changed = false
+  const nextSections = page.sections.map((section) => {
+    if (!section || typeof section !== 'object') return section
+    const rec = section as { blockType?: string; formaciones?: unknown[] }
+    if (rec.blockType !== 'services' || !Array.isArray(rec.formaciones)) return section
+    const next = rec.formaciones.filter((row) => {
+      if (!row || typeof row !== 'object') return true
+      return String(courseIdOf((row as { course?: unknown }).course)) !== deletedId
+    })
+    if (next.length !== rec.formaciones.length) changed = true
+    return { ...rec, formaciones: next }
+  })
+
+  if (!changed) return
+
+  try {
+    await payload.update({
+      collection: 'pages',
+      id: page.id,
+      data: {
+        sections: nextSections,
+        _status: 'published',
+      } as never,
+      overrideAccess: true,
+      draft: false,
+      context: { skipFormacionesSync: true },
+    })
+    payload.logger.info(`Card Formaciones quitada (course ${deletedId} borrado)`)
+  } catch (err) {
+    payload.logger.error(
+      `No se pudo quitar la card de Formaciones (course ${deletedId}): ${err instanceof Error ? err.message : String(err)}`,
+    )
+  }
 }

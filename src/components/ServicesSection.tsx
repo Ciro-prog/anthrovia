@@ -296,16 +296,29 @@ function LearningServices({ data }: { data: ServicesSectionContent }) {
         <section id="in-company" className="w-full py-16 md:py-24 lg:py-section-gap px-margin-mobile lg:px-margin-desktop bg-surface relative overflow-hidden">
           <div className="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-2 gap-gutter items-center">
             <div className="relative z-10 lg:order-2">
-              <div className="relative w-full aspect-[3/4] md:aspect-square lg:aspect-[4/5] rounded-3xl overflow-hidden shadow-ethereal">
+              <div
+                className="relative w-full aspect-[3/4] md:aspect-square lg:aspect-[4/5] rounded-3xl overflow-hidden shadow-ethereal"
+                data-cms-field="inCompany.image"
+              >
                 <img alt="Formación in company" className="w-full h-full object-cover" src={inCompany.imageUrl} />
               </div>
             </div>
             <div className="flex flex-col gap-8 z-10 lg:order-1 lg:pr-8">
-              <h2 className="font-heading text-headline-lg-mobile lg:text-[2.5rem] text-on-surface leading-tight">
+              <h2
+                className="font-heading text-headline-lg-mobile lg:text-[2.5rem] text-on-surface leading-tight"
+                data-cms-field="inCompany.title"
+              >
                 {inCompany.title} <br />
-                <span className="italic text-secondary">{inCompany.highlight}</span>
+                <span className="italic text-secondary" data-cms-field="inCompany.highlight">
+                  {inCompany.highlight}
+                </span>
               </h2>
-              <p className="font-body text-body-md md:text-body-lg text-on-surface-variant">{inCompany.description}</p>
+              <p
+                className="font-body text-body-md md:text-body-lg text-on-surface-variant"
+                data-cms-field="inCompany.description"
+              >
+                {inCompany.description}
+              </p>
               <ul className="flex flex-col gap-3">
                 {inCompany.areas.map((area) => (
                   <li key={area} className="flex items-center gap-3">

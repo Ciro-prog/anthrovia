@@ -12,10 +12,18 @@ import { Courses } from './collections/Courses'
 import { Leads } from './collections/Leads'
 import { EventTypes } from './collections/EventTypes'
 import { Bookings } from './collections/Bookings'
+import { Applications } from './collections/Applications'
 import { SiteSettings } from './globals/SiteSettings'
+import { ApplicationForm } from './globals/ApplicationForm'
 import { migrations } from './migrations'
 import { seedPages } from './seed/seedPages'
 import { seedCourses } from './seed/seedCourses'
+import { defaultPrivacySections, defaultTermsSections } from './seed/legalDefaults'
+import {
+  defaultApplicationFormFields,
+  defaultApplicationFormSubtitle,
+  defaultApplicationFormTitle,
+} from './seed/applicationFormDefaults'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -35,11 +43,25 @@ export default buildConfig({
       titleSuffix: ' · Anthrovia CMS',
     },
     components: {
-      afterNavLinks: ['/admin/PreviewFieldBridge#PreviewFieldBridge'],
+      afterNavLinks: [
+        '/admin/InboxNavLink#InboxNavLink',
+        '/admin/PreviewFieldBridge#PreviewFieldBridge',
+      ],
+      beforeDashboard: ['/admin/DashboardGuia#DashboardGuia'],
+      views: {
+        inbox: {
+          Component: '/admin/InboxView#InboxView',
+          path: '/inbox',
+          exact: true,
+          meta: {
+            title: 'Inbox',
+          },
+        },
+      },
     },
   },
-  collections: [Users, Media, Pages, Courses, Leads, EventTypes, Bookings],
-  globals: [SiteSettings],
+  collections: [Users, Media, Pages, Courses, Leads, EventTypes, Bookings, Applications],
+  globals: [SiteSettings, ApplicationForm],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || 'dev-secret-change-me',
   typescript: {
@@ -114,17 +136,62 @@ export default buildConfig({
       }
 
       try {
+        const current = await payload.findGlobal({
+          slug: 'site-settings',
+          overrideAccess: true,
+        })
+        const privacyEmpty = !Array.isArray(current.privacySections) || current.privacySections.length === 0
+        const termsEmpty = !Array.isArray(current.termsSections) || current.termsSections.length === 0
+        const slotsEmpty = !Array.isArray(current.dossierSlots) || current.dossierSlots.length === 0
+        const daysEmpty = !Array.isArray(current.dossierDays) || current.dossierDays.length === 0
         await payload.updateGlobal({
           slug: 'site-settings',
           data: {
-            siteName: 'Anthrovia HR',
-            bookingEnabled: true,
-            defaultEventTypeSlug: 'llamada-15',
-          },
+            siteName: current.siteName || 'Anthrovia HR',
+            bookingEnabled: current.bookingEnabled ?? true,
+            defaultEventTypeSlug: current.defaultEventTypeSlug || 'llamada-15',
+            ...(daysEmpty ? { dossierDays: ['lun', 'mar', 'mie', 'jue', 'vie'] } : {}),
+            ...(slotsEmpty
+              ? {
+                  dossierSlots: [
+                    { label: 'Mañana', start: '09:00', end: '13:00' },
+                    { label: 'Tarde', start: '14:00', end: '18:00' },
+                  ],
+                }
+              : {}),
+            ...(privacyEmpty
+              ? { privacyTitle: 'Política de Privacidad', privacySections: defaultPrivacySections }
+              : {}),
+            ...(termsEmpty
+              ? { termsTitle: 'Términos y Condiciones', termsSections: defaultTermsSections }
+              : {}),
+          } as never,
           overrideAccess: true,
         })
       } catch {
         // global puede fallar si el schema aún no está listo; se puede editar en admin
+      }
+
+      try {
+        const form = await payload.findGlobal({
+          slug: 'application-form',
+          overrideAccess: true,
+        })
+        const empty = !Array.isArray(form.fields) || form.fields.length === 0
+        if (empty) {
+          await payload.updateGlobal({
+            slug: 'application-form',
+            data: {
+              title: form.title || defaultApplicationFormTitle,
+              subtitle: form.subtitle || defaultApplicationFormSubtitle,
+              fields: defaultApplicationFormFields,
+            } as never,
+            overrideAccess: true,
+          })
+          payload.logger.info('Formulario de postulación: campos iniciales cargados')
+        }
+      } catch {
+        // global puede fallar si el schema aún no está listo
       }
 
       await seedPages(payload)

@@ -6,14 +6,17 @@ export function imagePair(uploadName: string, urlName: string, label: string): F
       name: uploadName,
       type: 'upload',
       relationTo: 'media',
-      label: `${label} (subir)`,
+      label: `Subir foto — ${label}`,
+      admin: {
+        description: 'Elegí o subí una imagen. Es lo que se ve en la web.',
+      },
     },
     {
       name: urlName,
       type: 'text',
-      label: `${label} (path / URL)`,
+      label: `Path (solo si no subís foto)`,
       admin: {
-        description: 'Fallback si no hay upload (ej. /ethos/courses/...).',
+        description: 'Opcional. Ej. /ethos/formacion-1.jpg si todavía no hay archivo subido.',
       },
     },
   ]

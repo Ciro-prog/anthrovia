@@ -167,13 +167,13 @@ export const ServicesBlock: Block = {
       admin: {
         initCollapsed: true,
         description:
-          'Editá la card acá. Al publicar se crea la URL (/capacitaciones/{título}) y la página «conocer más». Liderazgo Emocional sigue en #contacto.',
+          'Editá la card acá. Al publicar se crea la URL (/capacitaciones/{título}) y la página «conocer más». Eliminar la card y Publish borra también la página /capacitaciones/…. Liderazgo Emocional sigue en #contacto.',
         components: {
           RowLabel: '/admin/CardRowLabel#CardRowLabel',
         },
       },
       fields: [
-        { name: 'itemId', type: 'text', admin: { description: 'ID estable (ej. cm-nivel-1)' } },
+        { name: 'itemId', type: 'text', admin: { hidden: true } },
         ...imagePair('image', 'imageUrl', 'Imagen card'),
         { name: 'title', type: 'text', required: true, label: 'Título' },
         { name: 'description', type: 'textarea', required: true, label: 'Descripción' },

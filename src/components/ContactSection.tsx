@@ -18,7 +18,7 @@ export const ContactSection = ({
   showCustomTraining = false,
   serviceOptions,
 }: ContactSectionProps) => {
-  const { content } = useCMS()
+  const { content, siteSettings } = useCMS()
   const contactData = content.sections.find(s => s.id === 'contact') as ContactSectionContent
   const learningServices = content.sections.find(s => s.id === 'learning-services') as ServicesSectionContent
 
@@ -96,13 +96,14 @@ export const ContactSection = ({
         setFormData({ name: "", email: "", phone: "", service: "", message: "" })
         return
       }
-      setSubmitError(result.error || "No se pudo enviar")
+      setSubmitError(result.error || "No se pudo enviar. Probá de nuevo.")
       setSubmitState("error")
     }
 
     // Fallback: WhatsApp si no hay CMS o falló el POST
     const message = `Hola, mi nombre es ${formData.name}. Email: ${formData.email}. WhatsApp: ${formData.phone}. Me interesa: ${formData.service}. ${formData.message}`
-    const whatsappUrl = `https://wa.me/${contactData.whatsappNumber}?text=${encodeURIComponent(message)}`
+    const wa = (contactData.whatsappNumber || siteSettings.whatsappNumber || "").replace(/\D/g, "")
+    const whatsappUrl = `https://wa.me/${wa}?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, "_blank")
     if (!isCmsConfigured()) setSubmitState("idle")
   }
@@ -164,11 +165,21 @@ export const ContactSection = ({
               <span className="material-symbols-outlined text-primary text-xl">forum</span>
               <span className="font-label-md text-primary uppercase tracking-widest">Hablemos</span>
             </div>
-            <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface leading-tight">
-              ¿En qué podemos <span className="italic text-primary">ayudarte?</span>
+            <h2
+              className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface leading-tight"
+              data-cms-field="title"
+            >
+              {contactData.title || (
+                <>
+                  ¿En qué podemos <span className="italic text-primary">ayudarte?</span>
+                </>
+              )}
             </h2>
             {contactData.description && (
-              <p className="font-body text-body-lg text-on-surface-variant mt-4 max-w-2xl">
+              <p
+                className="font-body text-body-lg text-on-surface-variant mt-4 max-w-2xl"
+                data-cms-field="description"
+              >
                 {contactData.description}
               </p>
             )}
@@ -285,12 +296,14 @@ export const ContactSection = ({
                       {submitState === "loading" ? "Enviando…" : "Enviar mensaje"}
                       <Send className="ml-2 w-4 h-4" />
                     </Button>
-                    <Link
-                      to="/agendar"
-                      className="inline-flex items-center justify-center px-8 py-4 rounded-full border border-outline font-label-md text-label-md uppercase tracking-widest text-on-surface hover:border-primary hover:text-primary transition-colors"
-                    >
-                      Agendar llamada
-                    </Link>
+                    {siteSettings.bookingEnabled !== false && (
+                      <Link
+                        to="/agendar"
+                        className="inline-flex items-center justify-center px-8 py-4 rounded-full border border-outline font-label-md text-label-md uppercase tracking-widest text-on-surface hover:border-primary hover:text-primary transition-colors"
+                      >
+                        Agendar llamada
+                      </Link>
+                    )}
                   </div>
                 </div>
               </form>

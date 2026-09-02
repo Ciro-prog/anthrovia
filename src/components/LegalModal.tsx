@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShieldCheck, FileText } from 'lucide-react';
 import { LEGAL_CONTENT } from '../data/legal-content';
+import { useCMS } from '@/context/CMSContext';
 
 interface LegalModalProps {
   isOpen: boolean;
@@ -9,7 +10,22 @@ interface LegalModalProps {
 }
 
 export default function LegalModal({ isOpen, onClose, type }: LegalModalProps) {
-  const content = type === 'privacy' ? LEGAL_CONTENT.privacyPolicy : LEGAL_CONTENT.termsConditions;
+  const { siteSettings } = useCMS()
+  const fromCms =
+    type === 'privacy'
+      ? {
+          title: siteSettings.privacyTitle,
+          sections: siteSettings.privacySections,
+        }
+      : {
+          title: siteSettings.termsTitle,
+          sections: siteSettings.termsSections,
+        }
+  const fallback = type === 'privacy' ? LEGAL_CONTENT.privacyPolicy : LEGAL_CONTENT.termsConditions
+  const content = {
+    title: fromCms.title || fallback.title,
+    sections: fromCms.sections?.length ? fromCms.sections : fallback.sections,
+  }
 
   return (
     <AnimatePresence>

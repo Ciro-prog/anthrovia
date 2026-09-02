@@ -1,7 +1,9 @@
-import { FormEvent, useState } from "react"
+import { FormEvent, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
 import { Navbar } from "../components/Navbar"
 import { Footer } from "../components/Footer"
+import { useCMS } from "@/context/CMSContext"
+import { defaultSiteSettings, isCmsConfigured, submitLead } from "@/lib/cmsApi"
 import {
   ArrowRight,
   FolderOpen,
@@ -134,12 +136,81 @@ const moduleCategories = [
   { title: "Talento", count: "4 módulos" },
 ]
 
-export default function DossierPage() {
-  const [submitted, setSubmitted] = useState(false)
+const DAY_LABEL: Record<string, string> = {
+  lun: "Lunes",
+  mar: "Martes",
+  mie: "Miércoles",
+  jue: "Jueves",
+  vie: "Viernes",
+  sab: "Sábado",
+  dom: "Domingo",
+}
 
-  const handleSubmit = (e: FormEvent) => {
+function slotText(slot: { label: string; start: string; end: string }) {
+  return `${slot.label} (${slot.start} - ${slot.end})`
+}
+
+export default function DossierPage() {
+  const { siteSettings, content } = useCMS()
+  const contact = content.sections.find((s) => s.type === "contact") as
+    | { email?: string; whatsappNumber?: string }
+    | undefined
+  const email = siteSettings.contactEmail || contact?.email || "anthroviahr@gmail.com"
+  const whatsapp = (siteSettings.whatsappNumber || contact?.whatsappNumber || "5492604085501").replace(
+    /\D/g,
+    "",
+  )
+
+  const days = siteSettings.dossierDays?.length
+    ? siteSettings.dossierDays
+    : defaultSiteSettings.dossierDays || []
+  const slots = siteSettings.dossierSlots?.length
+    ? siteSettings.dossierSlots
+    : defaultSiteSettings.dossierSlots || []
+
+  const slotOptions = useMemo(() => slots.map((s) => slotText(s)), [slots])
+
+  const [submitted, setSubmitted] = useState(false)
+  const [submitState, setSubmitState] = useState<"idle" | "loading" | "error">("idle")
+  const [form, setForm] = useState({
+    name: "",
+    company: "",
+    email: "",
+    phone: "",
+    day: "",
+    slot: "",
+  })
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    setSubmitted(true)
+    if (!form.day || !form.slot) return
+    setSubmitState("loading")
+    const dayLabel = DAY_LABEL[form.day] || form.day
+    const result = isCmsConfigured()
+      ? await submitLead({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          company: form.company,
+          preferredDay: dayLabel,
+          preferredSlot: form.slot,
+          source: "dossier",
+          service: "Dossier HR Tech",
+          message: `Disponibilidad: ${dayLabel}, ${form.slot}`,
+        })
+      : { ok: false as const }
+
+    if (result.ok) {
+      setSubmitted(true)
+      setSubmitState("idle")
+      return
+    }
+
+    const text = `Hola, soy ${form.name} (${form.company || "sin empresa"}). Email: ${form.email}. WhatsApp: ${form.phone}. Quiero conversar sobre la plataforma. Disponibilidad: ${dayLabel}, ${form.slot}.`
+    if (whatsapp) {
+      window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(text)}`, "_blank")
+    }
+    setSubmitState("error")
   }
 
   return (
@@ -530,7 +601,7 @@ export default function DossierPage() {
                   &ldquo;Hoy puede ser el primer paso hacia una gestión más simple.&rdquo;
                 </p>
                 <a
-                  href="mailto:anthroviahr@gmail.com"
+                  href={`mailto:${email}`}
                   className="text-primary font-label-md text-label-md border-b border-primary pb-1 hover:text-primary-container transition-colors"
                 >
                   Quiero coordinar una reunión
@@ -549,8 +620,8 @@ export default function DossierPage() {
                   </p>
                   <p className="text-sm text-on-surface-variant pt-4">
                     O escribinos a{" "}
-                    <a className="text-primary underline" href="mailto:anthroviahr@gmail.com">
-                      anthroviahr@gmail.com
+                    <a className="text-primary underline" href={`mailto:${email}`}>
+                      {email}
                     </a>
                   </p>
                 </div>
@@ -563,6 +634,8 @@ export default function DossierPage() {
                     <input
                       id="dossier-name"
                       required
+                      value={form.name}
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
                       className="w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors text-on-surface font-body"
                       placeholder="Ej. Ana García"
                       type="text"
@@ -574,6 +647,8 @@ export default function DossierPage() {
                     </label>
                     <input
                       id="dossier-company"
+                      value={form.company}
+                      onChange={(e) => setForm({ ...form, company: e.target.value })}
                       className="w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors text-on-surface font-body"
                       placeholder="Tu organización"
                       type="text"
@@ -587,6 +662,8 @@ export default function DossierPage() {
                       <input
                         id="dossier-email"
                         required
+                        value={form.email}
+                        onChange={(e) => setForm({ ...form, email: e.target.value })}
                         className="w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors text-on-surface font-body"
                         placeholder="ana@empresa.com"
                         type="email"
@@ -598,42 +675,78 @@ export default function DossierPage() {
                       </label>
                       <input
                         id="dossier-phone"
+                        value={form.phone}
+                        onChange={(e) => setForm({ ...form, phone: e.target.value })}
                         className="w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors text-on-surface font-body"
                         placeholder="+54 9 11..."
                         type="tel"
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col gap-2 mb-2">
-                    <label htmlFor="dossier-slot" className="font-label-md text-xs text-on-surface-variant uppercase tracking-wider">
-                      Disponibilidad horaria preferida
-                    </label>
-                    <select
-                      id="dossier-slot"
-                      className="w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors text-on-surface font-body appearance-none"
-                      defaultValue=""
-                    >
-                      <option disabled value="">
-                        Seleccioná un rango horario
-                      </option>
-                      <option value="manana">Mañana (9:00 - 13:00)</option>
-                      <option value="tarde">Tarde (14:00 - 18:00)</option>
-                    </select>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor="dossier-day" className="font-label-md text-xs text-on-surface-variant uppercase tracking-wider">
+                        Día preferido
+                      </label>
+                      <select
+                        id="dossier-day"
+                        required
+                        value={form.day}
+                        onChange={(e) => setForm({ ...form, day: e.target.value })}
+                        className="w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors text-on-surface font-body appearance-none"
+                      >
+                        <option value="" disabled>
+                          Seleccioná un día
+                        </option>
+                        {days.map((d) => (
+                          <option key={d} value={d}>
+                            {DAY_LABEL[d] || d}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor="dossier-slot" className="font-label-md text-xs text-on-surface-variant uppercase tracking-wider">
+                        Franja horaria
+                      </label>
+                      <select
+                        id="dossier-slot"
+                        required
+                        value={form.slot}
+                        onChange={(e) => setForm({ ...form, slot: e.target.value })}
+                        className="w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors text-on-surface font-body appearance-none"
+                      >
+                        <option disabled value="">
+                          Seleccioná un rango horario
+                        </option>
+                        {slotOptions.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
+                  {submitState === "error" && (
+                    <p className="text-sm text-error">
+                      No se pudo enviar. Probá de nuevo. Se abrió WhatsApp como alternativa.
+                    </p>
+                  )}
                   <button
-                    className="w-full bg-primary text-on-primary py-4 rounded-xl font-label-md text-label-md hover:bg-primary/90 transition-colors mt-2"
+                    className="w-full bg-primary text-on-primary py-4 rounded-xl font-label-md text-label-md hover:bg-primary/90 transition-colors mt-2 disabled:opacity-60"
                     type="submit"
+                    disabled={submitState === "loading"}
                   >
-                    Solicitar reunión
+                    {submitState === "loading" ? "Enviando…" : "Solicitar reunión"}
                   </button>
                   <p className="text-xs text-on-surface-variant text-center">
                     Al enviar este formulario aceptás nuestra política de privacidad. También podés escribir a{" "}
-                    <a href="mailto:anthroviahr@gmail.com" className="text-primary underline">
-                      anthroviahr@gmail.com
+                    <a href={`mailto:${email}`} className="text-primary underline">
+                      {email}
                     </a>{" "}
                     o por{" "}
                     <a
-                      href="https://wa.me/5492604085501"
+                      href={`https://wa.me/${whatsapp}`}
                       className="text-primary underline"
                       target="_blank"
                       rel="noreferrer"

@@ -62,7 +62,7 @@ export const PostsSection = () => {
 
   if (!postsData || !postsData.isVisible) return null
 
-  const PostCard = ({ post }: { post: PostsSectionContent['posts'][0] }) => (
+  const PostCard = ({ post, index }: { post: PostsSectionContent['posts'][0]; index: number }) => (
     <div className="h-full bg-surface-container-lowest rounded-2xl overflow-hidden shadow-soft border border-surface-variant group hover:shadow-ethereal transition-all duration-300 flex flex-col">
       <div className="relative h-56 overflow-hidden">
         <img
@@ -70,6 +70,7 @@ export const PostsSection = () => {
           alt="Post cover"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           draggable="false"
+          data-cms-field={`posts.${index}.imageUrl`}
         />
         <div className="absolute top-4 right-4 bg-surface p-2 rounded-full shadow-soft">
           {post.platform === 'instagram' ? (
@@ -80,7 +81,10 @@ export const PostsSection = () => {
         </div>
       </div>
       <div className="p-6 flex flex-col flex-grow">
-        <p className="font-body text-body-md text-on-surface-variant mb-6 flex-grow line-clamp-4">
+        <p
+          className="font-body text-body-md text-on-surface-variant mb-6 flex-grow line-clamp-4"
+          data-cms-field={`posts.${index}.description`}
+        >
           {post.description}
         </p>
         <a
@@ -104,10 +108,13 @@ export const PostsSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface mb-3">
+            <h2
+              className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface mb-3"
+              data-cms-field="title"
+            >
               {postsData.title}
             </h2>
-            <p className="font-body text-body-lg text-on-surface-variant">
+            <p className="font-body text-body-lg text-on-surface-variant" data-cms-field="subtitle">
               {postsData.subtitle}
             </p>
           </motion.div>
@@ -135,12 +142,12 @@ export const PostsSection = () => {
                 onDragEnd={() => setIsHovered(false)}
                 className="flex gap-6"
               >
-                {postsData.posts.map((post) => (
+                {postsData.posts.map((post, index) => (
                   <motion.div
                     key={post.id}
                     className="min-w-[280px] md:min-w-[340px]"
                   >
-                    <PostCard post={post} />
+                    <PostCard post={post} index={index} />
                   </motion.div>
                 ))}
               </motion.div>
@@ -159,7 +166,7 @@ export const PostsSection = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.08 }}
               >
-                <PostCard post={post} />
+                <PostCard post={post} index={index} />
               </motion.div>
             ))}
           </div>

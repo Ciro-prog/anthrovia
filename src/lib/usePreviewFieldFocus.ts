@@ -10,6 +10,18 @@ const MEDIA_KEYS = new Set([
   'videoUrl',
 ])
 
+type FocusMsg = {
+  type?: string
+  path?: string
+  array?: string | null
+  index?: number | null
+  leaf?: string | null
+  value?: string
+  fieldPath?: string
+  fieldSchemaPath?: string
+  editedField?: string
+}
+
 function afterPaint(fn: () => void) {
   requestAnimationFrame(() => {
     requestAnimationFrame(fn)
@@ -59,31 +71,57 @@ function pathVariants(path: string): string[] {
     extra.push(c.replace(/\.image$/, '.imageUrl'))
     extra.push(c.replace(/\.videoUrl$/, '.video'))
     extra.push(c.replace(/\.logoUrl$/, '.logo'))
+    extra.push(c.replace(/\.personImage$/, '.personImage'))
     const segs = c.split('.')
     if (segs.length > 1) extra.push(segs.slice(0, -1).join('.'))
   }
   return [...new Set(extra.filter(Boolean))]
 }
 
+function queryField(path: string): HTMLElement | null {
+  const escaped = typeof CSS !== 'undefined' && CSS.escape ? CSS.escape(path) : path
+  const el = document.querySelector(`[data-cms-field="${escaped}"]`)
+  return el instanceof HTMLElement ? el : null
+}
+
 function findEl(path: string): HTMLElement | null {
   for (const candidate of pathVariants(path)) {
-    const escaped = typeof CSS !== 'undefined' && CSS.escape ? CSS.escape(candidate) : candidate
-    const el = document.querySelector(`[data-cms-field="${escaped}"]`)
-    if (el instanceof HTMLElement) return el
+    const el = queryField(candidate)
+    if (el) return el
   }
   return null
 }
 
-function isMediaPath(path: string) {
-  const last = path.split('.').pop() || ''
-  return MEDIA_KEYS.has(last)
+function findByMessage(msg: FocusMsg): HTMLElement | null {
+  const leaf = msg.leaf || ''
+  if (msg.array != null && msg.index != null && leaf) {
+    const hit = findEl(`${msg.array}.${msg.index}.${leaf}`) || findEl(`${msg.array}.${msg.index}`)
+    if (hit) return hit
+  }
+  if (msg.path) {
+    const hit = findEl(msg.path)
+    if (hit) return hit
+  }
+  if (leaf && msg.array == null) {
+    const hit = queryField(leaf)
+    if (hit) return hit
+  }
+  const value = typeof msg.value === 'string' ? msg.value.trim() : ''
+  if (value && leaf) {
+    const nodes = document.querySelectorAll(`[data-cms-field$=".${leaf}"], [data-cms-field="${leaf}"]`)
+    for (const node of nodes) {
+      if (node instanceof HTMLElement && node.textContent?.trim() === value) return node
+    }
+  }
+  return null
 }
 
-function focusPath(path: string) {
-  const el = findEl(path)
-  if (!el) return
+function isMediaLeaf(leaf: string) {
+  return MEDIA_KEYS.has(leaf)
+}
+
+function highlight(el: HTMLElement, media: boolean) {
   el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-  const media = isMediaPath(path)
   el.classList.remove('cms-preview-focus', 'cms-preview-focus-media')
   el.classList.add(media ? 'cms-preview-focus-media' : 'cms-preview-focus')
   window.setTimeout(() => {
@@ -91,15 +129,19 @@ function focusPath(path: string) {
   }, 2200)
 }
 
-function messagePath(data: unknown): string | null {
+function focusPath(path: string) {
+  const el = findEl(path)
+  if (!el) return
+  highlight(el, isMediaLeaf(path.split('.').pop() || ''))
+}
+
+function parseMessage(data: unknown): FocusMsg | null {
   if (!data || typeof data !== 'object') return null
-  const rec = data as Record<string, unknown>
-  if (rec.type === 'anthrovia-field-focus' && typeof rec.path === 'string' && rec.path.trim()) {
-    return rec.path
-  }
-  for (const key of ['fieldPath', 'fieldSchemaPath', 'path', 'editedField']) {
+  const rec = data as FocusMsg
+  if (rec.type === 'anthrovia-field-focus') return rec
+  for (const key of ['fieldPath', 'fieldSchemaPath', 'path', 'editedField'] as const) {
     const v = rec[key]
-    if (typeof v === 'string' && v.trim()) return v
+    if (typeof v === 'string' && v.trim()) return { path: v, leaf: v.split('.').pop() }
   }
   return null
 }
@@ -111,8 +153,16 @@ export function usePreviewFieldFocus(liveData: unknown, enabled: boolean) {
     if (!enabled) return
 
     const onMessage = (event: MessageEvent) => {
-      const path = messagePath(event.data)
-      if (path) afterPaint(() => focusPath(path))
+      const msg = parseMessage(event.data)
+      if (!msg) return
+      afterPaint(() => {
+        const el = findByMessage(msg)
+        if (el) {
+          highlight(el, isMediaLeaf(msg.leaf || msg.path?.split('.').pop() || ''))
+          return
+        }
+        if (msg.path) focusPath(msg.path)
+      })
     }
     window.addEventListener('message', onMessage)
 

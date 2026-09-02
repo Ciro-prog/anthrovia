@@ -465,6 +465,70 @@ export interface CoursePageContent {
   slug: string;
   title: string;
   blocks: CourseBlock[];
+  cohortStartDate?: string;
+  inscriptionDeadline?: string;
+  spots?: number;
+  cohortStatus?: 'open' | 'upcoming' | 'full' | 'closed' | string;
+}
+
+export interface DossierSlot {
+  label: string;
+  start: string;
+  end: string;
+}
+
+export interface LegalSection {
+  title: string;
+  content: string;
+}
+
+export type ApplicationFieldType =
+  | 'text'
+  | 'email'
+  | 'tel'
+  | 'textarea'
+  | 'select'
+  | 'checkbox'
+  | 'file'
+
+export interface ApplicationFieldOption {
+  label: string
+  value: string
+}
+
+export interface ApplicationField {
+  name: string
+  label: string
+  type: ApplicationFieldType
+  required?: boolean
+  step?: number
+  options?: ApplicationFieldOption[]
+}
+
+export interface ApplicationFormContent {
+  title?: string
+  subtitle?: string
+  fields?: ApplicationField[]
+}
+
+export interface ApplicationAnswer {
+  name: string
+  label: string
+  value: string | boolean
+}
+
+export interface SiteSettingsContent {
+  siteName?: string;
+  bookingEnabled?: boolean;
+  defaultEventTypeSlug?: string;
+  whatsappNumber?: string;
+  contactEmail?: string;
+  dossierDays?: string[];
+  dossierSlots?: DossierSlot[];
+  privacyTitle?: string;
+  privacySections?: LegalSection[];
+  termsTitle?: string;
+  termsSections?: LegalSection[];
 }
 
 export interface CoursesSectionContent extends BaseSection {
