@@ -20,6 +20,8 @@ const ARRAY_NAMES = [
   'pillars',
   'values',
   'fields',
+  'steps',
+  'files',
 ]
 
 const ROW_SELECTORS = [

@@ -6,6 +6,8 @@ export function DashboardGuia() {
     { href: '/admin/globals/application-form', label: 'Formulario postulación', hint: 'Campos de /postulacion. Live Preview a la derecha' },
     { href: '/admin/collections/pages', label: 'Páginas', hint: 'Home y Capacitaciones (cards, textos)' },
     { href: '/admin/collections/courses', label: 'Capacitaciones', hint: 'Página «conocer más» de cada curso' },
+    { href: '/admin/globals/resources-page', label: 'Página recursos', hint: 'Textos e imágenes de /recursos. Live Preview a la derecha' },
+    { href: '/admin/collections/resources', label: 'Recursos', hint: 'Cada guía/plantilla: card, página y archivos para descargar' },
     {
       href: '/admin/collections/leads',
       label: 'Consultas',

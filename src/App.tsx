@@ -8,6 +8,8 @@ import { ApplicationPage } from './pages/ApplicationPage'
 import DossierPage from './pages/DossierPage'
 import DossierModulesPage from './pages/DossierModulesPage'
 import { BookingPage } from './pages/BookingPage'
+import { ResourcesPage } from './pages/ResourcesPage'
+import { ResourceDetailPage } from './pages/ResourceDetailPage'
 import { ScrollToTop } from './components/ScrollToTop'
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
         <Route path="/postulacion" element={<ApplicationPage />} />
         <Route path="/dossier" element={<DossierPage />} />
         <Route path="/dossier/modulos" element={<DossierModulesPage />} />
+        <Route path="/recursos" element={<ResourcesPage />} />
+        <Route path="/recursos/:slug" element={<ResourceDetailPage />} />
       </Routes>
     </Router>
   )

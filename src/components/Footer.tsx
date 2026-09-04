@@ -115,7 +115,7 @@ export const Footer = () => {
             <Link className="font-body text-body-md text-on-surface-variant hover:text-primary transition-colors" to="/">Inicio</Link>
             <a className="font-body text-body-md text-on-surface-variant hover:text-primary transition-colors" href="/#servicios">Servicios</a>
             <Link className="font-body text-body-md text-on-surface-variant hover:text-primary transition-colors" to="/capacitaciones">Capacitaciones</Link>
-            <Link className="font-body text-body-md text-on-surface-variant hover:text-primary transition-colors" to="/news">Recursos</Link>
+            <Link className="font-body text-body-md text-on-surface-variant hover:text-primary transition-colors" to="/recursos">Recursos</Link>
             <a className="font-body text-body-md text-on-surface-variant hover:text-primary transition-colors" href="/#contacto">Contacto</a>
           </div>
 

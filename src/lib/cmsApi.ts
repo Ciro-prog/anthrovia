@@ -2,6 +2,9 @@ import {
   ApplicationAnswer,
   ApplicationFormContent,
   CoursePageContent,
+  ResourceFile,
+  ResourceItem,
+  ResourcesPageContent,
   SectionContent,
   SiteContent,
   SiteSettingsContent,
@@ -392,6 +395,94 @@ export async function fetchSiteSettings(): Promise<SiteSettingsContent | null> {
 
 export async function fetchApplicationForm(): Promise<ApplicationFormContent | null> {
   return cmsFetch<ApplicationFormContent>('/api/globals/application-form')
+}
+
+type MediaRef = { url?: string | null; filename?: string | null; mimeType?: string | null } | number | null
+
+function absolutizeUrl(url?: string | null): string {
+  if (!url || !String(url).trim()) return ''
+  const u = String(url).trim()
+  if (u.startsWith('http://') || u.startsWith('https://') || u.startsWith('data:')) return u
+  return CMS_URL ? `${CMS_URL}${u.startsWith('/') ? u : `/${u}`}` : u
+}
+
+function mediaRefUrl(value: MediaRef | undefined): string {
+  if (!value || typeof value === 'number') return ''
+  return absolutizeUrl(value.url)
+}
+
+export function mapCmsResource(raw: Record<string, unknown>): ResourceItem {
+  const files: ResourceFile[] = []
+  if (Array.isArray(raw.files)) {
+    for (const row of raw.files) {
+      if (!row || typeof row !== 'object') continue
+      const rec = row as { file?: MediaRef; label?: string }
+      const url = mediaRefUrl(rec.file)
+      if (!url) continue
+      const file = typeof rec.file === 'object' && rec.file ? rec.file : null
+      files.push({
+        url,
+        label: rec.label || file?.filename || 'Archivo',
+        filename: file?.filename || undefined,
+        mimeType: file?.mimeType || undefined,
+      })
+    }
+  }
+  const category = raw.category
+  return {
+    id: String(raw.id ?? raw.slug ?? ''),
+    title: String(raw.title || ''),
+    slug: String(raw.slug || ''),
+    category:
+      category === 'empleabilidad' || category === 'formacion' || category === 'tecnologia'
+        ? category
+        : 'reclutamiento',
+    icon: (raw.icon as ResourceItem['icon']) || 'description',
+    excerpt: String(raw.excerpt || ''),
+    body: raw.body ? String(raw.body) : undefined,
+    files,
+    published: raw.published !== false,
+  }
+}
+
+export function mapCmsResourcesPage(raw: Record<string, unknown>): ResourcesPageContent {
+  const steps = Array.isArray(raw.steps)
+    ? raw.steps
+        .filter((s): s is { title?: string; text?: string } => Boolean(s && typeof s === 'object'))
+        .map((s) => ({ title: String(s.title || ''), text: String(s.text || '') }))
+        .filter((s) => s.title || s.text)
+    : undefined
+  return {
+    eyebrow: raw.eyebrow ? String(raw.eyebrow) : undefined,
+    title: raw.title ? String(raw.title) : undefined,
+    subtitle: raw.subtitle ? String(raw.subtitle) : undefined,
+    ctaLabel: raw.ctaLabel ? String(raw.ctaLabel) : undefined,
+    introTitle: raw.introTitle ? String(raw.introTitle) : undefined,
+    introText: raw.introText ? String(raw.introText) : undefined,
+    introCallout: raw.introCallout ? String(raw.introCallout) : undefined,
+    introImage1: mediaRefUrl(raw.introImage1 as MediaRef) || undefined,
+    introImage2: mediaRefUrl(raw.introImage2 as MediaRef) || undefined,
+    introImage3: mediaRefUrl(raw.introImage3 as MediaRef) || undefined,
+    catalogTitle: raw.catalogTitle ? String(raw.catalogTitle) : undefined,
+    howTitle: raw.howTitle ? String(raw.howTitle) : undefined,
+    steps,
+    closingTitle: raw.closingTitle ? String(raw.closingTitle) : undefined,
+    closingText: raw.closingText ? String(raw.closingText) : undefined,
+    closingCta: raw.closingCta ? String(raw.closingCta) : undefined,
+  }
+}
+
+export async function fetchResourcesPage(): Promise<ResourcesPageContent | null> {
+  const raw = await cmsFetch<Record<string, unknown>>('/api/globals/resources-page?depth=1')
+  return raw ? mapCmsResourcesPage(raw) : null
+}
+
+export async function fetchResources(): Promise<ResourceItem[] | null> {
+  const list = await cmsFetch<PayloadList<Record<string, unknown>>>(
+    '/api/resources?where[published][equals]=true&limit=60&sort=title&depth=1',
+  )
+  if (!list) return null
+  return (list.docs || []).map(mapCmsResource)
 }
 
 export const defaultSiteSettings: SiteSettingsContent = {

@@ -10,7 +10,7 @@ const homeLinks = [
   { label: "Inicio", href: "/#inicio", to: "/" },
   { label: "Servicios", href: "/#servicios", to: "/#servicios" },
   { label: "Anthrovia", href: "/#anthrovia", to: "/#anthrovia" },
-  { label: "recursos gratuitos", href: "/news", to: "/news" },
+  { label: "recursos gratuitos", href: "/recursos", to: "/recursos" },
   { label: "Contacto", href: "/#contacto", to: "/#contacto" },
 ]
 

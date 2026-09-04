@@ -12,14 +12,25 @@ export const Media: CollectionConfig = {
     plural: 'Fotos y archivos',
   },
   admin: {
-    description: 'Subí acá las fotos de las cards. Después las elegís en Páginas o Capacitaciones.',
+    description:
+      'Fotos de las cards y archivos de Recursos (PDF, ZIP, Word, Excel, imágenes).',
   },
   access: {
     read: () => true,
   },
   upload: {
     staticDir: path.resolve(dirname, '../../media'),
-    mimeTypes: ['image/*', 'video/*', 'application/pdf'],
+    mimeTypes: [
+      'image/*',
+      'video/*',
+      'application/pdf',
+      'application/zip',
+      'application/x-zip-compressed',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    ],
     imageSizes: [
       {
         name: 'thumbnail',

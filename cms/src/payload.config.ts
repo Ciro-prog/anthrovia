@@ -13,11 +13,14 @@ import { Leads } from './collections/Leads'
 import { EventTypes } from './collections/EventTypes'
 import { Bookings } from './collections/Bookings'
 import { Applications } from './collections/Applications'
+import { Resources } from './collections/Resources'
 import { SiteSettings } from './globals/SiteSettings'
 import { ApplicationForm } from './globals/ApplicationForm'
+import { ResourcesPage } from './globals/ResourcesPage'
 import { migrations } from './migrations'
 import { seedPages } from './seed/seedPages'
 import { seedCourses } from './seed/seedCourses'
+import { seedResources } from './seed/seedResources'
 import { defaultPrivacySections, defaultTermsSections } from './seed/legalDefaults'
 import {
   defaultApplicationFormFields,
@@ -60,8 +63,8 @@ export default buildConfig({
       },
     },
   },
-  collections: [Users, Media, Pages, Courses, Leads, EventTypes, Bookings, Applications],
-  globals: [SiteSettings, ApplicationForm],
+  collections: [Users, Media, Pages, Courses, Leads, EventTypes, Bookings, Applications, Resources],
+  globals: [SiteSettings, ApplicationForm, ResourcesPage],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || 'dev-secret-change-me',
   typescript: {
@@ -196,6 +199,7 @@ export default buildConfig({
 
       await seedPages(payload)
       await seedCourses(payload)
+      await seedResources(payload)
     } catch (err) {
       const extra =
         typeof err === 'object' && err && 'data' in err

@@ -517,6 +517,54 @@ export interface ApplicationAnswer {
   value: string | boolean
 }
 
+export type ResourceCategory = 'reclutamiento' | 'empleabilidad' | 'formacion' | 'tecnologia'
+
+export type ResourceIcon =
+  | 'description'
+  | 'fact_check'
+  | 'assignment_ind'
+  | 'co_present'
+  | 'smart_toy'
+  | 'analytics'
+
+export interface ResourceFile {
+  label?: string
+  url: string
+  filename?: string
+  mimeType?: string
+}
+
+export interface ResourceItem {
+  id: string
+  title: string
+  slug: string
+  category: ResourceCategory
+  icon?: ResourceIcon
+  excerpt: string
+  body?: string
+  files: ResourceFile[]
+  published?: boolean
+}
+
+export interface ResourcesPageContent {
+  eyebrow?: string
+  title?: string
+  subtitle?: string
+  ctaLabel?: string
+  introTitle?: string
+  introText?: string
+  introCallout?: string
+  introImage1?: string
+  introImage2?: string
+  introImage3?: string
+  catalogTitle?: string
+  howTitle?: string
+  steps?: { title: string; text: string }[]
+  closingTitle?: string
+  closingText?: string
+  closingCta?: string
+}
+
 export interface SiteSettingsContent {
   siteName?: string;
   bookingEnabled?: boolean;
