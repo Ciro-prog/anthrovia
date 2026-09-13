@@ -1,11 +1,17 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
 import { Navbar } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { fetchActiveEventTypes, isCmsConfigured, submitBooking } from "@/lib/cmsApi"
+import {
+  fetchActiveEventTypes,
+  fetchAvailability,
+  isCmsConfigured,
+  submitBooking,
+  type AvailabilityDay,
+} from "@/lib/cmsApi"
 import { useCMS } from "@/context/CMSContext"
 import { ContactSectionContent } from "@/types/cms"
 
@@ -16,12 +22,15 @@ type EventType = {
   durationMinutes: number
 }
 
-function todayISODate() {
-  const now = new Date()
-  const y = now.getFullYear()
-  const m = String(now.getMonth() + 1).padStart(2, "0")
-  const d = String(now.getDate()).padStart(2, "0")
-  return `${y}-${m}-${d}`
+function formatDayLabel(date: string) {
+  const [y, m, d] = date.split("-").map(Number)
+  const utc = new Date(Date.UTC(y, m - 1, d, 15, 0, 0))
+  return utc.toLocaleDateString("es-AR", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    timeZone: "UTC",
+  })
 }
 
 export const BookingPage = () => {
@@ -30,6 +39,8 @@ export const BookingPage = () => {
   const bookingEnabled = siteSettings.bookingEnabled !== false
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
   const [loadingTypes, setLoadingTypes] = useState(true)
+  const [days, setDays] = useState<AvailabilityDay[]>([])
+  const [loadingSlots, setLoadingSlots] = useState(false)
   const [form, setForm] = useState({
     eventTypeId: "",
     name: "",
@@ -37,10 +48,16 @@ export const BookingPage = () => {
     phone: "",
     notes: "",
     date: "",
-    time: "10:00",
+    time: "",
   })
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [error, setError] = useState("")
+
+  const selectedDay = useMemo(
+    () => days.find((d) => d.date === form.date) || days[0],
+    [days, form.date],
+  )
+  const slots = selectedDay?.slots || []
 
   useEffect(() => {
     let cancelled = false
@@ -63,12 +80,35 @@ export const BookingPage = () => {
     }
   }, [siteSettings.defaultEventTypeSlug])
 
+  useEffect(() => {
+    if (!form.eventTypeId || !isCmsConfigured()) return
+    let cancelled = false
+    ;(async () => {
+      setLoadingSlots(true)
+      const res = await fetchAvailability({ eventTypeId: form.eventTypeId })
+      if (cancelled) return
+      const nextDays = res?.days || []
+      setDays(nextDays)
+      setForm((f) => {
+        const still = nextDays.find((d) => d.date === f.date)
+        const nextDate = still?.date || nextDays[0]?.date || ""
+        const nextSlots = (still || nextDays[0])?.slots || []
+        const nextTime = nextSlots.includes(f.time) ? f.time : ""
+        return { ...f, date: nextDate, time: nextTime }
+      })
+      setLoadingSlots(false)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [form.eventTypeId])
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!form.eventTypeId || !form.date || !form.time) return
     setStatus("loading")
     setError("")
-    const startsAt = new Date(`${form.date}T${form.time}:00`).toISOString()
+    const startsAt = `${form.date}T${form.time}:00-03:00`
     const result = await submitBooking({
       eventTypeId: form.eventTypeId,
       name: form.name,
@@ -79,7 +119,20 @@ export const BookingPage = () => {
     })
     if (result.ok) {
       setStatus("success")
-      setForm((f) => ({ ...f, name: "", email: "", phone: "", notes: "" }))
+      setForm((f) => ({ ...f, name: "", email: "", phone: "", notes: "", time: "" }))
+      const refreshed = await fetchAvailability({ eventTypeId: form.eventTypeId })
+      if (refreshed?.days) setDays(refreshed.days)
+      return
+    }
+
+    if (result.conflict) {
+      setStatus("error")
+      setError(result.error || "Ese horario ya no está disponible. Elegí otro turno.")
+      const refreshed = await fetchAvailability({ eventTypeId: form.eventTypeId })
+      if (refreshed?.days) {
+        setDays(refreshed.days)
+        setForm((f) => ({ ...f, time: "" }))
+      }
       return
     }
 
@@ -112,7 +165,7 @@ export const BookingPage = () => {
           Agendar una llamada
         </h1>
         <p className="font-body text-body-lg text-on-surface-variant mb-10">
-          Elegí un horario para una conversación de orientación. La reserva llega al CMS del equipo Anthrovia.
+          Elegí un día y un turno de 15 minutos. Si alguien ya lo tomó, no aparece.
         </p>
 
         {!isCmsConfigured() && (
@@ -145,7 +198,7 @@ export const BookingPage = () => {
               id="booking-event-type"
               required
               value={form.eventTypeId}
-              onChange={(e) => setForm({ ...form, eventTypeId: e.target.value })}
+              onChange={(e) => setForm({ ...form, eventTypeId: e.target.value, time: "" })}
               className="w-full border border-outline-variant rounded-xl px-4 py-3 bg-transparent"
               disabled={loadingTypes || eventTypes.length === 0}
             >
@@ -157,35 +210,71 @@ export const BookingPage = () => {
             </select>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-2">
-              <label htmlFor="booking-date" className="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant">
-                Fecha
-              </label>
-              <Input
-                id="booking-date"
-                type="date"
-                required
-                min={todayISODate()}
-                value={form.date}
-                onChange={(e) => setForm({ ...form, date: e.target.value })}
-                className="rounded-xl h-12"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label htmlFor="booking-time" className="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant">
-                Hora
-              </label>
-              <Input
-                id="booking-time"
-                type="time"
-                required
-                value={form.time}
-                onChange={(e) => setForm({ ...form, time: e.target.value })}
-                className="rounded-xl h-12"
-              />
+          <div className="flex flex-col gap-3">
+            <p className="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant">
+              Día
+            </p>
+            {loadingSlots && (
+              <p className="font-body text-body-md text-on-surface-variant">Cargando horarios…</p>
+            )}
+            {!loadingSlots && days.length === 0 && isCmsConfigured() && bookingEnabled && (
+              <p className="font-body text-body-md text-on-surface-variant">
+                No hay turnos libres en las próximas semanas. Probá más tarde o escribinos.
+              </p>
+            )}
+            <div className="flex flex-wrap gap-2">
+              {days.map((day) => {
+                const active = selectedDay?.date === day.date
+                return (
+                  <button
+                    key={day.date}
+                    type="button"
+                    onClick={() =>
+                      setForm((f) => ({
+                        ...f,
+                        date: day.date,
+                        time: day.slots.includes(f.time) ? f.time : "",
+                      }))
+                    }
+                    className={`rounded-full px-4 py-2 font-label-md text-sm border transition-colors ${
+                      active
+                        ? "bg-primary text-on-primary border-primary"
+                        : "bg-surface border-outline-variant text-on-surface-variant hover:border-primary/40"
+                    }`}
+                  >
+                    {formatDayLabel(day.date)}
+                  </button>
+                )
+              })}
             </div>
           </div>
+
+          {selectedDay && (
+            <div className="flex flex-col gap-3">
+              <p className="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant">
+                Horario
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {slots.map((slot) => {
+                  const active = form.time === slot
+                  return (
+                    <button
+                      key={slot}
+                      type="button"
+                      onClick={() => setForm((f) => ({ ...f, time: slot }))}
+                      className={`rounded-full px-4 py-2 font-label-md text-sm border transition-colors ${
+                        active
+                          ? "bg-primary text-on-primary border-primary"
+                          : "bg-surface border-outline-variant text-on-surface-variant hover:border-primary/40"
+                      }`}
+                    >
+                      {slot}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-col gap-2">
             <label htmlFor="booking-name" className="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant">
@@ -247,7 +336,14 @@ export const BookingPage = () => {
 
           <Button
             type="submit"
-            disabled={!bookingEnabled || !isCmsConfigured() || status === "loading" || eventTypes.length === 0}
+            disabled={
+              !bookingEnabled ||
+              !isCmsConfigured() ||
+              status === "loading" ||
+              eventTypes.length === 0 ||
+              !form.date ||
+              !form.time
+            }
             className="rounded-full px-10 py-4 h-auto uppercase tracking-widest"
           >
             {status === "loading" ? "Agendando…" : "Confirmar reserva"}

@@ -13,13 +13,17 @@ export function DashboardGuia() {
       label: 'Consultas',
       hint: 'Contacto de la web y Conversemos de /dossier (día + franja). Cambiá el Estado',
     },
-    { href: '/admin/collections/bookings', label: 'Reservas', hint: 'Llamadas de /agendar. Cambiá el Estado' },
+    {
+      href: '/admin/collections/bookings',
+      label: 'Reservas',
+      hint: 'Llamadas de /agendar. El horario se edita en Ajustes → Agenda',
+    },
     { href: '/admin/collections/applications', label: 'Postulaciones', hint: 'CVs que llegan desde /postulacion' },
     { href: '/admin/collections/event-types', label: 'Tipos de llamada', hint: 'Sin un tipo activo, /agendar no deja reservar' },
     {
       href: '/admin/globals/site-settings',
       label: 'Ajustes del sitio',
-      hint: 'WhatsApp, prender/apagar agenda, días y franjas del dossier, legales',
+      hint: 'WhatsApp, agenda (días, horarios y bloqueos de /agendar), dossier, legales',
     },
     { href: '/admin/collections/media', label: 'Fotos y archivos', hint: 'Imágenes para las cards' },
   ]

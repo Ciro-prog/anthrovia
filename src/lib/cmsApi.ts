@@ -356,7 +356,9 @@ export type BookingPayload = {
   startsAt: string
 }
 
-export async function submitBooking(data: BookingPayload): Promise<{ ok: boolean; error?: string }> {
+export async function submitBooking(
+  data: BookingPayload,
+): Promise<{ ok: boolean; error?: string; conflict?: boolean }> {
   if (!CMS_URL) {
     return { ok: false, error: 'No se pudo enviar. Probá de nuevo.' }
   }
@@ -375,12 +377,38 @@ export async function submitBooking(data: BookingPayload): Promise<{ ok: boolean
       }),
     })
     if (!res.ok) {
-      return { ok: false, error: 'No se pudo enviar. Probá de nuevo.' }
+      const json = (await res.json().catch(() => null)) as
+        | { errors?: { message?: string }[]; message?: string }
+        | null
+      const message =
+        json?.errors?.[0]?.message ||
+        json?.message ||
+        (res.status === 409
+          ? 'Ese horario ya no está disponible. Elegí otro turno.'
+          : 'No se pudo enviar. Probá de nuevo.')
+      return { ok: false, error: message, conflict: res.status === 409 }
     }
     return { ok: true }
   } catch {
     return { ok: false, error: 'No se pudo enviar. Probá de nuevo.' }
   }
+}
+
+export type AvailabilityDay = { date: string; slots: string[] }
+
+export async function fetchAvailability(opts?: {
+  eventTypeId?: string | number
+  from?: string
+  to?: string
+}): Promise<{ days: AvailabilityDay[]; durationMinutes?: number } | null> {
+  const params = new URLSearchParams()
+  if (opts?.eventTypeId) params.set('eventType', String(opts.eventTypeId))
+  if (opts?.from) params.set('from', opts.from)
+  if (opts?.to) params.set('to', opts.to)
+  const qs = params.toString()
+  return cmsFetch<{ days: AvailabilityDay[]; durationMinutes?: number }>(
+    `/api/availability${qs ? `?${qs}` : ''}`,
+  )
 }
 
 export async function fetchActiveEventTypes() {
@@ -489,6 +517,11 @@ export const defaultSiteSettings: SiteSettingsContent = {
   siteName: 'Anthrovia HR',
   bookingEnabled: true,
   defaultEventTypeSlug: 'llamada-15',
+  bookingDays: ['lun', 'mar', 'mie', 'jue', 'vie'],
+  bookingWindows: [
+    { start: '09:00', end: '13:00' },
+    { start: '14:00', end: '18:00' },
+  ],
   dossierDays: ['lun', 'mar', 'mie', 'jue', 'vie'],
   dossierSlots: [
     { label: 'Mañana', start: '09:00', end: '13:00' },

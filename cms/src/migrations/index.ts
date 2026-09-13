@@ -5,6 +5,7 @@ import * as migration_20260901_231000_applications from './20260901_231000_appli
 import * as migration_20260901_234500_dossier_leads_settings from './20260901_234500_dossier_leads_settings'
 import * as migration_20260902_001500_inbox_application_form from './20260902_001500_inbox_application_form'
 import * as migration_20260902_054400_resources from './20260902_054400_resources'
+import * as migration_20260913_151900_booking_availability from './20260913_151900_booking_availability'
 
 export const migrations = [
   {
@@ -41,5 +42,10 @@ export const migrations = [
     up: migration_20260902_054400_resources.up,
     down: migration_20260902_054400_resources.down,
     name: '20260902_054400_resources',
+  },
+  {
+    up: migration_20260913_151900_booking_availability.up,
+    down: migration_20260913_151900_booking_availability.down,
+    name: '20260913_151900_booking_availability',
   },
 ]

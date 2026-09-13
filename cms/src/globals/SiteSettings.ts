@@ -31,7 +31,7 @@ export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: 'Ajustes del sitio',
   admin: {
-    description: 'WhatsApp, agenda, días/franjas del dossier y textos legales.',
+    description: 'WhatsApp, horarios de /agendar, días/franjas del dossier y textos legales.',
     livePreview: {
       url: () => `${previewBase()}/?preview=1`,
     },
@@ -76,6 +76,71 @@ export const SiteSettings: GlobalConfig = {
               name: 'contactEmail',
               type: 'email',
               label: 'Email de contacto',
+            },
+          ],
+        },
+        {
+          label: 'Agenda',
+          fields: [
+            {
+              name: 'bookingDays',
+              type: 'select',
+              hasMany: true,
+              label: 'Días de atención',
+              defaultValue: ['lun', 'mar', 'mie', 'jue', 'vie'],
+              options: dayOptions,
+              admin: {
+                description: 'Los días que /agendar muestra turnos de 15 minutos.',
+              },
+            },
+            {
+              name: 'bookingWindows',
+              type: 'array',
+              label: 'Horarios',
+              labels: { singular: 'Franja', plural: 'Franjas' },
+              admin: {
+                description: 'Dentro de cada franja se arman turnos de 15 min. Ej. 09:00–13:00 y 14:00–18:00.',
+              },
+              fields: [
+                { name: 'start', type: 'text', required: true, label: 'Desde (ej. 09:00)' },
+                { name: 'end', type: 'text', required: true, label: 'Hasta (ej. 13:00)' },
+              ],
+            },
+            {
+              name: 'bookingBlocks',
+              type: 'array',
+              label: 'Días o horarios anulados',
+              labels: { singular: 'Bloqueo', plural: 'Bloqueos' },
+              admin: {
+                description: 'Cerrá un día entero (feriado) o un tramo (ej. el 20/09 de 14:00 a 18:00).',
+              },
+              fields: [
+                {
+                  name: 'date',
+                  type: 'date',
+                  required: true,
+                  label: 'Fecha',
+                  admin: { date: { pickerAppearance: 'dayOnly' } },
+                },
+                {
+                  name: 'allDay',
+                  type: 'checkbox',
+                  defaultValue: true,
+                  label: 'Todo el día',
+                },
+                {
+                  name: 'start',
+                  type: 'text',
+                  label: 'Desde',
+                  admin: { condition: (_, sibling) => !sibling?.allDay },
+                },
+                {
+                  name: 'end',
+                  type: 'text',
+                  label: 'Hasta',
+                  admin: { condition: (_, sibling) => !sibling?.allDay },
+                },
+              ],
             },
           ],
         },

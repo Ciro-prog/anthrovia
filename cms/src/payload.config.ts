@@ -21,6 +21,7 @@ import { migrations } from './migrations'
 import { seedPages } from './seed/seedPages'
 import { seedCourses } from './seed/seedCourses'
 import { seedResources } from './seed/seedResources'
+import { availabilityEndpoint } from './endpoints/availability'
 import { defaultPrivacySections, defaultTermsSections } from './seed/legalDefaults'
 import {
   defaultApplicationFormFields,
@@ -65,6 +66,7 @@ export default buildConfig({
   },
   collections: [Users, Media, Pages, Courses, Leads, EventTypes, Bookings, Applications, Resources],
   globals: [SiteSettings, ApplicationForm, ResourcesPage],
+  endpoints: [availabilityEndpoint],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || 'dev-secret-change-me',
   typescript: {
@@ -147,6 +149,9 @@ export default buildConfig({
         const termsEmpty = !Array.isArray(current.termsSections) || current.termsSections.length === 0
         const slotsEmpty = !Array.isArray(current.dossierSlots) || current.dossierSlots.length === 0
         const daysEmpty = !Array.isArray(current.dossierDays) || current.dossierDays.length === 0
+        const bookingDaysEmpty = !Array.isArray(current.bookingDays) || current.bookingDays.length === 0
+        const bookingWindowsEmpty =
+          !Array.isArray(current.bookingWindows) || current.bookingWindows.length === 0
         await payload.updateGlobal({
           slug: 'site-settings',
           data: {
@@ -159,6 +164,15 @@ export default buildConfig({
                   dossierSlots: [
                     { label: 'Mañana', start: '09:00', end: '13:00' },
                     { label: 'Tarde', start: '14:00', end: '18:00' },
+                  ],
+                }
+              : {}),
+            ...(bookingDaysEmpty ? { bookingDays: ['lun', 'mar', 'mie', 'jue', 'vie'] } : {}),
+            ...(bookingWindowsEmpty
+              ? {
+                  bookingWindows: [
+                    { start: '09:00', end: '13:00' },
+                    { start: '14:00', end: '18:00' },
                   ],
                 }
               : {}),

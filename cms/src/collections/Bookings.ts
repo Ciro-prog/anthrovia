@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { validateBookingSlot } from '../hooks/validateBookingSlot'
 
 export const Bookings: CollectionConfig = {
   slug: 'bookings',
@@ -12,7 +13,10 @@ export const Bookings: CollectionConfig = {
     defaultSort: '-startsAt',
     listSearchableFields: ['name', 'email', 'phone'],
     description:
-      'Llamadas agendadas desde la web. Cambiá el Estado: Pendiente → Confirmada / Cancelada / Completada.',
+      'Llamadas agendadas desde la web. El horario de atención está en Ajustes → Agenda. Cambiá el Estado: Pendiente → Confirmada / Cancelada / Completada.',
+  },
+  hooks: {
+    beforeChange: [validateBookingSlot],
   },
   access: {
     read: ({ req }) => Boolean(req.user),
@@ -45,6 +49,16 @@ export const Bookings: CollectionConfig = {
       label: 'Fecha y hora',
       admin: {
         readOnly: true,
+        date: { pickerAppearance: 'dayAndTime' },
+      },
+    },
+    {
+      name: 'endsAt',
+      type: 'date',
+      label: 'Fin',
+      admin: {
+        readOnly: true,
+        hidden: true,
         date: { pickerAppearance: 'dayAndTime' },
       },
     },

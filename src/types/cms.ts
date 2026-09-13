@@ -565,12 +565,27 @@ export interface ResourcesPageContent {
   closingCta?: string
 }
 
+export interface BookingWindow {
+  start: string
+  end: string
+}
+
+export interface BookingBlock {
+  date?: string
+  allDay?: boolean
+  start?: string
+  end?: string
+}
+
 export interface SiteSettingsContent {
   siteName?: string;
   bookingEnabled?: boolean;
   defaultEventTypeSlug?: string;
   whatsappNumber?: string;
   contactEmail?: string;
+  bookingDays?: string[]
+  bookingWindows?: BookingWindow[]
+  bookingBlocks?: BookingBlock[]
   dossierDays?: string[];
   dossierSlots?: DossierSlot[];
   privacyTitle?: string;
