@@ -146,6 +146,14 @@ const DAY_LABEL: Record<string, string> = {
   dom: "Domingo",
 }
 
+const ALL_DAYS = ["lun", "mar", "mie", "jue", "vie", "sab", "dom"] as const
+const OTHER_DAY = "otro"
+const OTHER_SLOT = "otra"
+const EXTRA_SLOTS = ["Mañana", "Tarde", "Noche"] as const
+
+const selectClass =
+  "w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors text-on-surface font-body appearance-none"
+
 function slotText(slot: { label: string; start: string; end: string }) {
   return `${slot.label} (${slot.start} - ${slot.end})`
 }
@@ -178,14 +186,19 @@ export default function DossierPage() {
     email: "",
     phone: "",
     day: "",
+    otherDay: "",
     slot: "",
+    otherSlot: "",
   })
+
+  const resolvedDay = form.day === OTHER_DAY ? form.otherDay : form.day
+  const resolvedSlot = form.slot === OTHER_SLOT ? form.otherSlot : form.slot
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (!form.day || !form.slot) return
+    if (!resolvedDay || !resolvedSlot) return
     setSubmitState("loading")
-    const dayLabel = DAY_LABEL[form.day] || form.day
+    const dayLabel = DAY_LABEL[resolvedDay] || resolvedDay
     const result = isCmsConfigured()
       ? await submitLead({
           name: form.name,
@@ -193,10 +206,10 @@ export default function DossierPage() {
           phone: form.phone,
           company: form.company,
           preferredDay: dayLabel,
-          preferredSlot: form.slot,
+          preferredSlot: resolvedSlot,
           source: "dossier",
           service: "Dossier HR Tech",
-          message: `Disponibilidad: ${dayLabel}, ${form.slot}`,
+          message: `Disponibilidad: ${dayLabel}, ${resolvedSlot}`,
         })
       : { ok: false as const }
 
@@ -206,7 +219,7 @@ export default function DossierPage() {
       return
     }
 
-    const text = `Hola, soy ${form.name} (${form.company || "sin empresa"}). Email: ${form.email}. WhatsApp: ${form.phone}. Quiero conversar sobre la plataforma. Disponibilidad: ${dayLabel}, ${form.slot}.`
+    const text = `Hola, soy ${form.name} (${form.company || "sin empresa"}). Email: ${form.email}. WhatsApp: ${form.phone}. Quiero conversar sobre la plataforma. Disponibilidad: ${dayLabel}, ${resolvedSlot}.`
     if (whatsapp) {
       window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(text)}`, "_blank")
     }
@@ -684,47 +697,111 @@ export default function DossierPage() {
                     </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="flex flex-col gap-2">
-                      <label htmlFor="dossier-day" className="font-label-md text-xs text-on-surface-variant uppercase tracking-wider">
-                        Día preferido
-                      </label>
-                      <select
-                        id="dossier-day"
-                        required
-                        value={form.day}
-                        onChange={(e) => setForm({ ...form, day: e.target.value })}
-                        className="w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors text-on-surface font-body appearance-none"
-                      >
-                        <option value="" disabled>
-                          Seleccioná un día
-                        </option>
-                        {days.map((d) => (
-                          <option key={d} value={d}>
-                            {DAY_LABEL[d] || d}
+                    <div className="flex flex-col gap-4">
+                      <div className="flex flex-col gap-2">
+                        <label htmlFor="dossier-day" className="font-label-md text-xs text-on-surface-variant uppercase tracking-wider">
+                          Día preferido
+                        </label>
+                        <select
+                          id="dossier-day"
+                          required
+                          value={form.day}
+                          onChange={(e) =>
+                            setForm({
+                              ...form,
+                              day: e.target.value,
+                              otherDay: e.target.value === OTHER_DAY ? form.otherDay : "",
+                            })
+                          }
+                          className={selectClass}
+                        >
+                          <option value="" disabled>
+                            Seleccioná un día
                           </option>
-                        ))}
-                      </select>
+                          {days.map((d) => (
+                            <option key={d} value={d}>
+                              {DAY_LABEL[d] || d}
+                            </option>
+                          ))}
+                          <option value={OTHER_DAY}>Ninguno de estos me queda</option>
+                        </select>
+                      </div>
+                      {form.day === OTHER_DAY && (
+                        <div className="flex flex-col gap-2">
+                          <label htmlFor="dossier-other-day" className="font-label-md text-xs text-on-surface-variant uppercase tracking-wider">
+                            ¿Qué día te queda cómodo?
+                          </label>
+                          <select
+                            id="dossier-other-day"
+                            required
+                            value={form.otherDay}
+                            onChange={(e) => setForm({ ...form, otherDay: e.target.value })}
+                            className={selectClass}
+                          >
+                            <option value="" disabled>
+                              Seleccioná un día
+                            </option>
+                            {ALL_DAYS.map((d) => (
+                              <option key={d} value={d}>
+                                {DAY_LABEL[d]}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex flex-col gap-2">
-                      <label htmlFor="dossier-slot" className="font-label-md text-xs text-on-surface-variant uppercase tracking-wider">
-                        Franja horaria
-                      </label>
-                      <select
-                        id="dossier-slot"
-                        required
-                        value={form.slot}
-                        onChange={(e) => setForm({ ...form, slot: e.target.value })}
-                        className="w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors text-on-surface font-body appearance-none"
-                      >
-                        <option disabled value="">
-                          Seleccioná un rango horario
-                        </option>
-                        {slotOptions.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
+                    <div className="flex flex-col gap-4">
+                      <div className="flex flex-col gap-2">
+                        <label htmlFor="dossier-slot" className="font-label-md text-xs text-on-surface-variant uppercase tracking-wider">
+                          Franja horaria
+                        </label>
+                        <select
+                          id="dossier-slot"
+                          required
+                          value={form.slot}
+                          onChange={(e) =>
+                            setForm({
+                              ...form,
+                              slot: e.target.value,
+                              otherSlot: e.target.value === OTHER_SLOT ? form.otherSlot : "",
+                            })
+                          }
+                          className={selectClass}
+                        >
+                          <option disabled value="">
+                            Seleccioná un rango horario
                           </option>
-                        ))}
-                      </select>
+                          {slotOptions.map((opt) => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                          <option value={OTHER_SLOT}>Otra</option>
+                        </select>
+                      </div>
+                      {form.slot === OTHER_SLOT && (
+                        <div className="flex flex-col gap-2">
+                          <label htmlFor="dossier-other-slot" className="font-label-md text-xs text-on-surface-variant uppercase tracking-wider">
+                            ¿Qué franja te queda cómoda?
+                          </label>
+                          <select
+                            id="dossier-other-slot"
+                            required
+                            value={form.otherSlot}
+                            onChange={(e) => setForm({ ...form, otherSlot: e.target.value })}
+                            className={selectClass}
+                          >
+                            <option value="" disabled>
+                              Seleccioná una franja
+                            </option>
+                            {EXTRA_SLOTS.map((opt) => (
+                              <option key={opt} value={opt}>
+                                {opt}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
                     </div>
                   </div>
                   {submitState === "error" && (
