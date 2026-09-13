@@ -6,10 +6,10 @@ export const Leads: CollectionConfig = {
     singular: 'Consulta',
     plural: 'Consultas',
   },
+  defaultSort: '-createdAt',
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'source', 'service', 'status', 'createdAt'],
-    defaultSort: '-createdAt',
     listSearchableFields: ['name', 'email', 'phone'],
     description:
       'Mensajes de contacto y de /dossier (Conversemos). Cambiá el Estado: Nuevo → Contactado → Agendado → Cerrado.',

@@ -78,10 +78,10 @@ export const Applications: CollectionConfig = {
     singular: 'Postulación',
     plural: 'Postulaciones',
   },
+  defaultSort: '-createdAt',
   admin: {
     useAsTitle: 'email',
     defaultColumns: ['firstName', 'lastName', 'email', 'status', 'createdAt'],
-    defaultSort: '-createdAt',
     listSearchableFields: ['firstName', 'lastName', 'email', 'phone'],
     description:
       'Postulaciones de /postulacion. Cambiá el Estado: Nueva → En revisión → Entrevista → Contratada / Descartada.',

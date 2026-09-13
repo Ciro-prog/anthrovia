@@ -7,10 +7,10 @@ export const Bookings: CollectionConfig = {
     singular: 'Reserva',
     plural: 'Reservas',
   },
+  defaultSort: '-startsAt',
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'eventType', 'startsAt', 'status', 'createdAt'],
-    defaultSort: '-startsAt',
     listSearchableFields: ['name', 'email', 'phone'],
     description:
       'Llamadas agendadas desde la web. El horario de atención está en Ajustes → Agenda. Cambiá el Estado: Pendiente → Confirmada / Cancelada / Completada.',
