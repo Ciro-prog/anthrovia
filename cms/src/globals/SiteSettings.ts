@@ -1,4 +1,5 @@
-import type { GlobalConfig } from 'payload'
+import type { Field, GlobalConfig } from 'payload'
+import { defaultBookingWeek } from '../lib/bookingAvailability'
 
 const previewBase = () =>
   (process.env.PREVIEW_URL || process.env.FRONTEND_URL || 'https://anthroviahr.com').replace(
@@ -16,6 +17,61 @@ const dayOptions = [
   { label: 'Domingo', value: 'dom' },
 ]
 
+const weekdayFields = (): Field[] => {
+  const defaults = defaultBookingWeek()
+  const labels: Record<string, string> = {
+    lun: 'Lunes',
+    mar: 'Martes',
+    mie: 'Miércoles',
+    jue: 'Jueves',
+    vie: 'Viernes',
+    sab: 'Sábado',
+    dom: 'Domingo',
+  }
+  return Object.entries(labels).map(([name, label]) => {
+    const day = defaults[name as keyof typeof defaults]
+    return {
+      name,
+      type: 'group' as const,
+      label,
+      fields: [
+        {
+          name: 'enabled',
+          type: 'checkbox' as const,
+          label: 'Atiende',
+          defaultValue: Boolean(day.enabled),
+        },
+        {
+          name: 'morningStart',
+          type: 'text' as const,
+          label: 'Mañana desde',
+          defaultValue: day.morningStart || '',
+          admin: { description: 'Ej. 09:00. Vacío si no hay turno a la mañana.' },
+        },
+        {
+          name: 'morningEnd',
+          type: 'text' as const,
+          label: 'Mañana hasta',
+          defaultValue: day.morningEnd || '',
+        },
+        {
+          name: 'afternoonStart',
+          type: 'text' as const,
+          label: 'Tarde desde',
+          defaultValue: day.afternoonStart || '',
+          admin: { description: 'Ej. 14:00. Dejalo vacío si ese día solo atiende a la mañana.' },
+        },
+        {
+          name: 'afternoonEnd',
+          type: 'text' as const,
+          label: 'Tarde hasta',
+          defaultValue: day.afternoonEnd || '',
+        },
+      ],
+    }
+  })
+}
+
 const legalSections = (name: 'privacySections' | 'termsSections', label: string) => ({
   name,
   type: 'array' as const,
@@ -31,6 +87,7 @@ export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: 'Ajustes del sitio',
   admin: {
+    group: 'Agenda',
     description: 'WhatsApp, horarios de /agendar, días/franjas del dossier y textos legales.',
     livePreview: {
       url: () => `${previewBase()}/?preview=1`,
@@ -63,9 +120,7 @@ export const SiteSettings: GlobalConfig = {
               type: 'text',
               defaultValue: 'llamada-15',
               label: 'Tipo de llamada por defecto',
-              admin: {
-                description: 'Ej. llamada-15. Tiene que coincidir con un tipo de llamada activo.',
-              },
+              admin: { hidden: true },
             },
             {
               name: 'whatsappNumber',
@@ -83,28 +138,43 @@ export const SiteSettings: GlobalConfig = {
           label: 'Agenda',
           fields: [
             {
+              name: 'bookingDurationMinutes',
+              type: 'number',
+              label: 'Duración de la reunión',
+              defaultValue: 30,
+              min: 5,
+              admin: {
+                description: 'Minutos que ocupa cada turno en /agendar. Si alguien reserva, ese bloque no se vuelve a ofrecer.',
+              },
+            },
+            {
+              name: 'bookingWeek',
+              type: 'group',
+              label: 'Días y horarios',
+              admin: {
+                description:
+                  'Lunes a domingo. Cada día puede tener mañana y tarde. Si la tarde queda vacía, ese día solo atiende a la mañana.',
+              },
+              fields: weekdayFields(),
+            },
+            {
               name: 'bookingDays',
               type: 'select',
               hasMany: true,
-              label: 'Días de atención',
+              label: 'Días de atención (anterior)',
               defaultValue: ['lun', 'mar', 'mie', 'jue', 'vie'],
               options: dayOptions,
-              admin: {
-                description: 'Los días que /agendar muestra turnos de 15 minutos.',
-              },
+              admin: { hidden: true },
             },
             {
               name: 'bookingWindows',
               type: 'array',
-              label: 'Horarios',
-              labels: { singular: 'Franja', plural: 'Franjas' },
-              admin: {
-                description: 'Dentro de cada franja se arman turnos de 15 min. Ej. 09:00–13:00 y 14:00–18:00.',
-              },
+              label: 'Horarios (anterior)',
               fields: [
-                { name: 'start', type: 'text', required: true, label: 'Desde (ej. 09:00)' },
-                { name: 'end', type: 'text', required: true, label: 'Hasta (ej. 13:00)' },
+                { name: 'start', type: 'text', label: 'Desde' },
+                { name: 'end', type: 'text', label: 'Hasta' },
               ],
+              admin: { hidden: true },
             },
             {
               name: 'bookingBlocks',

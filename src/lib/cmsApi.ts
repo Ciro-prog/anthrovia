@@ -517,6 +517,7 @@ export const defaultSiteSettings: SiteSettingsContent = {
   siteName: 'Anthrovia HR',
   bookingEnabled: true,
   defaultEventTypeSlug: 'llamada-15',
+  bookingDurationMinutes: 30,
   bookingDays: ['lun', 'mar', 'mie', 'jue', 'vie'],
   bookingWindows: [
     { start: '09:00', end: '13:00' },

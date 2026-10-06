@@ -8,6 +8,7 @@ export const Leads: CollectionConfig = {
   },
   defaultSort: '-createdAt',
   admin: {
+    group: 'Mensajes',
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'source', 'service', 'status', 'createdAt'],
     listSearchableFields: ['name', 'email', 'phone'],

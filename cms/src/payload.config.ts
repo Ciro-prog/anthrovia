@@ -1,6 +1,7 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { buildConfig } from 'payload'
+import { es } from '@payloadcms/translations/languages/es'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import sharp from 'sharp'
@@ -28,6 +29,12 @@ import {
   defaultApplicationFormSubtitle,
   defaultApplicationFormTitle,
 } from './seed/applicationFormDefaults'
+import {
+  isBookingWeekConfigured,
+  weekFromLegacy,
+  DEFAULT_BOOKING_DAYS,
+  DEFAULT_BOOKING_WINDOWS,
+} from './lib/bookingAvailability'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -38,6 +45,10 @@ const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173')
   .filter(Boolean)
 
 export default buildConfig({
+  i18n: {
+    supportedLanguages: { es },
+    fallbackLanguage: 'es',
+  },
   admin: {
     user: Users.slug,
     importMap: {
@@ -128,11 +139,11 @@ export default buildConfig({
         await payload.create({
           collection: 'event-types',
           data: {
-            title: 'Llamada de 15 minutos',
+            title: 'Llamada de 30 minutos',
             slug: 'llamada-15',
             description:
               'Agendá una llamada personalizada para conocer tus objetivos y ver si la formación es para vos.',
-            durationMinutes: 15,
+            durationMinutes: 30,
             active: true,
           },
           overrideAccess: true,
@@ -175,6 +186,24 @@ export default buildConfig({
                     { start: '14:00', end: '18:00' },
                   ],
                 }
+              : {}),
+            ...(!isBookingWeekConfigured(
+              (current as { bookingWeek?: unknown }).bookingWeek,
+            )
+              ? {
+                  bookingWeek: weekFromLegacy(
+                    bookingDaysEmpty
+                      ? DEFAULT_BOOKING_DAYS
+                      : ((current as { bookingDays?: string[] }).bookingDays || DEFAULT_BOOKING_DAYS),
+                    bookingWindowsEmpty
+                      ? DEFAULT_BOOKING_WINDOWS
+                      : ((current as { bookingWindows?: { start?: string; end?: string }[] }).bookingWindows ||
+                          DEFAULT_BOOKING_WINDOWS),
+                  ),
+                }
+              : {}),
+            ...(typeof (current as { bookingDurationMinutes?: number }).bookingDurationMinutes !== 'number'
+              ? { bookingDurationMinutes: 30 }
               : {}),
             ...(privacyEmpty
               ? { privacyTitle: 'Política de Privacidad', privacySections: defaultPrivacySections }

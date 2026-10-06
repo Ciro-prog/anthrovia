@@ -19,6 +19,12 @@ export const AboutSection = ({ sectionId = "about", variant = "home" }: AboutSec
   }
 
   const pillars = aboutData.pillars || []
+  const showPurpose =
+    aboutData.showPurpose !== false &&
+    Boolean(aboutData.purpose?.title || aboutData.purpose?.description)
+  const showMission =
+    aboutData.showMission !== false &&
+    Boolean(aboutData.mission?.title || aboutData.mission?.description)
 
   return (
     <>
@@ -85,43 +91,45 @@ export const AboutSection = ({ sectionId = "about", variant = "home" }: AboutSec
         </section>
       )}
 
-      {(aboutData.purpose?.title || aboutData.purpose?.description || aboutData.mission?.title || aboutData.mission?.description || (aboutData.values?.length ?? 0) > 0) && (
+      {(showPurpose || showMission || (aboutData.values?.length ?? 0) > 0) && (
         <section className="w-full px-margin-mobile lg:px-margin-desktop py-16 md:py-20 bg-surface-container-lowest">
           <div className="w-full max-w-container-max mx-auto flex flex-col gap-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-              {(aboutData.purpose?.title || aboutData.purpose?.description) && (
-                <div>
-                  <h3
-                    className="font-heading text-2xl md:text-3xl text-on-surface mb-4"
-                    data-cms-field="purpose.title"
-                  >
-                    {aboutData.purpose.title}
-                  </h3>
-                  <p
-                    className="font-body text-body-md md:text-body-lg text-on-surface-variant leading-relaxed"
-                    data-cms-field="purpose.description"
-                  >
-                    {aboutData.purpose.description}
-                  </p>
-                </div>
-              )}
-              {(aboutData.mission?.title || aboutData.mission?.description) && (
-                <div>
-                  <h3
-                    className="font-heading text-2xl md:text-3xl text-on-surface mb-4"
-                    data-cms-field="mission.title"
-                  >
-                    {aboutData.mission.title}
-                  </h3>
-                  <p
-                    className="font-body text-body-md md:text-body-lg text-on-surface-variant leading-relaxed"
-                    data-cms-field="mission.description"
-                  >
-                    {aboutData.mission.description}
-                  </p>
-                </div>
-              )}
-            </div>
+            {(showPurpose || showMission) && (
+              <div className={`grid grid-cols-1 gap-10 ${showPurpose && showMission ? "md:grid-cols-2" : ""}`}>
+                {showPurpose && (
+                  <div>
+                    <h3
+                      className="font-heading text-2xl md:text-3xl text-on-surface mb-4"
+                      data-cms-field="purpose.title"
+                    >
+                      {aboutData.purpose.title}
+                    </h3>
+                    <p
+                      className="font-body text-body-md md:text-body-lg text-on-surface-variant leading-relaxed"
+                      data-cms-field="purpose.description"
+                    >
+                      {aboutData.purpose.description}
+                    </p>
+                  </div>
+                )}
+                {showMission && (
+                  <div>
+                    <h3
+                      className="font-heading text-2xl md:text-3xl text-on-surface mb-4"
+                      data-cms-field="mission.title"
+                    >
+                      {aboutData.mission.title}
+                    </h3>
+                    <p
+                      className="font-body text-body-md md:text-body-lg text-on-surface-variant leading-relaxed"
+                      data-cms-field="mission.description"
+                    >
+                      {aboutData.mission.description}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
             {(aboutData.values?.length ?? 0) > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {aboutData.values.map((value, index) => {

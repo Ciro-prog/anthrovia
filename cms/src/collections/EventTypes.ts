@@ -7,9 +7,10 @@ export const EventTypes: CollectionConfig = {
     plural: 'Tipos de llamada',
   },
   admin: {
+    hidden: true,
     useAsTitle: 'title',
     defaultColumns: ['title', 'durationMinutes', 'active'],
-    description: 'Tipos de reunión que se pueden agendar en la web (ej. Llamada de 15 minutos).',
+    description: 'Duración real de /agendar: Ajustes del sitio → Agenda.',
   },
   access: {
     read: () => true,
@@ -28,7 +29,7 @@ export const EventTypes: CollectionConfig = {
       name: 'durationMinutes',
       type: 'number',
       required: true,
-      defaultValue: 15,
+      defaultValue: 30,
       min: 5,
       label: 'Duración (minutos)',
     },

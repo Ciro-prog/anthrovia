@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { pageSectionBlocks } from '../blocks/pageSections'
 import { syncFormacionesCourses } from '../hooks/syncFormacionesCourses'
+import { keepHomeSections } from '../hooks/keepHomeSections'
 
 const previewBase = () =>
   (process.env.PREVIEW_URL || process.env.FRONTEND_URL || 'https://anthroviahr.com').replace(
@@ -17,10 +18,11 @@ export const Pages: CollectionConfig = {
     plural: 'Páginas',
   },
   admin: {
+    group: 'Sitio',
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
     description:
-      'Live Preview (panel derecho / ojo) = borrador antes de Publish. Preview / Ver publicado = lo que ya está en Vercel. Home = anthroviahr.com/ · Capacitaciones = /capacitaciones. Lista: Published o All.',
+      'Home y Capacitaciones. En el inicio, propósito, misión, redes y noticias se ocultan con el interruptor: no se borran. Live Preview (panel derecho / ojo) = borrador. Publish cuando esté listo.',
     // URL pública (publicado). El borrador solo se ve en livePreview (iframe).
     preview: ({ slug }) => `${previewBase()}${publicPathForSlug(slug)}`,
     livePreview: {
@@ -36,7 +38,7 @@ export const Pages: CollectionConfig = {
     drafts: true,
   },
   hooks: {
-    beforeChange: [syncFormacionesCourses],
+    beforeChange: [keepHomeSections, syncFormacionesCourses],
   },
   access: {
     read: ({ req: { user } }) => {
@@ -83,7 +85,7 @@ export const Pages: CollectionConfig = {
       blocks: pageSectionBlocks,
       admin: {
         description:
-          'Cada bloque es una sección del sitio. Editá y mirá el borrador en Live Preview; Publish recién cuando esté OK.',
+          'Editá cada sección. Propósito, misión, últimas novedades y noticias se ocultan con «Mostrar…». Esas partes del inicio no se pueden borrar.',
       },
     },
   ],

@@ -26,40 +26,22 @@ export const validateBookingSlot: CollectionBeforeChangeHook = async ({
     throw new APIError('Elegí un horario válido.', 400)
   }
 
-  const eventTypeRef = data.eventType ?? originalDoc?.eventType
-  const eventTypeId =
-    typeof eventTypeRef === 'object' && eventTypeRef && 'id' in eventTypeRef
-      ? (eventTypeRef as { id: string | number }).id
-      : eventTypeRef
-
-  let durationMinutes = 15
-  if (eventTypeId) {
-    try {
-      const eventType = await req.payload.findByID({
-        collection: 'event-types',
-        id: eventTypeId as string,
-        overrideAccess: true,
-      })
-      if (typeof eventType.durationMinutes === 'number' && eventType.durationMinutes > 0) {
-        durationMinutes = eventType.durationMinutes
-      }
-    } catch {
-      // 15
-    }
-  }
-
-  const time = `${String(Math.floor(parsed.minutes / 60)).padStart(2, '0')}:${String(parsed.minutes % 60).padStart(2, '0')}`
-  data.endsAt = new Date(
-    new Date(slotToIso(parsed.date, time)).getTime() + durationMinutes * 60_000,
-  ).toISOString()
-
-  if (operation !== 'create') return data
-
   const settings = await req.payload.findGlobal({
     slug: 'site-settings',
     overrideAccess: true,
   })
-  const schedule = normalizeSchedule(settings)
+  const schedule = normalizeSchedule(settings as Parameters<typeof normalizeSchedule>[0])
+  const durationMinutes = schedule.durationMinutes
+
+  const time = `${String(Math.floor(parsed.minutes / 60)).padStart(2, '0')}:${String(parsed.minutes % 60).padStart(2, '0')}`
+  if (operation === 'create' || (!data.endsAt && !originalDoc?.endsAt)) {
+    data.endsAt = new Date(
+      new Date(slotToIso(parsed.date, time)).getTime() + durationMinutes * 60_000,
+    ).toISOString()
+  }
+
+  if (operation !== 'create') return data
+
   const nextDay = addDays(parsed.date, 1)
 
   const others = await req.payload.find({
@@ -80,8 +62,7 @@ export const validateBookingSlot: CollectionBeforeChangeHook = async ({
   const free = isSlotFree({
     date: parsed.date,
     time,
-    days: schedule.days,
-    windows: schedule.windows,
+    week: schedule.week,
     blocks: schedule.blocks,
     bookings: others.docs.map((doc) => ({
       id: doc.id,

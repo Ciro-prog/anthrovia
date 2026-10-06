@@ -13,6 +13,17 @@ const isVisible: Field = {
   name: 'isVisible',
   type: 'checkbox',
   defaultValue: true,
+  label: 'Mostrar esta sección',
+}
+
+function showSection(label: string, description: string): Field {
+  return {
+    name: 'isVisible',
+    type: 'checkbox',
+    defaultValue: true,
+    label,
+    admin: { description },
+  }
 }
 
 /** Upload opcional + path/URL de respaldo (ej. /ethos/...). */
@@ -228,7 +239,7 @@ export const ServicesBlock: Block = {
 
 export const AboutBlock: Block = {
   slug: 'about',
-  labels: { singular: 'About (quiénes somos)', plural: 'About' },
+  labels: { singular: 'Nosotros', plural: 'Nosotros' },
   fields: [
     {
       ...sectionId,
@@ -237,6 +248,20 @@ export const AboutBlock: Block = {
       },
     },
     isVisible,
+    {
+      name: 'showPurpose',
+      type: 'checkbox',
+      defaultValue: true,
+      label: 'Mostrar propósito',
+      admin: { description: 'Oculta el título y el texto de propósito en el inicio.' },
+    },
+    {
+      name: 'showMission',
+      type: 'checkbox',
+      defaultValue: true,
+      label: 'Mostrar misión',
+      admin: { description: 'Oculta el título y el texto de misión en el inicio.' },
+    },
     { name: 'title', type: 'text', required: true },
     { name: 'eyebrow', type: 'text' },
     { name: 'personName', type: 'text' },
@@ -255,17 +280,19 @@ export const AboutBlock: Block = {
     {
       name: 'purpose',
       type: 'group',
+      label: 'Propósito',
       fields: [
-        { name: 'title', type: 'text' },
-        { name: 'description', type: 'textarea' },
+        { name: 'title', type: 'text', label: 'Título' },
+        { name: 'description', type: 'textarea', label: 'Texto' },
       ],
     },
     {
       name: 'mission',
       type: 'group',
+      label: 'Misión',
       fields: [
-        { name: 'title', type: 'text' },
-        { name: 'description', type: 'textarea' },
+        { name: 'title', type: 'text', label: 'Título' },
+        { name: 'description', type: 'textarea', label: 'Texto' },
       ],
     },
     { name: 'pillarsTitle', type: 'text' },
@@ -383,10 +410,13 @@ export const SettingsBlock: Block = {
 
 export const PostsBlock: Block = {
   slug: 'posts',
-  labels: { singular: 'Posts redes', plural: 'Posts' },
+  labels: { singular: 'Redes', plural: 'Redes' },
   fields: [
     sectionId,
-    isVisible,
+    showSection(
+      'Mostrar últimas novedades',
+      'Oculta el título, «Síguenos en redes» y el carrusel.',
+    ),
     { name: 'title', type: 'text', required: true },
     { name: 'subtitle', type: 'text' },
     { name: 'backgroundType', type: 'select', options: [
@@ -422,10 +452,10 @@ export const PostsBlock: Block = {
 
 export const NewsBlock: Block = {
   slug: 'news',
-  labels: { singular: 'News', plural: 'News' },
+  labels: { singular: 'Noticias', plural: 'Noticias' },
   fields: [
     sectionId,
-    isVisible,
+    showSection('Mostrar noticias y recursos', 'Oculta esta sección del inicio.'),
     { name: 'title', type: 'text', required: true },
     { name: 'subtitle', type: 'textarea' },
     {

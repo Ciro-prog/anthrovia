@@ -22,6 +22,7 @@ export const Resources: CollectionConfig = {
     plural: 'Recursos',
   },
   admin: {
+    group: 'Sitio',
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'published', 'updatedAt'],
     description:

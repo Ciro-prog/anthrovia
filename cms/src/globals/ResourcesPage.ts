@@ -10,6 +10,7 @@ export const ResourcesPage: GlobalConfig = {
   slug: 'resources-page',
   label: 'Página recursos',
   admin: {
+    group: 'Sitio',
     description: 'Textos e imágenes de /recursos. Las cards se editan en Recursos.',
     livePreview: {
       url: () => `${previewBase()}/recursos?preview=1`,

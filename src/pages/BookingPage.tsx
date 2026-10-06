@@ -39,6 +39,7 @@ export const BookingPage = () => {
   const bookingEnabled = siteSettings.bookingEnabled !== false
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
   const [loadingTypes, setLoadingTypes] = useState(true)
+  const [durationMinutes, setDurationMinutes] = useState(siteSettings.bookingDurationMinutes || 30)
   const [days, setDays] = useState<AvailabilityDay[]>([])
   const [loadingSlots, setLoadingSlots] = useState(false)
   const [form, setForm] = useState({
@@ -81,14 +82,15 @@ export const BookingPage = () => {
   }, [siteSettings.defaultEventTypeSlug])
 
   useEffect(() => {
-    if (!form.eventTypeId || !isCmsConfigured()) return
+    if (!isCmsConfigured() || !bookingEnabled) return
     let cancelled = false
     ;(async () => {
       setLoadingSlots(true)
-      const res = await fetchAvailability({ eventTypeId: form.eventTypeId })
+      const res = await fetchAvailability()
       if (cancelled) return
       const nextDays = res?.days || []
       setDays(nextDays)
+      setDurationMinutes(res?.durationMinutes || siteSettings.bookingDurationMinutes || 30)
       setForm((f) => {
         const still = nextDays.find((d) => d.date === f.date)
         const nextDate = still?.date || nextDays[0]?.date || ""
@@ -101,7 +103,7 @@ export const BookingPage = () => {
     return () => {
       cancelled = true
     }
-  }, [form.eventTypeId])
+  }, [bookingEnabled, siteSettings.bookingDurationMinutes])
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -120,7 +122,7 @@ export const BookingPage = () => {
     if (result.ok) {
       setStatus("success")
       setForm((f) => ({ ...f, name: "", email: "", phone: "", notes: "", time: "" }))
-      const refreshed = await fetchAvailability({ eventTypeId: form.eventTypeId })
+      const refreshed = await fetchAvailability()
       if (refreshed?.days) setDays(refreshed.days)
       return
     }
@@ -128,7 +130,7 @@ export const BookingPage = () => {
     if (result.conflict) {
       setStatus("error")
       setError(result.error || "Ese horario ya no está disponible. Elegí otro turno.")
-      const refreshed = await fetchAvailability({ eventTypeId: form.eventTypeId })
+      const refreshed = await fetchAvailability()
       if (refreshed?.days) {
         setDays(refreshed.days)
         setForm((f) => ({ ...f, time: "" }))
@@ -165,7 +167,7 @@ export const BookingPage = () => {
           Agendar una llamada
         </h1>
         <p className="font-body text-body-lg text-on-surface-variant mb-10">
-          Elegí un día y un turno de 15 minutos. Si alguien ya lo tomó, no aparece.
+          Elegí un día y un turno de {durationMinutes} minutos. Si alguien ya lo tomó, no aparece.
         </p>
 
         {!isCmsConfigured() && (
@@ -185,31 +187,11 @@ export const BookingPage = () => {
 
         {bookingEnabled && isCmsConfigured() && !loadingTypes && eventTypes.length === 0 && (
           <p className="font-body text-body-md text-on-surface-variant mb-8">
-            No hay tipos de llamada activos. En el admin del CMS abrí Tipos de llamada y activá uno.
+            La agenda todavía no tiene un tipo de reunión activo. Escribinos desde Contacto.
           </p>
         )}
 
         <form onSubmit={onSubmit} className="flex flex-col gap-6 bg-surface-container-lowest p-6 md:p-10 rounded-2xl border border-outline-variant/40">
-          <div className="flex flex-col gap-2">
-            <label htmlFor="booking-event-type" className="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant">
-              Tipo de reunión
-            </label>
-            <select
-              id="booking-event-type"
-              required
-              value={form.eventTypeId}
-              onChange={(e) => setForm({ ...form, eventTypeId: e.target.value, time: "" })}
-              className="w-full border border-outline-variant rounded-xl px-4 py-3 bg-transparent"
-              disabled={loadingTypes || eventTypes.length === 0}
-            >
-              {eventTypes.map((et) => (
-                <option key={et.id} value={String(et.id)}>
-                  {et.title} ({et.durationMinutes} min)
-                </option>
-              ))}
-            </select>
-          </div>
-
           <div className="flex flex-col gap-3">
             <p className="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant">
               Día

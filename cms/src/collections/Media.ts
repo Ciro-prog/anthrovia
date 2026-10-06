@@ -12,6 +12,7 @@ export const Media: CollectionConfig = {
     plural: 'Fotos y archivos',
   },
   admin: {
+    group: 'Sitio',
     description:
       'Fotos de las cards y archivos de Recursos (PDF, ZIP, Word, Excel, imágenes).',
   },

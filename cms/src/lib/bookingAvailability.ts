@@ -22,11 +22,79 @@ export type AvailabilityDay = { date: string; slots: string[] }
 
 const WEEKDAY: DayKey[] = ['dom', 'lun', 'mar', 'mie', 'jue', 'vie', 'sab']
 
+export const DAY_KEYS: DayKey[] = ['lun', 'mar', 'mie', 'jue', 'vie', 'sab', 'dom']
+
 export const DEFAULT_BOOKING_DAYS: DayKey[] = ['lun', 'mar', 'mie', 'jue', 'vie']
 export const DEFAULT_BOOKING_WINDOWS: BookingWindow[] = [
   { start: '09:00', end: '13:00' },
   { start: '14:00', end: '18:00' },
 ]
+export const DEFAULT_DURATION_MINUTES = 30
+
+export type DaySchedule = {
+  enabled?: boolean | null
+  morningStart?: string | null
+  morningEnd?: string | null
+  afternoonStart?: string | null
+  afternoonEnd?: string | null
+}
+
+export type BookingWeek = Record<DayKey, DaySchedule>
+
+export function defaultBookingWeek(): BookingWeek {
+  const week = {} as BookingWeek
+  for (const key of DAY_KEYS) {
+    const open = DEFAULT_BOOKING_DAYS.includes(key)
+    week[key] = {
+      enabled: open,
+      morningStart: open ? '09:00' : '',
+      morningEnd: open ? '13:00' : '',
+      afternoonStart: open ? '14:00' : '',
+      afternoonEnd: open ? '18:00' : '',
+    }
+  }
+  return week
+}
+
+export function windowsForDay(day: DaySchedule | undefined): BookingWindow[] {
+  if (!day?.enabled) return []
+  return [
+    { start: day.morningStart, end: day.morningEnd },
+    { start: day.afternoonStart, end: day.afternoonEnd },
+  ]
+}
+
+export function isBookingWeekConfigured(raw: unknown): boolean {
+  if (!raw || typeof raw !== 'object') return false
+  return DAY_KEYS.some((key) => {
+    const day = (raw as Record<string, DaySchedule | undefined>)[key]
+    if (!day || typeof day !== 'object') return false
+    return typeof day.enabled === 'boolean' || Boolean(day.morningStart) || Boolean(day.afternoonStart)
+  })
+}
+
+export function weekFromLegacy(days: string[], windows: BookingWindow[]): BookingWeek {
+  const morning = windows[0] || DEFAULT_BOOKING_WINDOWS[0]
+  const afternoon = windows[1]
+  const week = {} as BookingWeek
+  for (const key of DAY_KEYS) {
+    const enabled = days.includes(key)
+    week[key] = {
+      enabled,
+      morningStart: enabled ? morning.start || '09:00' : '',
+      morningEnd: enabled ? morning.end || '13:00' : '',
+      afternoonStart: enabled ? afternoon?.start || '' : '',
+      afternoonEnd: enabled ? afternoon?.end || '' : '',
+    }
+  }
+  return week
+}
+
+export function durationFromSettings(value: unknown): number {
+  const n = typeof value === 'number' ? value : Number(value)
+  if (Number.isFinite(n) && n >= 5) return Math.round(n)
+  return DEFAULT_DURATION_MINUTES
+}
 
 export function dateStr(value: unknown): string {
   if (!value) return ''
@@ -155,16 +223,17 @@ function occupiedRanges(bookings: OccupiedBooking[], date: string, fallbackDurat
 
 export function slotsForDate(opts: {
   date: string
-  days: string[]
-  windows: BookingWindow[]
+  week: BookingWeek
   blocks: BookingBlock[]
   bookings: OccupiedBooking[]
   durationMinutes: number
   skipPast?: boolean
 }): string[] {
-  const { date, days, windows, blocks, bookings, durationMinutes, skipPast } = opts
+  const { date, week, blocks, bookings, durationMinutes, skipPast } = opts
   const weekday = weekdayKey(date)
-  if (!weekday || !days.includes(weekday)) return []
+  if (!weekday) return []
+  const windows = windowsForDay(week[weekday])
+  if (!windows.length) return []
   const { allDay, ranges: blocked } = blockRangesForDate(blocks, date)
   if (allDay) return []
   const occupied = occupiedRanges(bookings, date, durationMinutes)
@@ -184,8 +253,7 @@ export function slotsForDate(opts: {
 export function buildAvailability(opts: {
   from: string
   to: string
-  days: string[]
-  windows: BookingWindow[]
+  week: BookingWeek
   blocks: BookingBlock[]
   bookings: OccupiedBooking[]
   durationMinutes: number
@@ -203,8 +271,7 @@ export function buildAvailability(opts: {
 export function isSlotFree(opts: {
   date: string
   time: string
-  days: string[]
-  windows: BookingWindow[]
+  week: BookingWeek
   blocks: BookingBlock[]
   bookings: OccupiedBooking[]
   durationMinutes: number
@@ -213,17 +280,39 @@ export function isSlotFree(opts: {
   return slots.includes(opts.time)
 }
 
+function normalizeWeek(raw: unknown): BookingWeek {
+  const source = (raw && typeof raw === 'object' ? raw : {}) as Record<string, DaySchedule>
+  const week = {} as BookingWeek
+  for (const key of DAY_KEYS) {
+    const day = source[key] || {}
+    week[key] = {
+      enabled: Boolean(day.enabled),
+      morningStart: day.morningStart || '',
+      morningEnd: day.morningEnd || '',
+      afternoonStart: day.afternoonStart || '',
+      afternoonEnd: day.afternoonEnd || '',
+    }
+  }
+  return week
+}
+
 export function normalizeSchedule(raw: {
+  bookingWeek?: unknown
   bookingDays?: unknown
   bookingWindows?: unknown
   bookingBlocks?: unknown
+  bookingDurationMinutes?: unknown
 }) {
+  const blocks = Array.isArray(raw.bookingBlocks) ? (raw.bookingBlocks as BookingBlock[]) : []
+  const durationMinutes = durationFromSettings(raw.bookingDurationMinutes)
+  if (isBookingWeekConfigured(raw.bookingWeek)) {
+    return { week: normalizeWeek(raw.bookingWeek), blocks, durationMinutes }
+  }
   const days = Array.isArray(raw.bookingDays) && raw.bookingDays.length
     ? raw.bookingDays.map(String)
     : DEFAULT_BOOKING_DAYS
   const windows = Array.isArray(raw.bookingWindows) && raw.bookingWindows.length
     ? (raw.bookingWindows as BookingWindow[])
     : DEFAULT_BOOKING_WINDOWS
-  const blocks = Array.isArray(raw.bookingBlocks) ? (raw.bookingBlocks as BookingBlock[]) : []
-  return { days, windows, blocks }
+  return { week: weekFromLegacy(days, windows), blocks, durationMinutes }
 }

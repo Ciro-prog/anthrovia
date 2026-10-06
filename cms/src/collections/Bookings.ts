@@ -9,6 +9,7 @@ export const Bookings: CollectionConfig = {
   },
   defaultSort: '-startsAt',
   admin: {
+    group: 'Mensajes',
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'eventType', 'startsAt', 'status', 'createdAt'],
     listSearchableFields: ['name', 'email', 'phone'],

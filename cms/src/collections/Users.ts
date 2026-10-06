@@ -8,6 +8,7 @@ export const Users: CollectionConfig = {
     plural: 'Usuarios',
   },
   admin: {
+    group: 'Sistema',
     useAsTitle: 'email',
     description: 'Quienes pueden entrar al panel.',
   },

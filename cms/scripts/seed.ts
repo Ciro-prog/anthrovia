@@ -36,11 +36,11 @@ async function seed() {
     await payload.create({
       collection: 'event-types',
       data: {
-        title: 'Llamada de 15 minutos',
+        title: 'Llamada de 30 minutos',
         slug: 'llamada-15',
         description:
           'Agendá una llamada personalizada para conocer tus objetivos y ver si la formación es para vos.',
-        durationMinutes: 15,
+        durationMinutes: 30,
         active: true,
       },
       overrideAccess: true,

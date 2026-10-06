@@ -30,8 +30,6 @@ export const availabilityEndpoint: Endpoint = {
   handler: async (req) => {
     const fromParam = queryParam(req, 'from') || todayInArgentina()
     const toParam = queryParam(req, 'to') || addDays(fromParam, HORIZON_DAYS)
-    const eventTypeId = queryParam(req, 'eventType')
-
     const settings = await req.payload.findGlobal({
       slug: 'site-settings',
       overrideAccess: true,
@@ -41,30 +39,8 @@ export const availabilityEndpoint: Endpoint = {
       return Response.json({ days: [] })
     }
 
-    let durationMinutes = 15
-    if (eventTypeId) {
-      try {
-        const eventType = await req.payload.findByID({
-          collection: 'event-types',
-          id: eventTypeId,
-          overrideAccess: true,
-        })
-        if (typeof eventType.durationMinutes === 'number' && eventType.durationMinutes > 0) {
-          durationMinutes = eventType.durationMinutes
-        }
-      } catch {
-        // usa 15
-      }
-    } else if (settings.defaultEventTypeSlug) {
-      const found = await req.payload.find({
-        collection: 'event-types',
-        where: { slug: { equals: settings.defaultEventTypeSlug } },
-        limit: 1,
-        overrideAccess: true,
-      })
-      const minutes = found.docs[0]?.durationMinutes
-      if (typeof minutes === 'number' && minutes > 0) durationMinutes = minutes
-    }
+    const schedule = normalizeSchedule(settings as Parameters<typeof normalizeSchedule>[0])
+    const durationMinutes = schedule.durationMinutes
 
     const from = fromParam < todayInArgentina() ? todayInArgentina() : fromParam
     const rangeEnd = addDays(toParam, 1)
@@ -83,12 +59,10 @@ export const availabilityEndpoint: Endpoint = {
       overrideAccess: true,
     })
 
-    const schedule = normalizeSchedule(settings)
     const days = buildAvailability({
       from,
       to: toParam,
-      days: schedule.days,
-      windows: schedule.windows,
+      week: schedule.week,
       blocks: schedule.blocks,
       bookings: bookings.docs.map((doc) => ({
         id: doc.id,

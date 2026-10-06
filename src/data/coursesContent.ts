@@ -447,7 +447,7 @@ export const coursesData: CoursePageContent[] = [
         primary: { text: "Quiero inscribirme ahora", link: contactLink, variant: "primary" },
         doubtTitle: "¿Todavía tenés dudas?",
         doubtBody:
-          "Agendá una llamada personalizada de 15 minutos. Podemos conocer tus objetivos, responder tus preguntas y ayudarte a entender si esta formación es para vos.",
+          "Agendá una llamada personalizada de 30 minutos. Podemos conocer tus objetivos, responder tus preguntas y ayudarte a entender si esta formación es para vos.",
         secondary: { text: "Agendar llamada", link: contactLink, variant: "outline" },
       },
     ],

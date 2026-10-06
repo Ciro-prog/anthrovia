@@ -10,6 +10,7 @@ export const ApplicationForm: GlobalConfig = {
   slug: 'application-form',
   label: 'Formulario postulación',
   admin: {
+    group: 'Sistema',
     description:
       'Campos de /postulacion. Live Preview (ojo) muestra el formulario. Email y CV siempre se muestran, aunque los saques de la lista.',
     livePreview: {

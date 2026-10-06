@@ -210,6 +210,8 @@ export function mapCmsBlocksToSections(
             title: String(mission.title || ''),
             description: String(mission.description || ''),
           },
+          showPurpose: raw.showPurpose !== false,
+          showMission: raw.showMission !== false,
           pillarsTitle: String(raw.pillarsTitle || '') || undefined,
           pillars: Array.isArray(raw.pillars)
             ? (raw.pillars as {

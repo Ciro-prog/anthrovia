@@ -124,6 +124,8 @@ export interface AboutSectionContent extends BaseSection {
     title: string;
     description: string;
   };
+  showPurpose?: boolean;
+  showMission?: boolean;
   values: ValueItem[];
   pillarsTitle?: string;
   pillars?: ValueItem[];
@@ -585,6 +587,7 @@ export interface SiteSettingsContent {
   contactEmail?: string;
   bookingDays?: string[]
   bookingWindows?: BookingWindow[]
+  bookingDurationMinutes?: number
   bookingBlocks?: BookingBlock[]
   dossierDays?: string[];
   dossierSlots?: DossierSlot[];

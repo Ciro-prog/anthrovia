@@ -15,6 +15,7 @@ export const Courses: CollectionConfig = {
     plural: 'Capacitaciones',
   },
   admin: {
+    group: 'Sitio',
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', 'category', 'updatedAt'],
     description:

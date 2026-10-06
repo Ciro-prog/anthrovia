@@ -80,6 +80,7 @@ export const Applications: CollectionConfig = {
   },
   defaultSort: '-createdAt',
   admin: {
+    group: 'Mensajes',
     useAsTitle: 'email',
     defaultColumns: ['firstName', 'lastName', 'email', 'status', 'createdAt'],
     listSearchableFields: ['firstName', 'lastName', 'email', 'phone'],
