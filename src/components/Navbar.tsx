@@ -10,7 +10,8 @@ const homeLinks = [
   { label: "Inicio", href: "/#inicio", to: "/" },
   { label: "Servicios", href: "/#servicios", to: "/#servicios" },
   { label: "Anthrovia", href: "/#anthrovia", to: "/#anthrovia" },
-  { label: "recursos gratuitos", href: "/recursos", to: "/recursos" },
+  { label: "Recursos gratuitos", href: "/recursos", to: "/recursos" },
+  { label: "Noticias", href: "/news", to: "/news" },
   { label: "Contacto", href: "/#contacto", to: "/#contacto" },
 ]
 
@@ -31,7 +32,7 @@ export const Navbar = ({ variant }: { variant?: NavVariant }) => {
     variant || (location.pathname.startsWith("/capacitaciones") ? "learning" : "home")
 
   const settings = content.sections.find(s => s.type === 'settings') as SettingsSectionContent
-  const cvUrl = settings?.cvUrl || "https://talento.anthroviahr.com/"
+  const cvUrl = settings?.cvUrl || "/postulacion"
   const cvText = settings?.cvText || "Dejanos tu CV"
   const links = resolvedVariant === "learning" ? learningLinks : homeLinks
 
@@ -83,14 +84,23 @@ export const Navbar = ({ variant }: { variant?: NavVariant }) => {
 
         <div className="flex items-center gap-4">
           {resolvedVariant === "home" ? (
-            <a
-              href={cvUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline-flex bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-md uppercase tracking-widest hover:bg-primary-container transition-all"
-            >
-              {cvText}
-            </a>
+            cvUrl.startsWith("/") ? (
+              <Link
+                to={cvUrl}
+                className="hidden sm:inline-flex bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-md uppercase tracking-widest hover:bg-primary-container transition-all"
+              >
+                {cvText}
+              </Link>
+            ) : (
+              <a
+                href={cvUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:inline-flex bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-md uppercase tracking-widest hover:bg-primary-container transition-all"
+              >
+                {cvText}
+              </a>
+            )
           ) : (
             <Link
               to="/#contacto"
@@ -113,6 +123,25 @@ export const Navbar = ({ variant }: { variant?: NavVariant }) => {
       {isOpen && (
         <div className="lg:hidden border-t border-outline-variant/30 bg-surface px-margin-mobile pb-6 pt-4 space-y-1">
           {links.map((link) => renderLink(link, true))}
+          {resolvedVariant === "home" &&
+            (cvUrl.startsWith("/") ? (
+              <Link
+                to={cvUrl}
+                onClick={() => setIsOpen(false)}
+                className="block font-label-md text-primary py-3 uppercase tracking-wider"
+              >
+                {cvText}
+              </Link>
+            ) : (
+              <a
+                href={cvUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block font-label-md text-primary py-3 uppercase tracking-wider"
+              >
+                {cvText}
+              </a>
+            ))}
         </div>
       )}
     </header>

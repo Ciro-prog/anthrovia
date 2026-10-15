@@ -4,11 +4,11 @@ import { useEffect, useMemo, useState } from 'react'
 import { SourceBadge } from './SourceBadge'
 import { sourceMeta } from './sourceMeta'
 
-type Filter = 'all' | 'home' | 'learning' | 'dossier' | 'postulacion'
+type Filter = 'all' | 'home' | 'learning' | 'dossier' | 'postulacion' | 'agenda'
 
 type InboxItem = {
   id: string | number
-  kind: 'lead' | 'application'
+  kind: 'lead' | 'application' | 'booking'
   name: string
   email: string
   source: string
@@ -24,6 +24,7 @@ const FILTERS: { id: Filter; label: string }[] = [
   { id: 'learning', label: 'Capacitaciones' },
   { id: 'dossier', label: 'Dossier' },
   { id: 'postulacion', label: 'Postulación' },
+  { id: 'agenda', label: 'Agenda' },
 ]
 
 function statusLabel(kind: InboxItem['kind'], status: string) {
@@ -34,6 +35,15 @@ function statusLabel(kind: InboxItem['kind'], status: string) {
       interview: 'Entrevista',
       hired: 'Contratada',
       rejected: 'Descartada',
+    }
+    return map[status] || status
+  }
+  if (kind === 'booking') {
+    const map: Record<string, string> = {
+      pending: 'Pendiente',
+      confirmed: 'Confirmada',
+      cancelled: 'Cancelada',
+      completed: 'Completada',
     }
     return map[status] || status
   }
@@ -50,18 +60,30 @@ export function InboxView() {
   const [items, setItems] = useState<InboxItem[]>([])
   const [filter, setFilter] = useState<Filter>('all')
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
 
   useEffect(() => {
     let cancelled = false
     ;(async () => {
       setLoading(true)
+      setLoadError('')
       try {
-        const [leadsRes, appsRes] = await Promise.all([
+        const [leadsRes, appsRes, bookingsRes] = await Promise.all([
           fetch('/api/leads?limit=80&sort=-createdAt&depth=0', { credentials: 'include' }),
           fetch('/api/applications?limit=80&sort=-createdAt&depth=0', { credentials: 'include' }),
+          fetch('/api/bookings?limit=80&sort=-createdAt&depth=0', { credentials: 'include' }),
         ])
+        const failed = [leadsRes, appsRes, bookingsRes].filter((res) => !res.ok).length
+        if (!cancelled && failed > 0) {
+          setLoadError(
+            failed === 3
+              ? 'No pudimos cargar el inbox. Recargá la página.'
+              : 'Algunas bandejas no cargaron. Lo que ves puede estar incompleto.',
+          )
+        }
         const leadsJson = leadsRes.ok ? await leadsRes.json() : { docs: [] }
         const appsJson = appsRes.ok ? await appsRes.json() : { docs: [] }
+        const bookingsJson = bookingsRes.ok ? await bookingsRes.json() : { docs: [] }
         const leads: InboxItem[] = (leadsJson.docs || []).map(
           (d: {
             id: string | number
@@ -104,10 +126,34 @@ export function InboxView() {
             summary: 'Postulación · CV',
           }),
         )
-        const merged = [...leads, ...apps].sort(
+        const bookings: InboxItem[] = (bookingsJson.docs || []).map(
+          (d: {
+            id: string | number
+            name?: string
+            email?: string
+            status?: string
+            createdAt?: string
+            startsAt?: string
+          }) => ({
+            id: d.id,
+            kind: 'booking' as const,
+            name: d.name || 'Reserva',
+            email: d.email || '',
+            source: 'agenda',
+            status: d.status || 'pending',
+            createdAt: d.createdAt || d.startsAt || '',
+            href: `/admin/collections/bookings/${d.id}`,
+            summary: d.startsAt
+              ? `Llamada · ${new Date(d.startsAt).toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' })}`
+              : 'Llamada',
+          }),
+        )
+        const merged = [...leads, ...apps, ...bookings].sort(
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         )
         if (!cancelled) setItems(merged)
+      } catch {
+        if (!cancelled) setLoadError('No pudimos cargar el inbox. Recargá la página.')
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -126,7 +172,7 @@ export function InboxView() {
     <div style={{ padding: '1.5rem 0 2rem' }}>
       <h1 style={{ fontSize: 22, margin: '0 0 0.35rem' }}>Inbox</h1>
       <p style={{ margin: '0 0 1rem', color: 'var(--theme-elevation-600)', fontSize: 14 }}>
-        Consultas y postulaciones, con el origen de cada formulario. Las reservas siguen en Reservas.
+        Consultas, postulaciones y reservas, con el origen de cada formulario.
       </p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
         {FILTERS.map((f) => (
@@ -149,6 +195,9 @@ export function InboxView() {
         ))}
       </div>
       {loading && <p style={{ fontSize: 14 }}>Cargando…</p>}
+      {!loading && loadError && (
+        <p style={{ fontSize: 14, color: 'var(--theme-error-500)', marginBottom: 12 }}>{loadError}</p>
+      )}
       {!loading && visible.length === 0 && (
         <p style={{ fontSize: 14, color: 'var(--theme-elevation-600)' }}>No hay mensajes en este filtro.</p>
       )}

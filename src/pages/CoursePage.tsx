@@ -46,9 +46,23 @@ function CourseCohortBadge({ course }: { course: CoursePageContent }) {
   )
 }
 
+function CourseMessage({ children }: { children: string }) {
+  return (
+    <div className="min-h-screen bg-background text-on-surface">
+      <Navbar variant="learning" />
+      <main className="pt-40 px-margin-mobile md:px-margin-desktop max-w-3xl mx-auto pb-24">
+        <p className="font-body text-body-lg text-on-surface-variant">{children}</p>
+        <Link to="/capacitaciones" className="inline-flex mt-6 font-label-md text-primary hover:underline">
+          Volver a capacitaciones
+        </Link>
+      </main>
+    </div>
+  )
+}
+
 export const CoursePage = () => {
   const { slug } = useParams<{ slug: string }>()
-  const { content, isLoading, isPreview } = useCMS()
+  const { content, isLoading, isPreview, cmsError } = useCMS()
 
   const coursesSection = content.sections.find((s) => s.type === "courses") as
     | CoursesSectionContent
@@ -57,7 +71,14 @@ export const CoursePage = () => {
   const course = coursesSection?.courses.find((c) => c.slug === slug)
 
   if (!course) {
-    if (isLoading || isPreview) return null
+    if (isLoading || isPreview) return <CourseMessage>Cargando la capacitación…</CourseMessage>
+    if (cmsError) {
+      return (
+        <CourseMessage>
+          No pudimos cargar esta capacitación. Probá de nuevo en unos minutos.
+        </CourseMessage>
+      )
+    }
     return <Navigate to="/capacitaciones" replace />
   }
 
@@ -76,6 +97,11 @@ export const CoursePage = () => {
       <div className="relative z-10">
         <Navbar variant="learning" />
         <main>
+          {cmsError && (
+            <p className="mx-margin-mobile md:mx-margin-desktop mt-28 max-w-container-max font-body text-body-md text-on-surface-variant">
+              No pudimos actualizar el contenido desde el CMS. Estás viendo la versión guardada en el sitio.
+            </p>
+          )}
           <div className="pt-32 md:pt-36 lg:pt-40 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
             <Link
               to="/capacitaciones"

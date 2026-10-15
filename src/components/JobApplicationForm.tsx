@@ -12,7 +12,12 @@ import {
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useCMS } from '@/context/CMSContext'
-import { defaultApplicationForm, ensureRequiredApplicationFields } from '@/data/applicationFormDefaults'
+import {
+  defaultApplicationForm,
+  ensureRequiredApplicationFields,
+  fieldIsVisible,
+  fieldsClearedBy,
+} from '@/data/applicationFormDefaults'
 import { isCmsConfigured, submitApplication } from '@/lib/cmsApi'
 import type { ApplicationAnswer, ApplicationField } from '@/types/cms'
 
@@ -21,14 +26,19 @@ const N8N_WEBHOOK_URL = import.meta.env.VITE_WEBHOOK_URL || ''
 const STEP_LABELS = ['Datos y Formación', 'Experiencia', 'Condiciones y CV']
 const inputClass = 'w-full px-4 py-3 rounded-lg border border-durazno/30 bg-crema/50'
 
-type Values = Record<string, string | boolean>
+type Values = Record<string, string | boolean | string[]>
 type Errors = Record<string, string>
 
 function optionLabel(field: ApplicationField, value: string) {
   return field.options?.find((o) => o.value === value)?.label || value
 }
 
-function validateField(field: ApplicationField, value: string | boolean, file: File | null): string {
+function validateField(field: ApplicationField, value: string | boolean | string[] | undefined, file: File | null): string {
+  if (field.multiple) {
+    const selected = Array.isArray(value) ? value : []
+    if (field.required && selected.length === 0) return 'Elegí al menos una opción'
+    return ''
+  }
   if (field.type === 'file') {
     if (field.required && !file) return 'Adjuntá tu CV'
     return ''
@@ -39,8 +49,19 @@ function validateField(field: ApplicationField, value: string | boolean, file: F
   }
   const text = typeof value === 'string' ? value.trim() : ''
   if (field.required && !text) return 'Completá este campo'
+  if (field.name === 'age' && text && !/^\d{1,3}$/.test(text)) return 'Ingresá la edad en números'
   if (field.type === 'email' && text && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text)) return 'Email inválido'
   if (field.type === 'tel' && text && text.replace(/\D/g, '').length < 8) return 'Ingresá un teléfono válido'
+  return ''
+}
+
+function answerValue(field: ApplicationField, raw: string | boolean | string[] | undefined): string | boolean {
+  if (field.multiple) {
+    const selected = Array.isArray(raw) ? raw : []
+    return selected.map((value) => optionLabel(field, value)).join(', ')
+  }
+  if (field.type === 'checkbox') return raw === true
+  if (typeof raw === 'string') return optionLabel(field, raw)
   return ''
 }
 
@@ -67,19 +88,30 @@ export default function JobApplicationForm({ webhookUrl = N8N_WEBHOOK_URL }: { w
     if (!steps.includes(currentStep)) setCurrentStep(steps[0] || 1)
   }, [steps, currentStep])
 
-  const stepFields = fields.filter((f) => (f.step || 1) === currentStep)
+  const visibleFields = fields.filter((f) => fieldIsVisible(f, values))
+  const stepFields = visibleFields.filter((f) => (f.step || 1) === currentStep)
   const isLast = currentStep === steps[steps.length - 1]
   const stepIndex = steps.indexOf(currentStep)
 
-  const setValue = (name: string, value: string | boolean) => {
-    setValues((prev) => ({ ...prev, [name]: value }))
-    setErrors((prev) => ({ ...prev, [name]: '' }))
+  const setValue = (name: string, value: string | boolean | string[]) => {
+    const drop = new Set(fieldsClearedBy(name))
+    setValues((prev) => {
+      const next: Values = { ...prev, [name]: value }
+      for (const key of drop) delete next[key]
+      return next
+    })
+    setErrors((prev) => {
+      const next = { ...prev, [name]: '' }
+      for (const key of drop) delete next[key]
+      return next
+    })
   }
 
   const validateStep = (step: number) => {
     const next: Errors = {}
-    for (const field of fields.filter((f) => (f.step || 1) === step)) {
-      const err = validateField(field, values[field.name] ?? (field.type === 'checkbox' ? false : ''), file)
+    for (const field of visibleFields.filter((f) => (f.step || 1) === step)) {
+      const fallback = field.multiple ? [] : field.type === 'checkbox' ? false : ''
+      const err = validateField(field, values[field.name] ?? fallback, file)
       if (err) next[field.name] = err
     }
     setErrors((prev) => ({ ...prev, ...next }))
@@ -125,18 +157,9 @@ export default function JobApplicationForm({ webhookUrl = N8N_WEBHOOK_URL }: { w
     if (!validateStep(currentStep)) return
     if (isPreview) return
 
-    const answers: ApplicationAnswer[] = fields
+    const answers: ApplicationAnswer[] = visibleFields
       .filter((f) => f.type !== 'file')
-      .map((f) => {
-        const raw = values[f.name]
-        const value =
-          f.type === 'checkbox'
-            ? raw === true
-            : typeof raw === 'string'
-              ? optionLabel(f, raw)
-              : ''
-        return { name: f.name, label: f.label, value }
-      })
+      .map((f) => ({ name: f.name, label: f.label, value: answerValue(f, values[f.name]) }))
 
     const email = String(values.email || '').trim()
     const payload = {
@@ -152,7 +175,11 @@ export default function JobApplicationForm({ webhookUrl = N8N_WEBHOOK_URL }: { w
       residencyStatus: String(values.residencyStatus || ''),
       educationLevel: String(values.educationLevel || ''),
       secondaryStatus: String(values.secondaryStatus || ''),
+      educationArea: String(values.educationArea || ''),
       careerRun: String(values.careerRun || ''),
+      salesSectors: String(answers.find((row) => row.name === 'salesSectors')?.value || ''),
+      motivation: String(values.motivation || ''),
+      healthAttraction: String(values.healthAttraction || ''),
       salesExperienceYears: String(values.salesExperienceYears || ''),
       healthSalesExperience: String(values.healthSalesExperience || ''),
       healthSalesExperienceDesc: String(values.healthSalesExperienceDesc || ''),
@@ -273,7 +300,7 @@ export default function JobApplicationForm({ webhookUrl = N8N_WEBHOOK_URL }: { w
                     key={field.name}
                     field={field}
                     index={globalIndex >= 0 ? globalIndex : index}
-                    value={values[field.name] ?? (field.type === 'checkbox' ? false : '')}
+                    value={values[field.name] ?? (field.multiple ? [] : field.type === 'checkbox' ? false : '')}
                     file={file}
                     error={errors[field.name]}
                     onChange={(v) => setValue(field.name, v)}
@@ -348,10 +375,10 @@ function FieldControl({
 }: {
   field: ApplicationField
   index: number
-  value: string | boolean
+  value: string | boolean | string[]
   file: File | null
   error?: string
-  onChange: (value: string | boolean) => void
+  onChange: (value: string | boolean | string[]) => void
   onFile: (file: File | null) => void
 }) {
   const requiredMark = field.required ? ' *' : ''
@@ -411,6 +438,35 @@ function FieldControl({
           <div className="text-sm font-lora text-verde-profundo leading-relaxed">{field.label}</div>
         </label>
         {error && <p className="text-vino text-sm mt-2">{error}</p>}
+      </div>
+    )
+  }
+
+  if (field.type === 'select' && field.multiple) {
+    const selected = Array.isArray(value) ? value : []
+    const toggle = (option: string) => {
+      const next = selected.includes(option)
+        ? selected.filter((item) => item !== option)
+        : [...selected, option]
+      onChange(next)
+    }
+    return (
+      <div className="space-y-2" data-cms-field={cmsField}>
+        <p className="font-montserrat font-medium text-verde-profundo">{field.label}</p>
+        <div className="space-y-2">
+          {(field.options || []).map((opt) => (
+            <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={selected.includes(opt.value)}
+                onChange={() => toggle(opt.value)}
+                className="w-4 h-4 text-verde-profundo rounded"
+              />
+              <span className="font-lora text-sm">{opt.label}</span>
+            </label>
+          ))}
+        </div>
+        {error && <p className="text-vino text-xs mt-1">{error}</p>}
       </div>
     )
   }
@@ -528,7 +584,8 @@ function SuccessView() {
         </div>
         <p className="font-lora text-gris-neutro leading-relaxed">
           Nuestro equipo va a revisar tu perfil y, si se alinea con los requisitos del puesto, nos
-          pondremos en contacto.
+          pondremos en contacto. Sabemos que completar una postulación lleva tiempo, por lo que
+          desde Anthrovia HR valoramos tu interés y por haberte tomado ese momento para aplicar.
         </p>
         <div className="p-6 bg-crema/50 rounded-xl border border-durazno/10 space-y-4">
           <p className="font-montserrat text-sm font-medium text-verde-profundo">Seguinos en nuestras redes:</p>
@@ -557,12 +614,12 @@ function SuccessView() {
             </a>
           </div>
         </div>
-        <button
-          onClick={() => window.location.reload()}
+        <a
+          href="/"
           className="text-verde-profundo hover:text-terracota font-montserrat text-sm font-medium underline transition-colors"
         >
           Volver al inicio
-        </button>
+        </a>
       </motion.div>
     </div>
   )

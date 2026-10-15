@@ -9,7 +9,7 @@ import { Footer } from "@/components/Footer"
 import { Card, CardContent } from "@/components/ui/card"
 
 export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
-  const { content } = useCMS()
+  const { content, isLoading, cmsError } = useCMS()
   const navigate = useNavigate()
   const [currentSlide, setCurrentSlide] = useState(0)
 
@@ -21,10 +21,15 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
   const article = newsSection?.newsItems.find(item => item.id === articleId)
 
   if (!article) {
+    const message = isLoading
+      ? 'Cargando la noticia…'
+      : cmsError
+        ? 'No pudimos cargar esta noticia. Probá de nuevo en unos minutos.'
+        : 'Noticia no encontrada'
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface text-on-surface flex items-center justify-center px-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Noticia no encontrada</h1>
+          <h1 className="font-heading text-2xl text-on-surface mb-4">{message}</h1>
           <Button onClick={() => navigate('/news')}>Volver a Noticias</Button>
         </div>
       </div>
@@ -45,7 +50,7 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
       case 'pdf': return <FileText className="w-5 h-5 text-red-500" />;
       case 'excel': return <FileSpreadsheet className="w-5 h-5 text-green-500" />;
       case 'image': return <ImageIcon className="w-5 h-5 text-blue-500" />;
-      default: return <LinkIcon className="w-5 h-5 text-gray-500" />;
+      default: return <LinkIcon className="w-5 h-5 text-on-surface-variant" />;
     }
   };
 
@@ -80,7 +85,7 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm group-hover:bg-primary group-hover:text-white transition-colors">
                {listMatch[1]}
              </span>
-             <p className="text-lg text-gray-700 leading-relaxed pt-0.5">
+             <p className="font-body text-lg text-on-surface-variant leading-relaxed pt-0.5">
                {listMatch[2].split('**').map((part, i) => 
                  i % 2 === 1 ? <strong key={i} className="text-primary font-semibold">{part}</strong> : part
                )}
@@ -93,7 +98,7 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
 
       // Standard paragraphs with basic bold support
       return (
-        <p key={index} className="mb-6 leading-relaxed text-gray-700 text-lg">
+        <p key={index} className="mb-6 leading-relaxed text-on-surface-variant font-body text-lg">
           {line.split('**').map((part, i) => 
             i % 2 === 1 ? <strong key={i} className="text-primary font-semibold">{part}</strong> : part
           )}
@@ -103,7 +108,7 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface text-on-surface">
       <Navbar />
       
       <main className="container mx-auto px-4 py-24">
@@ -116,7 +121,7 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
           Volver a Noticias
         </Button>
 
-        <article className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+        <article className="max-w-4xl mx-auto bg-surface-container-lowest rounded-2xl shadow-xl overflow-hidden border border-outline-variant/30">
           {/* ... carousel code ... */}
           <div className="relative h-[400px] md:h-[500px] bg-black group">
             {mediaList.length > 0 ? (
@@ -165,7 +170,7 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
                 )}
               </>
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-500">
+              <div className="w-full h-full flex items-center justify-center text-on-surface-variant">
                 Sin imagen
               </div>
             )}
@@ -176,10 +181,10 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
               <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-semibold mb-4 inline-block">
                 {article.category}
               </span>
-              <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight text-gray-900 tracking-tight">
+              <h1 className="font-heading text-3xl md:text-5xl mb-6 leading-tight text-on-surface tracking-tight">
                 {article.title}
               </h1>
-              <div className="flex items-center gap-6 text-gray-500">
+              <div className="flex items-center gap-6 text-on-surface-variant font-body">
                 <div className="flex items-center gap-2">
                   <Calendar className="h-5 w-5 text-primary/60" />
                   <span>{formatDate(article.date)}</span>
@@ -191,14 +196,14 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
               </div>
             </div>
 
-            <div className="prose prose-lg max-w-none text-gray-800 mb-8">
+            <div className="max-w-none text-on-surface mb-8">
               {renderContent(article.content || article.excerpt)}
             </div>
 
             {article.citation && (
               <div className="mb-12 pt-8 border-t border-gray-100 flex items-center gap-2">
                 <LinkIcon className="w-4 h-4 text-primary" />
-                <p className="text-sm text-gray-500 italic">
+                <p className="text-sm text-on-surface-variant italic font-body">
                   Fuente: <a 
                     href={article.citation} 
                     target="_blank" 
@@ -213,7 +218,7 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
 
             {article.attachments && article.attachments.length > 0 && (
               <div className="border-t pt-8">
-                <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                <h3 className="font-heading text-xl text-on-surface mb-6 flex items-center gap-2">
                   <Download className="w-5 h-5" />
                   Recursos Descargables
                 </h3>
@@ -222,14 +227,14 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
                     <Card key={attachment.id} className="hover:shadow-md transition-shadow">
                       <CardContent className="p-4 flex items-center justify-between">
                         <div className="flex items-center gap-3 overflow-hidden">
-                          <div className="p-2 bg-gray-100 rounded-lg">
+                          <div className="p-2 bg-surface-container rounded-lg">
                             {getIcon(attachment.type)}
                           </div>
                           <div className="flex flex-col min-w-0">
-                            <span className="font-medium text-gray-900 truncate" title={attachment.name}>
+                            <span className="font-medium text-on-surface truncate" title={attachment.name}>
                               {attachment.name}
                             </span>
-                            <span className="text-xs text-gray-500 uppercase">{attachment.type}</span>
+                            <span className="text-xs text-on-surface-variant uppercase">{attachment.type}</span>
                           </div>
                         </div>
                         <Button variant="outline" size="sm" asChild>

@@ -10,6 +10,7 @@ import DossierModulesPage from './pages/DossierModulesPage'
 import { BookingPage } from './pages/BookingPage'
 import { ResourcesPage } from './pages/ResourcesPage'
 import { ResourceDetailPage } from './pages/ResourceDetailPage'
+import { NotFoundPage } from './pages/NotFoundPage'
 import { ScrollToTop } from './components/ScrollToTop'
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/dossier/modulos" element={<DossierModulesPage />} />
         <Route path="/recursos" element={<ResourcesPage />} />
         <Route path="/recursos/:slug" element={<ResourceDetailPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   )

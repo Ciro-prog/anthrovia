@@ -244,7 +244,7 @@ export function applyRemoteSections(
   return { sections }
 }
 
-export async function fetchSiteContent(): Promise<SiteContent> {
+export async function fetchSiteContent(): Promise<{ content: SiteContent; reachable: boolean }> {
   const depth = 'depth=2'
   const [home, learning, coursesRes] = await Promise.all([
     cmsFetch<PayloadList<PageDoc>>(`/api/pages?where[slug][equals]=home&limit=1&${depth}`),
@@ -252,16 +252,18 @@ export async function fetchSiteContent(): Promise<SiteContent> {
     cmsFetch<PayloadList<CourseDoc>>('/api/courses?limit=50&depth=2'),
   ])
 
-  if (!home && !learning && !coursesRes) {
-    return {
-      ...initialContent,
-      sections: initialContent.sections.map((s) =>
-        s.type === 'courses' ? { ...s, courses: coursesData } : s
-      ),
-    }
+  const fallback: SiteContent = {
+    ...initialContent,
+    sections: initialContent.sections.map((s) =>
+      s.type === 'courses' ? { ...s, courses: coursesData } : s
+    ),
   }
 
-  let sections = [...initialContent.sections]
+  if (!home && !learning && !coursesRes) {
+    return { content: fallback, reachable: false }
+  }
+
+  let sections = [...fallback.sections]
 
   const homeMapped = pageSectionsFromDoc(home?.docs[0])
   if (homeMapped.length > 0) {
@@ -302,7 +304,7 @@ export async function fetchSiteContent(): Promise<SiteContent> {
     })
   }
 
-  return { sections }
+  return { content: { sections }, reachable: true }
 }
 
 export type LeadPayload = {
@@ -543,7 +545,11 @@ export type ApplicationPayload = {
   residencyStatus?: string
   educationLevel?: string
   secondaryStatus?: string
+  educationArea?: string
   careerRun?: string
+  salesSectors?: string
+  motivation?: string
+  healthAttraction?: string
   salesExperienceYears?: string
   healthSalesExperience?: string
   healthSalesExperienceDesc?: string

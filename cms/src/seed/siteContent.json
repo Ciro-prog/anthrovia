@@ -336,7 +336,7 @@
       "id": "settings",
       "type": "settings",
       "isVisible": true,
-      "cvUrl": "https://talento.anthroviahr.com/",
+      "cvUrl": "/postulacion",
       "cvText": "Dejanos tu CV",
       "footerTagline": "Personas, estrategia y tecnología para transformar la gestión de Recursos Humanos."
     }

@@ -45,6 +45,7 @@ export const ContactSection = ({
   })
   const [submitState, setSubmitState] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [submitError, setSubmitError] = useState("")
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 
   useEffect(() => {
     const applyServiceFromUrl = () => {
@@ -79,6 +80,15 @@ export const ContactSection = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const nextErrors: Record<string, string> = {}
+    if (!formData.name.trim()) nextErrors.name = "Completá tu nombre"
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) nextErrors.email = "Email inválido"
+    if (formData.phone.replace(/\D/g, "").length < 8) nextErrors.phone = "Ingresá un WhatsApp válido"
+    if (!formData.service.trim()) nextErrors.service = "Elegí un servicio"
+    if (!formData.message.trim()) nextErrors.message = "Escribí un mensaje"
+    setFieldErrors(nextErrors)
+    if (Object.keys(nextErrors).length > 0) return
+
     setSubmitState("loading")
     setSubmitError("")
 
@@ -207,6 +217,7 @@ export const ContactSection = ({
                       required
                       className="w-full bg-transparent border border-outline-variant rounded-xl px-4 py-4 h-auto font-body text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                     />
+                    {fieldErrors.name && <p className="font-body text-sm text-error">{fieldErrors.name}</p>}
                   </div>
                   <div className="flex flex-col gap-2 relative">
                     <label className="font-label-md text-[12px] text-on-surface-variant uppercase tracking-widest absolute -top-2 left-4 bg-surface-container-lowest px-1 z-10" htmlFor="email">
@@ -222,6 +233,7 @@ export const ContactSection = ({
                       required
                       className="w-full bg-transparent border border-outline-variant rounded-xl px-4 py-4 h-auto font-body text-on-surface focus:border-primary focus:ring-1 focus:ring-primary"
                     />
+                    {fieldErrors.email && <p className="font-body text-sm text-error">{fieldErrors.email}</p>}
                   </div>
                 </div>
 
@@ -234,11 +246,13 @@ export const ContactSection = ({
                       id="phone"
                       name="phone"
                       type="tel"
+                      required
                       placeholder="+54 9 11 1234 5678"
                       value={formData.phone}
                       onChange={handleChange}
                       className="w-full bg-transparent border border-outline-variant rounded-xl px-4 py-4 h-auto font-body text-on-surface focus:border-primary"
                     />
+                    {fieldErrors.phone && <p className="font-body text-sm text-error">{fieldErrors.phone}</p>}
                   </div>
                   <div className="flex flex-col gap-2 relative">
                     <label className="font-label-md text-[12px] text-on-surface-variant uppercase tracking-widest absolute -top-2 left-4 bg-surface-container-lowest px-1 z-10" htmlFor="service">
@@ -257,6 +271,7 @@ export const ContactSection = ({
                         <option key={opt} value={opt}>{opt}</option>
                       ))}
                     </select>
+                    {fieldErrors.service && <p className="font-body text-sm text-error">{fieldErrors.service}</p>}
                   </div>
                 </div>
 
@@ -274,6 +289,7 @@ export const ContactSection = ({
                     rows={4}
                     className="w-full bg-transparent border border-outline-variant rounded-xl px-4 py-4 font-body text-on-surface focus:border-primary resize-none min-h-[120px]"
                   />
+                  {fieldErrors.message && <p className="font-body text-sm text-error">{fieldErrors.message}</p>}
                 </div>
 
                 <div className="mt-2 flex flex-col gap-3">

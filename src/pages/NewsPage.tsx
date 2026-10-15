@@ -30,23 +30,23 @@ const NewsCard = ({ article }: { article: NewsItem }) => {
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
         <div className="absolute top-4 left-4">
-          <span className="bg-gradient-to-r from-primary to-accent-teal text-white px-3 py-1 rounded-full text-xs font-semibold">
+          <span className="bg-primary text-on-primary px-3 py-1 rounded-full text-xs font-label-md uppercase tracking-wider">
             {article.category}
           </span>
         </div>
       </div>
 
       <CardHeader className="flex-grow">
-        <CardTitle className="text-xl text-primary group-hover:text-accent-burgundy transition-colors line-clamp-2">
+        <CardTitle className="font-heading text-xl text-on-surface group-hover:text-primary transition-colors line-clamp-2">
           {article.title}
         </CardTitle>
-        <CardDescription className="text-gray-600 leading-relaxed">
+        <CardDescription className="font-body text-on-surface-variant leading-relaxed">
           <p className="line-clamp-3">{article.excerpt}</p>
         </CardDescription>
       </CardHeader>
 
       <CardContent>
-        <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
+        <div className="flex items-center gap-4 text-sm text-on-surface-variant mb-4">
           <div className="flex items-center gap-1">
             <Calendar className="h-4 w-4" />
             <span>{formatDate(article.date)}</span>
@@ -70,7 +70,7 @@ const NewsCard = ({ article }: { article: NewsItem }) => {
 }
 
 export const NewsPage = () => {
-  const { content } = useCMS()
+  const { content, isLoading, cmsError } = useCMS()
   const navigate = useNavigate()
   
   const newsSection = content.sections.find(s => s.id === 'news') as NewsSectionContent
@@ -81,10 +81,10 @@ export const NewsPage = () => {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface text-on-surface">
       <Navbar />
       
-      <main className="container mx-auto px-4 py-24">
+      <main className="max-w-container-max mx-auto px-margin-mobile lg:px-margin-desktop pt-36 pb-24">
         <Button 
           variant="ghost" 
           onClick={() => navigate('/')}
@@ -96,23 +96,36 @@ export const NewsPage = () => {
 
         <div className="text-center mb-16">
           <h1 
-            className="text-4xl md:text-5xl font-bold mb-4"
-            style={getTextStyle(newsSection?.titleColor || '#1f2937')}
+            className="font-heading text-headline-lg-mobile md:text-headline-lg text-primary mb-4"
+            style={getTextStyle(newsSection?.titleColor || '')}
           >
             {newsSection?.newsPageTitle || newsSection?.title || 'Noticias y Recursos'}
           </h1>
           <div 
             className="h-1 w-24 mx-auto mb-6 rounded-full"
-            style={{ background: newsSection?.underlineColor || 'linear-gradient(to right, #e11d48, #9f1239)' }}
+            style={{ background: newsSection?.underlineColor || 'var(--primary, #004848)' }}
           ></div>
           <p 
-            className="text-lg max-w-2xl mx-auto"
-            style={getTextStyle(newsSection?.descriptionColor || '#4b5563')}
+            className="font-body text-body-lg text-on-surface-variant max-w-2xl mx-auto"
+            style={getTextStyle(newsSection?.descriptionColor || '')}
           >
             {newsSection?.newsPageSubtitle || newsSection?.subtitle || 'Explora todas nuestras publicaciones y recursos'}
           </p>
         </div>
 
+        {cmsError && (
+          <p className="font-body text-body-md text-on-surface-variant text-center mb-8">
+            No pudimos actualizar las noticias desde el CMS. Estás viendo la versión guardada en el sitio.
+          </p>
+        )}
+        {isLoading && articles.length === 0 && (
+          <p className="font-body text-body-lg text-on-surface-variant text-center">Cargando noticias…</p>
+        )}
+        {!isLoading && articles.length === 0 && (
+          <p className="font-body text-body-lg text-on-surface-variant text-center">
+            Todavía no hay noticias publicadas.
+          </p>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {articles.map((article) => (
             <NewsCard key={article.id} article={article} />

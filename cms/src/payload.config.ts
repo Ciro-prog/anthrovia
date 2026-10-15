@@ -223,18 +223,51 @@ export default buildConfig({
           slug: 'application-form',
           overrideAccess: true,
         })
-        const empty = !Array.isArray(form.fields) || form.fields.length === 0
-        if (empty) {
+        const remoteFields = Array.isArray(form.fields) ? form.fields : []
+        const names = new Set(
+          remoteFields.map((field) =>
+            field && typeof field === 'object' && 'name' in field ? String(field.name || '') : '',
+          ),
+        )
+        const missing = defaultApplicationFormFields.filter((field) => !names.has(field.name))
+        if (remoteFields.length === 0 || missing.length > 0) {
+          const byName = new Map(
+            remoteFields
+              .filter((field): field is { name?: string } => Boolean(field && typeof field === 'object'))
+              .map((field) => [String(field.name || ''), field]),
+          )
+          const fields = [
+            ...defaultApplicationFormFields.map((def) => {
+              const remote = byName.get(def.name)
+              if (!remote) return def
+              return {
+                ...def,
+                ...remote,
+                required: def.required,
+                step: def.step,
+                type: def.type,
+                multiple: def.multiple,
+                showWhenField: def.showWhenField,
+                showWhenEquals: def.showWhenEquals,
+                options: def.options || ('options' in remote ? remote.options : undefined),
+              }
+            }),
+            ...remoteFields.filter((field) => {
+              const name =
+                field && typeof field === 'object' && 'name' in field ? String(field.name || '') : ''
+              return name && !defaultApplicationFormFields.some((def) => def.name === name)
+            }),
+          ]
           await payload.updateGlobal({
             slug: 'application-form',
             data: {
               title: form.title || defaultApplicationFormTitle,
               subtitle: form.subtitle || defaultApplicationFormSubtitle,
-              fields: defaultApplicationFormFields,
+              fields,
             } as never,
             overrideAccess: true,
           })
-          payload.logger.info('Formulario de postulación: campos iniciales cargados')
+          payload.logger.info('Formulario de postulación: campos del brief sincronizados')
         }
       } catch {
         // global puede fallar si el schema aún no está listo

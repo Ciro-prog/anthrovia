@@ -37,7 +37,7 @@ const BADGE: Record<ResourceItem['category'], string> = {
 }
 
 export function ResourcesPage() {
-  const { resourcesPage, resources } = useCMS()
+  const { resourcesPage, resources, isLoading, cmsError } = useCMS()
   const page = { ...defaultResourcesPage, ...resourcesPage }
   const [filter, setFilter] = useState<ResourceItem['category'] | 'all'>('all')
   const visible =
@@ -162,6 +162,19 @@ export function ResourcesPage() {
               </div>
             </div>
 
+            {cmsError && (
+              <p className="font-body text-body-md text-on-surface-variant mb-8">
+                No pudimos actualizar el catálogo desde el CMS. Estás viendo la versión guardada en el sitio.
+              </p>
+            )}
+            {isLoading && resources.length === 0 && (
+              <p className="font-body text-body-md text-on-surface-variant mb-8">Cargando recursos…</p>
+            )}
+            {!isLoading && visible.length === 0 && (
+              <p className="font-body text-body-lg text-on-surface-variant">
+                No hay recursos en esta categoría.
+              </p>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {visible.map((item) => {
                 const Icon = ICONS[item.icon || 'description'] || FileText

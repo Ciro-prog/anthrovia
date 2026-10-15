@@ -42,6 +42,8 @@ export const BookingPage = () => {
   const [durationMinutes, setDurationMinutes] = useState(siteSettings.bookingDurationMinutes || 30)
   const [days, setDays] = useState<AvailabilityDay[]>([])
   const [loadingSlots, setLoadingSlots] = useState(false)
+  const [slotsError, setSlotsError] = useState("")
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [form, setForm] = useState({
     eventTypeId: "",
     name: "",
@@ -86,9 +88,16 @@ export const BookingPage = () => {
     let cancelled = false
     ;(async () => {
       setLoadingSlots(true)
+      setSlotsError("")
       const res = await fetchAvailability()
       if (cancelled) return
-      const nextDays = res?.days || []
+      if (!res) {
+        setDays([])
+        setSlotsError("No pudimos cargar los horarios. Probá de nuevo en unos minutos.")
+        setLoadingSlots(false)
+        return
+      }
+      const nextDays = res.days || []
       setDays(nextDays)
       setDurationMinutes(res?.durationMinutes || siteSettings.bookingDurationMinutes || 30)
       setForm((f) => {
@@ -107,7 +116,14 @@ export const BookingPage = () => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.eventTypeId || !form.date || !form.time) return
+    const nextErrors: Record<string, string> = {}
+    if (!form.name.trim()) nextErrors.name = "Completá tu nombre"
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) nextErrors.email = "Email inválido"
+    if (form.phone.replace(/\D/g, "").length < 8) nextErrors.phone = "Ingresá un WhatsApp válido"
+    if (!form.date || !form.time) nextErrors.slot = "Elegí un día y un horario"
+    setFieldErrors(nextErrors)
+    if (Object.keys(nextErrors).length > 0) return
+    if (!form.eventTypeId) return
     setStatus("loading")
     setError("")
     const startsAt = `${form.date}T${form.time}:00-03:00`
@@ -185,6 +201,10 @@ export const BookingPage = () => {
           </p>
         )}
 
+        {bookingEnabled && isCmsConfigured() && loadingTypes && (
+          <p className="font-body text-body-md text-on-surface-variant mb-8">Cargando la agenda…</p>
+        )}
+
         {bookingEnabled && isCmsConfigured() && !loadingTypes && eventTypes.length === 0 && (
           <p className="font-body text-body-md text-on-surface-variant mb-8">
             La agenda todavía no tiene un tipo de reunión activo. Escribinos desde Contacto.
@@ -199,11 +219,15 @@ export const BookingPage = () => {
             {loadingSlots && (
               <p className="font-body text-body-md text-on-surface-variant">Cargando horarios…</p>
             )}
-            {!loadingSlots && days.length === 0 && isCmsConfigured() && bookingEnabled && (
+            {!loadingSlots && slotsError && (
+              <p className="font-body text-body-md text-error">{slotsError}</p>
+            )}
+            {!loadingSlots && !slotsError && days.length === 0 && isCmsConfigured() && bookingEnabled && (
               <p className="font-body text-body-md text-on-surface-variant">
                 No hay turnos libres en las próximas semanas. Probá más tarde o escribinos.
               </p>
             )}
+            {fieldErrors.slot && <p className="font-body text-body-md text-error">{fieldErrors.slot}</p>}
             <div className="flex flex-wrap gap-2">
               {days.map((day) => {
                 const active = selectedDay?.date === day.date
@@ -269,6 +293,7 @@ export const BookingPage = () => {
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               className="rounded-xl h-12"
             />
+            {fieldErrors.name && <p className="font-body text-sm text-error">{fieldErrors.name}</p>}
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="booking-email" className="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant">
@@ -282,6 +307,7 @@ export const BookingPage = () => {
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               className="rounded-xl h-12"
             />
+            {fieldErrors.email && <p className="font-body text-sm text-error">{fieldErrors.email}</p>}
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="booking-phone" className="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant">
@@ -289,10 +315,13 @@ export const BookingPage = () => {
             </label>
             <Input
               id="booking-phone"
+              type="tel"
+              required
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
               className="rounded-xl h-12"
             />
+            {fieldErrors.phone && <p className="font-body text-sm text-error">{fieldErrors.phone}</p>}
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="booking-notes" className="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant">

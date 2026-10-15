@@ -39,6 +39,8 @@ interface CMSContextType {
   saveContent: () => Promise<void>
   isLoading: boolean
   cmsOnline: boolean
+  /** CMS configurado y ninguna lectura respondió. El contenido visible es el fallback local. */
+  cmsError: boolean
   isPreview: boolean
 }
 
@@ -96,6 +98,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [resources, setResources] = useState<ResourceItem[]>(defaultResources)
   const [isLoading, setIsLoading] = useState(true)
   const [cmsOnline, setCmsOnline] = useState(false)
+  const [cmsError, setCmsError] = useState(false)
   const isPreview = isPreviewMode()
   const cmsBase = getCmsBaseUrl()
 
@@ -136,7 +139,11 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           fetchResources(),
         ])
         if (!cancelled) {
-          setContent(remote)
+          setContent(remote.content)
+          const reachable =
+            remote.reachable || Boolean(settings) || Boolean(form) || Boolean(page) || Boolean(list)
+          setCmsOnline(Boolean(cmsBase) && reachable)
+          setCmsError(Boolean(cmsBase) && !reachable)
           if (settings) {
             setSiteSettings({
               ...defaultSiteSettings,
@@ -167,13 +174,13 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             })
           }
           if (list?.length) setResources(list)
-          setCmsOnline(Boolean(cmsBase))
         }
       } catch (err) {
         console.warn('CMS load failed, using local content', err)
         if (!cancelled) {
           setContent(fallbackContent)
           setCmsOnline(false)
+          setCmsError(Boolean(cmsBase))
         }
       } finally {
         if (!cancelled) setIsLoading(false)
@@ -299,6 +306,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         saveContent,
         isLoading,
         cmsOnline,
+        cmsError,
         isPreview,
       }}
     >

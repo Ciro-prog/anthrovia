@@ -7,6 +7,7 @@ import * as migration_20260902_001500_inbox_application_form from './20260902_00
 import * as migration_20260902_054400_resources from './20260902_054400_resources'
 import * as migration_20260913_151900_booking_availability from './20260913_151900_booking_availability'
 import * as migration_20261006_120000_booking_week_section_toggles from './20261006_120000_booking_week_section_toggles'
+import * as migration_20261015_140000_application_form_conditions from './20261015_140000_application_form_conditions'
 
 export const migrations = [
   {
@@ -53,5 +54,10 @@ export const migrations = [
     up: migration_20261006_120000_booking_week_section_toggles.up,
     down: migration_20261006_120000_booking_week_section_toggles.down,
     name: '20261006_120000_booking_week_section_toggles',
+  },
+  {
+    up: migration_20261015_140000_application_form_conditions.up,
+    down: migration_20261015_140000_application_form_conditions.down,
+    name: '20261015_140000_application_form_conditions',
   },
 ]

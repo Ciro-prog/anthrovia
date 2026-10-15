@@ -608,7 +608,7 @@ A pesar del avance tecnológico, el reporte de tendencias 2026 subraya un riesgo
       id: "settings",
       type: "settings",
       isVisible: true,
-      cvUrl: "https://talento.anthroviahr.com/",
+      cvUrl: "/postulacion",
       cvText: "Dejanos tu CV",
       footerTagline: "Personas, estrategia y tecnología para transformar la gestión de Recursos Humanos."
     },

@@ -4,14 +4,22 @@ export type SeedFormField = {
   type: 'text' | 'email' | 'tel' | 'textarea' | 'select' | 'checkbox' | 'file'
   required?: boolean
   step?: number
+  multiple?: boolean
+  showWhenField?: string
+  showWhenEquals?: string
   options?: { label: string; value: string }[]
 }
+
+const yesNo = [
+  { label: 'Sí', value: 'si' },
+  { label: 'No', value: 'no' },
+]
 
 export const defaultApplicationFormTitle =
   'Postulación – Asesor Comercial | Planes de Salud'
 
 export const defaultApplicationFormSubtitle =
-  'Gracias por tu interés en esta oportunidad. A través de este formulario buscamos conocer tu perfil, tu experiencia comercial y validar si estás alineado/a con la modalidad de trabajo y contratación.'
+  'Gracias por tu interés en esta oportunidad. A través de este formulario buscamos conocer tu perfil, tu experiencia comercial y validar si estás alineado/a con la modalidad de trabajo y contratación. La información será utilizada únicamente con fines de evaluación para procesos de selección. Completá todos los campos con datos reales y actualizados.'
 
 export const defaultApplicationFormFields: SeedFormField[] = [
   { name: 'lastName', label: 'Apellido', type: 'text', required: true, step: 1 },
@@ -19,8 +27,8 @@ export const defaultApplicationFormFields: SeedFormField[] = [
   { name: 'age', label: 'Edad', type: 'text', required: true, step: 1 },
   { name: 'phone', label: 'Teléfono con WhatsApp', type: 'tel', required: true, step: 1 },
   { name: 'email', label: 'Correo electrónico', type: 'email', required: true, step: 1 },
-  { name: 'linkedin', label: 'Perfil de LinkedIn (opcional)', type: 'text', required: false, step: 1 },
-  { name: 'country', label: 'País', type: 'text', required: true, step: 1 },
+  { name: 'linkedin', label: 'Perfil de LinkedIn (si tenés)', type: 'text', required: false, step: 1 },
+  { name: 'country', label: 'País de residencia actual', type: 'text', required: true, step: 1 },
   { name: 'province', label: 'Provincia', type: 'text', required: true, step: 1 },
   { name: 'city', label: 'Ciudad', type: 'text', required: true, step: 1 },
   {
@@ -50,7 +58,37 @@ export const defaultApplicationFormFields: SeedFormField[] = [
       { label: 'Universitario completo', value: 'Universitario completo' },
     ],
   },
-  { name: 'careerRun', label: 'Carrera o cursos', type: 'text', required: false, step: 1 },
+  {
+    name: 'secondaryStatus',
+    label: 'En relación al nivel secundario, ¿cuál es tu situación actual?',
+    type: 'select',
+    required: true,
+    step: 1,
+    showWhenField: 'educationLevel',
+    showWhenEquals: 'Secundario completo',
+    options: [
+      { label: 'Tengo todas las materias aprobadas', value: 'todas_aprobadas' },
+      { label: 'Tengo materias pendientes', value: 'materias_pendientes' },
+      { label: 'Cuento con analítico / título en trámite', value: 'analitico_en_tramite' },
+    ],
+  },
+  {
+    name: 'educationArea',
+    label: 'Área de formación principal',
+    type: 'select',
+    required: true,
+    step: 1,
+    options: [
+      { label: 'Comercial / Ventas', value: 'comercial' },
+      { label: 'Marketing', value: 'marketing' },
+      { label: 'Negocios', value: 'negocios' },
+      { label: 'Gestión', value: 'gestion' },
+      { label: 'Marketing de servicios de salud', value: 'marketing_salud' },
+      { label: 'APM', value: 'apm' },
+      { label: 'Otra', value: 'otra' },
+    ],
+  },
+  { name: 'careerRun', label: 'Carrera cursada o en curso', type: 'text', required: false, step: 1 },
   {
     name: 'salesExperienceYears',
     label: '¿Cuántos años de experiencia tenés en ventas?',
@@ -70,17 +108,33 @@ export const defaultApplicationFormFields: SeedFormField[] = [
     type: 'select',
     required: true,
     step: 2,
-    options: [
-      { label: 'Sí', value: 'si' },
-      { label: 'No', value: 'no' },
-    ],
+    options: yesNo,
   },
   {
     name: 'healthSalesExperienceDesc',
-    label: 'Contanos brevemente dónde y qué vendías',
+    label: 'Contanos brevemente dónde y qué vendías.',
     type: 'textarea',
-    required: false,
+    required: true,
     step: 2,
+    showWhenField: 'healthSalesExperience',
+    showWhenEquals: 'si',
+  },
+  {
+    name: 'salesSectors',
+    label: 'Además de salud, ¿en qué rubros vendiste?',
+    type: 'select',
+    required: false,
+    multiple: true,
+    step: 2,
+    options: [
+      { label: 'Seguros', value: 'seguros' },
+      { label: 'Financiera', value: 'financiera' },
+      { label: 'Tecnología', value: 'tecnologia' },
+      { label: 'Estética / cosmética', value: 'estetica' },
+      { label: 'Call center', value: 'call_center' },
+      { label: 'Venta consultiva', value: 'venta_consultiva' },
+      { label: 'Otro', value: 'otro' },
+    ],
   },
   {
     name: 'isWorking',
@@ -88,12 +142,51 @@ export const defaultApplicationFormFields: SeedFormField[] = [
     type: 'select',
     required: true,
     step: 2,
+    options: yesNo,
+  },
+  {
+    name: 'currentRole',
+    label: '¿En qué área o rol trabajás?',
+    type: 'text',
+    required: true,
+    step: 2,
+    showWhenField: 'isWorking',
+    showWhenEquals: 'si',
+  },
+  {
+    name: 'lookingForChange',
+    label: '¿Estás buscando cambiar de trabajo en el corto plazo?',
+    type: 'select',
+    required: true,
+    step: 2,
+    showWhenField: 'isWorking',
+    showWhenEquals: 'si',
+    options: yesNo,
+  },
+  {
+    name: 'willingToChange',
+    label:
+      'Este rol requiere dedicación full time y no aplica como complemento laboral. ¿Estarías dispuesto/a a evaluar un cambio si la propuesta resulta alineada a tus expectativas?',
+    type: 'select',
+    required: true,
+    step: 2,
+    showWhenField: 'lookingForChange',
+    showWhenEquals: 'no',
     options: [
       { label: 'Sí', value: 'si' },
       { label: 'No', value: 'no' },
+      { label: 'Tal vez / dependería de la propuesta', value: 'tal_vez' },
     ],
   },
-  { name: 'currentRole', label: '¿En qué área o rol trabajás?', type: 'text', required: false, step: 2 },
+  {
+    name: 'changeCondition',
+    label: '¿De qué dependería que evalúes un cambio laboral?',
+    type: 'textarea',
+    required: true,
+    step: 2,
+    showWhenField: 'willingToChange',
+    showWhenEquals: 'tal_vez',
+  },
   {
     name: 'startDate',
     label: '¿Cuándo podrías comenzar?',
@@ -108,15 +201,26 @@ export const defaultApplicationFormFields: SeedFormField[] = [
     ],
   },
   {
+    name: 'motivation',
+    label: '¿Por qué te interesa esta oportunidad laboral?',
+    type: 'textarea',
+    required: true,
+    step: 2,
+  },
+  {
+    name: 'healthAttraction',
+    label: '¿Qué te atrae del rubro salud y de comercializar planes médicos?',
+    type: 'textarea',
+    required: true,
+    step: 2,
+  },
+  {
     name: 'remoteWorkAgreement',
     label: 'La posición es 100% remota. ¿Estás de acuerdo con esta modalidad?',
     type: 'select',
     required: true,
     step: 3,
-    options: [
-      { label: 'Sí', value: 'si' },
-      { label: 'No', value: 'no' },
-    ],
+    options: yesNo,
   },
   {
     name: 'commissionSchemeAgreement',
@@ -125,10 +229,16 @@ export const defaultApplicationFormFields: SeedFormField[] = [
     type: 'select',
     required: true,
     step: 3,
-    options: [
-      { label: 'Sí', value: 'si' },
-      { label: 'No', value: 'no' },
-    ],
+    options: yesNo,
+  },
+  {
+    name: 'desiredIncomeScheme',
+    label: '¿Qué tipo de esquema de ingresos estás buscando actualmente?',
+    type: 'text',
+    required: true,
+    step: 3,
+    showWhenField: 'commissionSchemeAgreement',
+    showWhenEquals: 'no',
   },
   {
     name: 'contractTypeAgreement',
@@ -137,10 +247,7 @@ export const defaultApplicationFormFields: SeedFormField[] = [
     type: 'select',
     required: true,
     step: 3,
-    options: [
-      { label: 'Sí', value: 'si' },
-      { label: 'No', value: 'no' },
-    ],
+    options: yesNo,
   },
   {
     name: 'monotributo',
@@ -160,10 +267,7 @@ export const defaultApplicationFormFields: SeedFormField[] = [
     type: 'select',
     required: true,
     step: 3,
-    options: [
-      { label: 'Sí', value: 'si' },
-      { label: 'No', value: 'no' },
-    ],
+    options: yesNo,
   },
   {
     name: 'hasInternet',
@@ -171,10 +275,7 @@ export const defaultApplicationFormFields: SeedFormField[] = [
     type: 'select',
     required: true,
     step: 3,
-    options: [
-      { label: 'Sí', value: 'si' },
-      { label: 'No', value: 'no' },
-    ],
+    options: yesNo,
   },
   { name: 'cv', label: 'Adjuntá tu CV actualizado (PDF, JPG o PNG)', type: 'file', required: true, step: 3 },
   {

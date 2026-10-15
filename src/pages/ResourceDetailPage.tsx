@@ -13,13 +13,30 @@ const BADGE: Record<ResourceItem['category'], string> = {
   tecnologia: 'bg-primary-fixed text-on-primary-fixed-variant',
 }
 
+function ResourceMessage({ children }: { children: string }) {
+  return (
+    <div className="min-h-screen bg-surface text-on-surface">
+      <Navbar variant="home" />
+      <main className="pt-40 px-margin-mobile lg:px-margin-desktop max-w-3xl mx-auto pb-24">
+        <p className="font-body text-body-lg text-on-surface-variant">{children}</p>
+        <Link to="/recursos" className="inline-flex mt-6 font-label-md text-primary hover:underline">
+          Volver a recursos
+        </Link>
+      </main>
+    </div>
+  )
+}
+
 export function ResourceDetailPage() {
   const { slug } = useParams<{ slug: string }>()
-  const { resources, isLoading, isPreview } = useCMS()
+  const { resources, isLoading, isPreview, cmsError } = useCMS()
   const resource = resources.find((r) => r.slug === slug)
 
   if (!resource) {
-    if (isLoading || isPreview) return null
+    if (isLoading || isPreview) return <ResourceMessage>Cargando el recurso…</ResourceMessage>
+    if (cmsError) {
+      return <ResourceMessage>No pudimos cargar este recurso. Probá de nuevo en unos minutos.</ResourceMessage>
+    }
     return <Navigate to="/recursos" replace />
   }
 
@@ -30,6 +47,11 @@ export function ResourceDetailPage() {
     <div className="min-h-screen bg-surface text-on-surface">
       <Navbar variant="home" />
       <main className="pt-32 md:pt-36 lg:pt-40 pb-20">
+        {cmsError && (
+          <p className="max-w-3xl mx-auto px-margin-mobile lg:px-margin-desktop mb-6 font-body text-body-md text-on-surface-variant">
+            No pudimos actualizar el contenido desde el CMS. Estás viendo la versión guardada en el sitio.
+          </p>
+        )}
         <div className="max-w-3xl mx-auto px-margin-mobile lg:px-margin-desktop">
           <Link
             to="/recursos"

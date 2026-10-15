@@ -505,6 +505,12 @@ export interface ApplicationField {
   required?: boolean
   step?: number
   options?: ApplicationFieldOption[]
+  /** Select con varias opciones a la vez (rubros). */
+  multiple?: boolean
+  /** El campo solo se muestra si otro vale exactamente `equals`. */
+  showWhen?: { field: string; equals: string }
+  showWhenField?: string
+  showWhenEquals?: string
 }
 
 export interface ApplicationFormContent {

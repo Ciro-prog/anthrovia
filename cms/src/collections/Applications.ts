@@ -16,7 +16,11 @@ const FIXED_TEXT = [
   'residencyStatus',
   'educationLevel',
   'secondaryStatus',
+  'educationArea',
   'careerRun',
+  'salesSectors',
+  'motivation',
+  'healthAttraction',
   'salesExperienceYears',
   'healthSalesExperience',
   'healthSalesExperienceDesc',
@@ -160,7 +164,11 @@ export const Applications: CollectionConfig = {
           fields: [
             { name: 'educationLevel', type: 'text', label: 'Formación', ...ro },
             { name: 'secondaryStatus', type: 'text', label: 'Secundario', ...ro },
+            { name: 'educationArea', type: 'text', label: 'Área de formación', ...ro },
             { name: 'careerRun', type: 'text', label: 'Carrera', ...ro },
+            { name: 'salesSectors', type: 'textarea', label: 'Rubros', ...ro },
+            { name: 'motivation', type: 'textarea', label: 'Motivación', ...ro },
+            { name: 'healthAttraction', type: 'textarea', label: 'Interés en salud', ...ro },
             { name: 'salesExperienceYears', type: 'text', label: 'Años en ventas', ...ro },
             { name: 'healthSalesExperience', type: 'text', label: 'Ventas en salud', ...ro },
             {

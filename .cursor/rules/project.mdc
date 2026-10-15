@@ -1,0 +1,29 @@
+---
+description: Convenciones reales de Anthrovia HR para cerrar lo empezado sin inventar stack
+alwaysApply: true
+---
+
+# Anthrovia HR
+
+Sitio de servicios de RR. HH. Dos apps en el mismo repo. No hay tests. El `README.md` de la raíz está viejo: la fuente de verdad es el código y `PROGRESS.md`.
+
+## Stack que sí corre
+
+- Front (`/`): Vite 5, React 18, TypeScript, Tailwind 3, React Router 7, Framer Motion. Entry `src/main.tsx`. Rutas en `src/App.tsx`.
+- Contenido: Payload 3.49 + Next 15 + Postgres en `cms/`. La SPA lee `CMS_URL` o `VITE_CMS_URL` en `src/lib/cmsApi.ts`. Si el CMS no responde, usa el fallback de `src/data/`.
+- Deploy: SPA en Vercel, CMS en el VPS (puerto 60518). No muevas el CMS al front.
+- `zod`, `react-hook-form` y `@supabase/supabase-js` están en `package.json` y no participan del flujo. No los adopts en un cambio salvo que ese cambio lo pida. `check-auth.js`, `create-admin.js`, `check-storage.js` y `supabase_schema.sql` son legado.
+
+## Cómo trabajar
+
+- Cerrá lo incompleto de `PROGRESS.md` antes de sumar pantallas o colecciones.
+- Una feature no está lista sin UI, lógica, carga, error, validación de inputs y una línea actualizada en `PROGRESS.md`.
+- Copy de interfaz en español (Argentina). No inventes textos de marca.
+- En cada pantalla reutilizá los tokens que esa pantalla ya usa: `verde-profundo` / Playfair en `/postulacion`; tokens `primary` / `surface` en home, recursos y dossier. No unifiques el sistema visual en el mismo cambio.
+- Secretos solo en `.env`. No copies a código la clave de admin ni el webhook por defecto.
+
+## Dónde tocar
+
+- Páginas: `src/pages/` y `src/App.tsx`.
+- Lectura y envíos al CMS: `src/lib/cmsApi.ts`. Estado de contenido: `src/context/CMSContext.tsx`.
+- Schema, acceso y hooks: `cms/src/collections/` y `cms/src/globals/`. Si cambia el schema, migración en `cms/src/migrations/`.

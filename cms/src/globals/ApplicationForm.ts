@@ -70,6 +70,26 @@ export const ApplicationForm: GlobalConfig = {
         },
         { name: 'required', type: 'checkbox', defaultValue: true, label: 'Obligatorio' },
         {
+          name: 'multiple',
+          type: 'checkbox',
+          label: 'Varias opciones',
+          admin: {
+            condition: (_, sibling) => sibling?.type === 'select',
+          },
+        },
+        {
+          name: 'showWhenField',
+          type: 'text',
+          label: 'Mostrar si el campo',
+          admin: { description: 'Clave de otro campo. Vacío = siempre visible.' },
+        },
+        {
+          name: 'showWhenEquals',
+          type: 'text',
+          label: 'Vale',
+          admin: { description: 'El campo se muestra solo cuando esa clave tiene este valor.' },
+        },
+        {
           name: 'step',
           type: 'number',
           min: 1,

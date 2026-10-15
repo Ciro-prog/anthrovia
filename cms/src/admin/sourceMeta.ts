@@ -1,11 +1,12 @@
 export const SOURCE_META: Record<
   string,
-  { label: string; bg: string; fg: string; filter: 'home' | 'learning' | 'dossier' | 'postulacion' | 'other' }
+  { label: string; bg: string; fg: string; filter: 'home' | 'learning' | 'dossier' | 'postulacion' | 'agenda' | 'other' }
 > = {
   'home-contact': { label: 'Home', bg: '#dbeafe', fg: '#1e40af', filter: 'home' },
   'learning-contact': { label: 'Capacitaciones', bg: '#dcfce7', fg: '#166534', filter: 'learning' },
   dossier: { label: 'Dossier', bg: '#fef3c7', fg: '#92400e', filter: 'dossier' },
   postulacion: { label: 'Postulación', bg: '#ede9fe', fg: '#5b21b6', filter: 'postulacion' },
+  agenda: { label: 'Agenda', bg: '#e0f2fe', fg: '#075985', filter: 'agenda' },
   'contact-form': { label: 'Formulario', bg: '#e5e7eb', fg: '#374151', filter: 'other' },
 }
 
