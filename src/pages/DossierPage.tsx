@@ -556,15 +556,9 @@ export default function DossierPage() {
                 ))}
               </div>
               <div className="mt-10 p-6 bg-surface rounded-xl border border-outline-variant/20">
-                <p className="font-heading text-lg text-primary italic mb-4">
+                <p className="font-heading text-lg text-primary italic">
                   &ldquo;{page.pathQuote}&rdquo;
                 </p>
-                <a
-                  href={`mailto:${email}`}
-                  className="text-primary font-label-md text-label-md border-b border-primary pb-1 hover:text-primary-container transition-colors"
-                >
-                  {page.pathMailtoLabel}
-                </a>
               </div>
             </div>
 

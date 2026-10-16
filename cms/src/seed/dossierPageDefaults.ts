@@ -83,7 +83,6 @@ export const defaultDossierPage = {
     { n: '4', title: 'Solución', body: 'Presentamos cómo la plataforma resuelve tu caso específico.' },
   ],
   pathQuote: 'Hoy puede ser el primer paso hacia una gestión más simple.',
-  pathMailtoLabel: 'Quiero coordinar una reunión',
   formTitle: 'Conversemos',
   formSuccessTitle: '¡Gracias por escribirnos!',
   formSuccessText: 'Te contactaremos a la brevedad para coordinar una conversación.',

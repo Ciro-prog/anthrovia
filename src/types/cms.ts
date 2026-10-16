@@ -650,7 +650,6 @@ export interface DossierPageContent {
   pathTitle?: string
   steps?: { n: string; title: string; body: string }[]
   pathQuote?: string
-  pathMailtoLabel?: string
   formTitle?: string
   formSuccessTitle?: string
   formSuccessText?: string

@@ -607,7 +607,6 @@ export function mapCmsDossierPage(raw: Record<string, unknown>): DossierPageCont
       }))
       .filter((row) => row.title || row.body),
     pathQuote: raw.pathQuote ? String(raw.pathQuote) : undefined,
-    pathMailtoLabel: raw.pathMailtoLabel ? String(raw.pathMailtoLabel) : undefined,
     formTitle: raw.formTitle ? String(raw.formTitle) : undefined,
     formSuccessTitle: raw.formSuccessTitle ? String(raw.formSuccessTitle) : undefined,
     formSuccessText: raw.formSuccessText ? String(raw.formSuccessText) : undefined,

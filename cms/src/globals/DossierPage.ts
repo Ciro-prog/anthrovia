@@ -196,7 +196,6 @@ export const DossierPage: GlobalConfig = {
               ],
             },
             { name: 'pathQuote', type: 'textarea', label: 'Cita' },
-            { name: 'pathMailtoLabel', type: 'text', label: 'Enlace de mail' },
             { name: 'formTitle', type: 'text', label: 'Título del formulario' },
             { name: 'formSuccessTitle', type: 'text', label: 'Éxito — título' },
             { name: 'formSuccessText', type: 'textarea', label: 'Éxito — texto' },
