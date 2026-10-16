@@ -1,6 +1,6 @@
 # Progreso — Anthrovia HR
 
-Actualizado el 15 de octubre de 2026, después de cerrar lo que estaba a medias. El dossier no se tocó.
+Actualizado el 15 de octubre de 2026. El dossier no se tocó.
 
 ## Cómo está armado
 
@@ -17,18 +17,21 @@ Usable de punta a punta con el CMS en línea y con fallback local si el CMS no r
 - **Home** (`/`): navbar, hero, servicios, about, carrusel de posts, noticias, contacto y footer. Textos e imágenes salen de la página `home` del CMS, con merge sobre `src/data/initialContent.ts`. Live preview en el admin.
 - **Capacitaciones** (`/capacitaciones`): misma estructura (hero, formaciones, in company, contacto). Las cards salen de la página `learning`.
 - **Ficha de curso** (`/capacitaciones/:slug`): bloques del CMS, badge de cohorte, mensaje de carga y error si el CMS no responde. Un slug desconocido vuelve a `/capacitaciones`.
+- **Liderazgo Emocional** (`/capacitaciones/liderazgo-emocional`): ficha de venta del documento con el copy actual de la card. Formulario de nombre, email y teléfono → lead `source=liderazgo-manual`. Si el CMS falla, WhatsApp. La card apunta a esa ruta, no a `#contacto`.
 - **Contacto** (home y capacitaciones): valida nombre, email, WhatsApp, servicio y mensaje, y envía un lead a Payload. Muestra envío, éxito y error.
 - **Agenda** (`/agendar`): tipos de evento, días y horarios, validación de slot en el server, conflicto 409, éxito, error de red al cargar turnos, validación de nombre, email y WhatsApp, y alternativa por WhatsApp.
-- **Recursos** (`/recursos` y `/recursos/:slug`): listado con filtro, vacío, detalle, descarga, carga y error de CMS. Editables en `resources` y `resources-page`.
-- **Noticias** (`/news`, `/news/:id`): salen del bloque Noticias de la home (CMS) con fallback en `initialContent.ts`. Están en el navbar. Carga, vacío y “no encontrada” usan los tokens del sitio. Se eliminó `src/data/news.json`, que no se importaba.
-- **Postulación** (`/postulacion`): formulario de 3 pasos alineado con `mejoras.md`, condicionales, rubros múltiples, motivación, CV, éxito y error. El envío guarda las respuestas en `applications`. Si el CMS ya tenía el formulario viejo, al arrancar completa los campos que faltan.
+- **Recursos** (`/recursos` y `/recursos/:slug`): listado, detalle, descarga, imagen de card, carga y error. Un recurso despublicado no aparece; si el CMS responde con lista vacía, no se rellenan los 6 seed. Si `sectionVisible` está apagado, el menú se oculta y las rutas muestran Próximamente.
+- **Dossier landing** (`/dossier`): textos e imágenes editables en el global `dossier-page`. Conversemos valida nombre/email/día/franja, envía lead `source=dossier` y tiene fallback WhatsApp. Días y franjas siguen en Ajustes. El bloque “Explorar módulos” y `/dossier/modulos` no se editan.
+- **Noticias** (`/news`, `/news/:id`): salen del bloque Noticias de la home (CMS) con fallback en `initialContent.ts`. Están en el navbar. Carga, vacío y “no encontrada” usan los tokens del sitio.
+- **Postulación** (`/postulacion`): formulario de 3 pasos alineado con `mejoras.md`, condicionales, rubros múltiples, motivación, CV, éxito y error. El envío guarda las respuestas en `applications`.
 - **Legales**: modal de privacidad y términos, CMS con fallback en `src/data/legal-content.ts`.
-- **Navegación**: ruta 404, “Recursos gratuitos” y “Noticias” en el menú, y “Dejanos tu CV” apunta a `/postulacion` en el contenido local y en el seed. Si el CMS en producción ya publicó otra URL, esa sigue ganando hasta editarla en Ajustes.
-- **Admin Payload**: usuarios, borradores, live preview, inbox de leads, postulaciones y reservas (con error si una bandeja no carga), migraciones en `cms/src/migrations/`.
+- **Carga y 404**: textos editables en Ajustes → General. Una URL desconocida muestra “En mantenimiento” con navbar y footer. Los “Cargando…” de curso, recursos, noticias y agenda usan el copy de Ajustes.
+- **Navegación**: “Recursos gratuitos” solo si la sección está visible. “Dejanos tu CV” apunta a `/postulacion` en el contenido local y en el seed.
+- **Admin Payload**: usuarios, borradores, live preview, inbox de leads (incluye Manual Liderazgo), postulaciones y reservas. Migraciones en `cms/src/migrations/`.
 
 ## A medias
 
-- **Dossier** (`/dossier`, `/dossier/modulos`): queda fuera de este cierre, a pedido. La landing y los módulos siguen armados a mano, con logos de ejemplo. El formulario “Solicitar reunión” sí crea un lead. El contenido no se edita en el CMS.
+- **Dossier módulos** (`/dossier/modulos`): sigue fuera. No se edita el catálogo de módulos ni la simulación.
 
 ## No hacer todavía
 
@@ -36,8 +39,16 @@ Usable de punta a punta con el CMS en línea y con fallback local si el CMS no r
 - Reescribir formularios con Zod o React Hook Form.
 - Reactivar Supabase.
 - Reescribir el README salvo que se pida.
-- Tocar el dossier salvo un pedido explícito.
+- Editar `/dossier/modulos` desde el CMS.
+- Pago online ni descarga automática del manual de Liderazgo.
+
+## Agenda de llamadas
+
+Esto ya está en el CMS y no forma parte del dossier:
+
+- Ajustes → **Agenda** → **Días y horarios** (`bookingWeek`): qué días y qué franjas ofrece `/agendar`.
+- Ajustes → **Agenda** → **Duración de la reunión** (`bookingDurationMinutes`): minutos de cada turno. El endpoint `/api/availability` arma los horarios con ese valor y `/agendar` lo muestra.
 
 ## Siguiente
 
-1. Dossier, cuando se decida retomarlo: sacar los logos de ejemplo y definir qué textos salen del CMS.
+Para ver la landing dossier y los campos nuevos en el VPS hay que redeployar el CMS (incluye `20261015_213500_dossier_page`) y después Vercel. `/dossier/modulos` no se retoma.

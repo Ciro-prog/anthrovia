@@ -247,7 +247,7 @@ export const initialContent: SiteContent = {
           description: "Herramientas prácticas para liderar personas, gestionar tensiones y fortalecer la comunicación y el vínculo dentro de los equipos.",
           category: "Habilidades Blandas",
           imageUrl: "/ethos/formacion-5.jpg",
-          link: "#contacto"
+          link: "/capacitaciones/liderazgo-emocional"
         }
       ],
       formacionesComingSoon: {

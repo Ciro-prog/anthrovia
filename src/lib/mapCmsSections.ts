@@ -142,9 +142,11 @@ export function mapCmsBlocksToSections(
                       : null
                   const title = String(f.title || related?.title || '')
                   const slug = String(related?.slug || '')
+                  const itemId = String(f.itemId || related?.courseId || related?.id || slug || title)
                   if (!title && !slug) return null
+                  const liderazgo = itemId === 'liderazgo-emocional' || slug === 'liderazgo-emocional'
                   return {
-                    id: String(f.itemId || related?.courseId || related?.id || slug || title),
+                    id: itemId,
                     title,
                     description: String(f.description || related?.description || ''),
                     category: String(f.category || related?.category || ''),
@@ -153,7 +155,11 @@ export function mapCmsBlocksToSections(
                       f.image || related?.image,
                       (f.imageUrl || related?.imageUrl) as string,
                     ),
-                    link: slug ? `/capacitaciones/${slug}` : '#contacto',
+                    link: slug
+                      ? `/capacitaciones/${slug}`
+                      : liderazgo
+                        ? '/capacitaciones/liderazgo-emocional'
+                        : '#contacto',
                   }
                 })
                 .filter((row): row is NonNullable<typeof row> => Boolean(row))

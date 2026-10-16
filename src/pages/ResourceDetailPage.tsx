@@ -2,8 +2,10 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { ArrowLeft, Download, FileText } from 'lucide-react'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
+import { HoldingPage } from '@/components/HoldingPage'
 import { useCMS } from '@/context/CMSContext'
-import { RESOURCE_CATEGORY_LABEL } from '@/data/resourcesDefaults'
+import { defaultResourcesPage, RESOURCE_CATEGORY_LABEL } from '@/data/resourcesDefaults'
+import { siteLoadingMessage } from '@/lib/siteCopy'
 import type { ResourceItem } from '@/types/cms'
 
 const BADGE: Record<ResourceItem['category'], string> = {
@@ -29,11 +31,26 @@ function ResourceMessage({ children }: { children: string }) {
 
 export function ResourceDetailPage() {
   const { slug } = useParams<{ slug: string }>()
-  const { resources, isLoading, isPreview, cmsError } = useCMS()
+  const { resources, resourcesPage, isLoading, isPreview, cmsError, siteSettings } = useCMS()
+  const page = { ...defaultResourcesPage, ...resourcesPage }
+
+  if (page.sectionVisible === false && !isPreview) {
+    return (
+      <HoldingPage
+        eyebrow="Recursos"
+        title={page.comingSoonTitle || 'Próximamente'}
+        message={page.comingSoonText || 'Estamos preparando recursos nuevos. Volvé en unos días.'}
+        ctaLabel="Volver al inicio"
+      />
+    )
+  }
+
   const resource = resources.find((r) => r.slug === slug)
 
   if (!resource) {
-    if (isLoading || isPreview) return <ResourceMessage>Cargando el recurso…</ResourceMessage>
+    if (isLoading || isPreview) {
+      return <ResourceMessage>{siteLoadingMessage(siteSettings, 'Cargando el recurso…')}</ResourceMessage>
+    }
     if (cmsError) {
       return <ResourceMessage>No pudimos cargar este recurso. Probá de nuevo en unos minutos.</ResourceMessage>
     }
@@ -66,6 +83,11 @@ export function ResourceDetailPage() {
           >
             {RESOURCE_CATEGORY_LABEL[resource.category]}
           </span>
+          {resource.image && (
+            <div className="mb-8 rounded-2xl overflow-hidden max-h-80">
+              <img src={resource.image} alt="" className="w-full h-full object-cover" />
+            </div>
+          )}
           <h1 data-cms-field="title" className="font-heading text-headline-lg-mobile md:text-headline-lg text-primary-container mt-4 mb-6">
             {resource.title}
           </h1>

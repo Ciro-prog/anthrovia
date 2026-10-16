@@ -47,6 +47,7 @@ export const Leads: CollectionConfig = {
         { label: 'Home', value: 'home-contact' },
         { label: 'Capacitaciones', value: 'learning-contact' },
         { label: 'Dossier', value: 'dossier' },
+        { label: 'Manual Liderazgo', value: 'liderazgo-manual' },
         { label: 'Formulario', value: 'contact-form' },
       ],
       admin: {

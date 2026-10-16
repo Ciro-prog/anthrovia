@@ -3,6 +3,8 @@ import {
   ApplicationFormContent,
   CoursePageContent,
   ResourceFile,
+  DossierIcon,
+  DossierPageContent,
   ResourceItem,
   ResourcesPageContent,
   SectionContent,
@@ -468,6 +470,7 @@ export function mapCmsResource(raw: Record<string, unknown>): ResourceItem {
         ? category
         : 'reclutamiento',
     icon: (raw.icon as ResourceItem['icon']) || 'description',
+    image: mediaRefUrl(raw.image as MediaRef) || undefined,
     excerpt: String(raw.excerpt || ''),
     body: raw.body ? String(raw.body) : undefined,
     files,
@@ -483,6 +486,9 @@ export function mapCmsResourcesPage(raw: Record<string, unknown>): ResourcesPage
         .filter((s) => s.title || s.text)
     : undefined
   return {
+    sectionVisible: raw.sectionVisible !== false,
+    comingSoonTitle: raw.comingSoonTitle ? String(raw.comingSoonTitle) : undefined,
+    comingSoonText: raw.comingSoonText ? String(raw.comingSoonText) : undefined,
     eyebrow: raw.eyebrow ? String(raw.eyebrow) : undefined,
     title: raw.title ? String(raw.title) : undefined,
     subtitle: raw.subtitle ? String(raw.subtitle) : undefined,
@@ -515,10 +521,114 @@ export async function fetchResources(): Promise<ResourceItem[] | null> {
   return (list.docs || []).map(mapCmsResource)
 }
 
+function asRows(value: unknown): Record<string, unknown>[] {
+  if (!Array.isArray(value)) return []
+  return value.filter((row): row is Record<string, unknown> => Boolean(row && typeof row === 'object'))
+}
+
+function asIcon(value: unknown): DossierIcon | undefined {
+  return typeof value === 'string' && value ? (value as DossierIcon) : undefined
+}
+
+export function mapCmsDossierPage(raw: Record<string, unknown>): DossierPageContent {
+  return {
+    heroTitle: raw.heroTitle ? String(raw.heroTitle) : undefined,
+    heroHighlight: raw.heroHighlight ? String(raw.heroHighlight) : undefined,
+    heroSubtitle: raw.heroSubtitle ? String(raw.heroSubtitle) : undefined,
+    heroCtaPrimary: raw.heroCtaPrimary ? String(raw.heroCtaPrimary) : undefined,
+    heroCtaSecondary: raw.heroCtaSecondary ? String(raw.heroCtaSecondary) : undefined,
+    heroImage: mediaRefUrl(raw.heroImage as MediaRef) || undefined,
+    trustLabel: raw.trustLabel ? String(raw.trustLabel) : undefined,
+    trustLogos: asRows(raw.trustLogos)
+      .map((row) => ({ name: String(row.name || '') }))
+      .filter((row) => row.name),
+    challengeTitle: raw.challengeTitle ? String(raw.challengeTitle) : undefined,
+    challengeText: raw.challengeText ? String(raw.challengeText) : undefined,
+    challengeQuote: raw.challengeQuote ? String(raw.challengeQuote) : undefined,
+    challengeCta: raw.challengeCta ? String(raw.challengeCta) : undefined,
+    challengeChips: asRows(raw.challengeChips)
+      .map((row) => ({ label: String(row.label || '') }))
+      .filter((row) => row.label),
+    familiarTitle: raw.familiarTitle ? String(raw.familiarTitle) : undefined,
+    painPoints: asRows(raw.painPoints)
+      .map((row) => ({
+        icon: asIcon(row.icon),
+        title: String(row.title || ''),
+        body: String(row.body || ''),
+      }))
+      .filter((row) => row.title || row.body),
+    familiarQuote: raw.familiarQuote ? String(raw.familiarQuote) : undefined,
+    familiarCta: raw.familiarCta ? String(raw.familiarCta) : undefined,
+    transformTitle: raw.transformTitle ? String(raw.transformTitle) : undefined,
+    transformImage: mediaRefUrl(raw.transformImage as MediaRef) || undefined,
+    pillars: asRows(raw.pillars)
+      .map((row) => ({
+        icon: asIcon(row.icon),
+        title: String(row.title || ''),
+        body: String(row.body || ''),
+      }))
+      .filter((row) => row.title || row.body),
+    transformQuote: raw.transformQuote ? String(raw.transformQuote) : undefined,
+    transformCta: raw.transformCta ? String(raw.transformCta) : undefined,
+    featuresTitle: raw.featuresTitle ? String(raw.featuresTitle) : undefined,
+    features: asRows(raw.features)
+      .map((row) => ({
+        icon: asIcon(row.icon),
+        title: String(row.title || ''),
+        body: String(row.body || ''),
+        wide: row.wide === true,
+      }))
+      .filter((row) => row.title || row.body),
+    featuresQuote: raw.featuresQuote ? String(raw.featuresQuote) : undefined,
+    featuresCta: raw.featuresCta ? String(raw.featuresCta) : undefined,
+    statsTitle: raw.statsTitle ? String(raw.statsTitle) : undefined,
+    stats: asRows(raw.stats)
+      .map((row) => ({
+        icon: asIcon(row.icon),
+        value: String(row.value || ''),
+        label: String(row.label || ''),
+      }))
+      .filter((row) => row.value || row.label),
+    statsCta: raw.statsCta ? String(raw.statsCta) : undefined,
+    whyTitle: raw.whyTitle ? String(raw.whyTitle) : undefined,
+    whyText: raw.whyText ? String(raw.whyText) : undefined,
+    whyItems: asRows(raw.whyItems)
+      .map((row) => ({ title: String(row.title || ''), body: String(row.body || '') }))
+      .filter((row) => row.title || row.body),
+    whyCta: raw.whyCta ? String(raw.whyCta) : undefined,
+    whyImage: mediaRefUrl(raw.whyImage as MediaRef) || undefined,
+    whyQuote: raw.whyQuote ? String(raw.whyQuote) : undefined,
+    pathTitle: raw.pathTitle ? String(raw.pathTitle) : undefined,
+    steps: asRows(raw.steps)
+      .map((row) => ({
+        n: String(row.n || ''),
+        title: String(row.title || ''),
+        body: String(row.body || ''),
+      }))
+      .filter((row) => row.title || row.body),
+    pathQuote: raw.pathQuote ? String(raw.pathQuote) : undefined,
+    pathMailtoLabel: raw.pathMailtoLabel ? String(raw.pathMailtoLabel) : undefined,
+    formTitle: raw.formTitle ? String(raw.formTitle) : undefined,
+    formSuccessTitle: raw.formSuccessTitle ? String(raw.formSuccessTitle) : undefined,
+    formSuccessText: raw.formSuccessText ? String(raw.formSuccessText) : undefined,
+  }
+}
+
+export async function fetchDossierPage(): Promise<DossierPageContent | null> {
+  const raw = await cmsFetch<Record<string, unknown>>('/api/globals/dossier-page?depth=1')
+  return raw ? mapCmsDossierPage(raw) : null
+}
+
 export const defaultSiteSettings: SiteSettingsContent = {
   siteName: 'Anthrovia HR',
   bookingEnabled: true,
   defaultEventTypeSlug: 'llamada-15',
+  loadingTitle: 'Cargando',
+  loadingMessage: 'Estamos cargando el contenido…',
+  notFoundTitle: 'En mantenimiento',
+  notFoundMessage:
+    'Esta dirección no está disponible por ahora. Podés seguir recorriendo el sitio desde el menú o volver al inicio.',
+  notFoundCtaLabel: 'Volver al inicio',
   bookingDurationMinutes: 30,
   bookingDays: ['lun', 'mar', 'mie', 'jue', 'vie'],
   bookingWindows: [

@@ -14,6 +14,7 @@ import {
 } from "@/lib/cmsApi"
 import { useCMS } from "@/context/CMSContext"
 import { ContactSectionContent } from "@/types/cms"
+import { siteLoadingMessage } from "@/lib/siteCopy"
 
 type EventType = {
   id: string | number
@@ -202,7 +203,9 @@ export const BookingPage = () => {
         )}
 
         {bookingEnabled && isCmsConfigured() && loadingTypes && (
-          <p className="font-body text-body-md text-on-surface-variant mb-8">Cargando la agenda…</p>
+          <p className="font-body text-body-md text-on-surface-variant mb-8">
+            {siteLoadingMessage(siteSettings, "Cargando la agenda…")}
+          </p>
         )}
 
         {bookingEnabled && isCmsConfigured() && !loadingTypes && eventTypes.length === 0 && (
@@ -217,7 +220,9 @@ export const BookingPage = () => {
               Día
             </p>
             {loadingSlots && (
-              <p className="font-body text-body-md text-on-surface-variant">Cargando horarios…</p>
+              <p className="font-body text-body-md text-on-surface-variant">
+                {siteLoadingMessage(siteSettings, "Cargando horarios…")}
+              </p>
             )}
             {!loadingSlots && slotsError && (
               <p className="font-body text-body-md text-error">{slotsError}</p>

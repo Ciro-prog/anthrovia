@@ -4,6 +4,9 @@ import { Navbar } from "../components/Navbar"
 import { Footer } from "../components/Footer"
 import { useCMS } from "@/context/CMSContext"
 import { defaultSiteSettings, isCmsConfigured, submitLead } from "@/lib/cmsApi"
+import { mergeDossierPage } from "@/data/dossierPageDefaults"
+import { siteLoadingMessage } from "@/lib/siteCopy"
+import type { DossierIcon } from "@/types/cms"
 import {
   ArrowRight,
   FolderOpen,
@@ -26,107 +29,35 @@ import {
   Users,
   Smartphone,
   CheckCircle2,
+  type LucideIcon,
 } from "lucide-react"
 
-const trustLogos = ["TechCorp", "GlobalBank", "InnovateInc", "NexusGroup", "Synergy"]
+const DOSSIER_ICONS: Record<DossierIcon, LucideIcon> = {
+  folder: FolderOpen,
+  messages: MessagesSquare,
+  clipboard: ClipboardList,
+  trending: TrendingDown,
+  usersround: UsersRound,
+  activity: Activity,
+  network: Network,
+  message: MessageCircle,
+  linechart: LineChart,
+  smile: Smile,
+  git: GitBranch,
+  todo: ListTodo,
+  graduation: GraduationCap,
+  heart: HeartHandshake,
+  barchart: BarChart3,
+  building: Building2,
+  globe: Globe2,
+  users: Users,
+  smartphone: Smartphone,
+}
 
-const painPoints = [
-  {
-    icon: FolderOpen,
-    title: "Información dispersa",
-    body: "Datos fragmentados en múltiples plataformas que dificultan la trazabilidad.",
-  },
-  {
-    icon: MessagesSquare,
-    title: "Comunicación poco efectiva",
-    body: "Mensajes importantes que se pierden en el ruido diario de la organización.",
-  },
-  {
-    icon: ClipboardList,
-    title: "Tareas administrativas",
-    body: "Tiempo valioso invertido en procesos repetitivos de bajo impacto estratégico.",
-  },
-  {
-    icon: TrendingDown,
-    title: "Toma de decisiones lenta",
-    body: "Ausencia de datos en tiempo real para respaldar acciones críticas.",
-  },
-  {
-    icon: UsersRound,
-    title: "Experiencia poco uniforme",
-    body: "Procesos de onboarding y desarrollo inconsistentes entre equipos.",
-  },
-  {
-    icon: Activity,
-    title: "RRHH saturado",
-    body: "Equipos operando reactivamente en lugar de impulsar la estrategia.",
-  },
-]
-
-const pillars = [
-  { icon: Network, title: "Procesos centralizados", body: "Un único lugar para cada interacción." },
-  { icon: MessageCircle, title: "Comunicación ágil", body: "Mensajes claros y directos a toda la red." },
-  { icon: LineChart, title: "Decisiones con datos", body: "Métricas que respaldan tu intuición." },
-  { icon: Smile, title: "Mejor experiencia", body: "Interfaces humanas e intuitivas." },
-]
-
-const bentoFeatures = [
-  {
-    icon: GitBranch,
-    title: "Organización conectada",
-    body: "Estructuras claras, roles definidos y un directorio siempre actualizado para que todos sepan a quién contactar.",
-    wide: true,
-  },
-  {
-    icon: ListTodo,
-    title: "Gestión administrativa",
-    body: "Automatiza solicitudes, vacaciones y aprobaciones rutinarias.",
-  },
-  {
-    icon: GraduationCap,
-    title: "Desarrollo del talento",
-    body: "Evaluaciones de desempeño y planes de carrera claros y medibles.",
-  },
-  {
-    icon: HeartHandshake,
-    title: "Cultura organizacional",
-    body: "Muros de reconocimiento, encuestas de clima y comunicación interna.",
-  },
-  {
-    icon: BarChart3,
-    title: "Información para decisiones",
-    body: "Dashboards en tiempo real sobre rotación, ausentismo y desempeño.",
-  },
-]
-
-const stats = [
-  { icon: Building2, value: "+2.000", label: "Empresas" },
-  { icon: Globe2, value: "+40", label: "Países" },
-  { icon: Users, value: "+2M", label: "Colaboradores" },
-  { icon: Smartphone, value: "1", label: "Experiencia única" },
-]
-
-const whyItems = [
-  {
-    title: "Conocemos los desafíos",
-    body: "Hemos estado del otro lado del escritorio, y comprendemos la realidad que hoy enfrentás.",
-  },
-  {
-    title: "Tecnología con propósito",
-    body: "Identificamos dónde puede aportar valor, simplificar la gestión y acompañar tus objetivos.",
-  },
-  {
-    title: "Acompañamiento",
-    body: "Estamos presentes antes, durante y después de la implementación para favorecer una adopción exitosa y sostenible.",
-  },
-]
-
-const steps = [
-  { n: "1", title: "Contacto", body: "Nos dejás tus datos en el formulario." },
-  { n: "2", title: "Coordinamos", body: "Agendamos una breve llamada de exploración." },
-  { n: "3", title: "Conocemos", body: "Entendemos tus procesos y desafíos actuales." },
-  { n: "4", title: "Solución", body: "Presentamos cómo la plataforma resuelve tu caso específico." },
-]
+function DossierGlyph({ name, className }: { name?: DossierIcon; className?: string }) {
+  const Icon = (name && DOSSIER_ICONS[name]) || FolderOpen
+  return <Icon className={className} strokeWidth={1.5} />
+}
 
 const moduleCategories = [
   { title: "Comunicación interna", count: "5 módulos" },
@@ -159,7 +90,8 @@ function slotText(slot: { label: string; start: string; end: string }) {
 }
 
 export default function DossierPage() {
-  const { siteSettings, content } = useCMS()
+  const { siteSettings, content, dossierPage, cmsError, isLoading } = useCMS()
+  const page = mergeDossierPage(dossierPage)
   const contact = content.sections.find((s) => s.type === "contact") as
     | { email?: string; whatsappNumber?: string }
     | undefined
@@ -180,6 +112,7 @@ export default function DossierPage() {
 
   const [submitted, setSubmitted] = useState(false)
   const [submitState, setSubmitState] = useState<"idle" | "loading" | "error">("idle")
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [form, setForm] = useState({
     name: "",
     company: "",
@@ -196,7 +129,16 @@ export default function DossierPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (!resolvedDay || !resolvedSlot) return
+    const nextErrors: Record<string, string> = {}
+    if (!form.name.trim()) nextErrors.name = "Completá tu nombre"
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) nextErrors.email = "Email inválido"
+    if (form.phone.trim() && form.phone.replace(/\D/g, "").length < 8) {
+      nextErrors.phone = "Ingresá un WhatsApp válido"
+    }
+    if (!resolvedDay) nextErrors.day = "Elegí un día"
+    if (!resolvedSlot) nextErrors.slot = "Elegí una franja"
+    setFieldErrors(nextErrors)
+    if (Object.keys(nextErrors).length > 0) return
     setSubmitState("loading")
     const dayLabel = DAY_LABEL[resolvedDay] || resolvedDay
     const result = isCmsConfigured()
@@ -231,30 +173,39 @@ export default function DossierPage() {
       <Navbar />
 
       <main>
+        {cmsError && (
+          <p className="mx-margin-mobile md:mx-margin-desktop mt-28 font-body text-body-md text-on-surface-variant">
+            No pudimos actualizar el contenido desde el CMS. Estás viendo la versión guardada en el sitio.
+          </p>
+        )}
+        {isLoading && !page.heroTitle && (
+          <p className="mx-margin-mobile md:mx-margin-desktop mt-28 font-body text-body-md text-on-surface-variant">
+            {siteLoadingMessage(siteSettings, "Cargando…")}
+          </p>
+        )}
         {/* Hero */}
         <section className="w-full pt-28 md:pt-32 pb-16 md:pb-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
             <div className="flex flex-col gap-8">
               <h1 className="font-heading text-headline-lg-mobile md:text-display-lg text-on-surface leading-[1.1]">
-                Cuando Recursos Humanos deja de correr detrás de lo urgente,{" "}
-                <span className="text-primary italic">empieza a enfocarse en lo que realmente transforma.</span>
+                {page.heroTitle}{" "}
+                <span className="text-primary italic">{page.heroHighlight}</span>
               </h1>
               <p className="font-body text-body-lg text-on-surface-variant max-w-[600px]">
-                Después de trabajar en Recursos Humanos, sabemos que gran parte del día no debería estar dedicado a
-                buscar información, perseguir aprobaciones o resolver tareas repetitivas…
+                {page.heroSubtitle}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mt-2">
                 <a
                   href="#contacto"
                   className="bg-primary text-on-primary px-8 py-4 rounded-full font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-xl shadow-primary/20 text-center"
                 >
-                  Coordinar una reunión
+                  {page.heroCtaPrimary}
                 </a>
                 <a
                   href="#features"
                   className="border border-outline text-on-surface px-8 py-4 rounded-full font-label-md text-label-md hover:bg-surface-variant transition-colors text-center"
                 >
-                  Conocer la plataforma
+                  {page.heroCtaSecondary}
                 </a>
               </div>
             </div>
@@ -262,7 +213,7 @@ export default function DossierPage() {
               <img
                 alt="Plataforma Anthrovia"
                 className="w-full h-full object-cover"
-                src="/ethos/hero-card.jpg"
+                src={page.heroImage}
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-surface/30 to-transparent" />
             </div>
@@ -270,12 +221,12 @@ export default function DossierPage() {
 
           <div className="mt-16 md:mt-24 pt-10 md:pt-12 border-t border-outline-variant/20 flex flex-col items-center">
             <p className="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-8">
-              Empresas que confían en nosotros
+              {page.trustLabel}
             </p>
             <div className="flex flex-wrap justify-center gap-8 md:gap-12 opacity-60">
-              {trustLogos.map((name) => (
-                <span key={name} className="font-heading text-lg md:text-xl text-on-surface">
-                  {name}
+              {(page.trustLogos || []).map((logo) => (
+                <span key={logo.name} className="font-heading text-lg md:text-xl text-on-surface">
+                  {logo.name}
                 </span>
               ))}
             </div>
@@ -288,9 +239,9 @@ export default function DossierPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <div className="order-2 lg:order-1 relative rounded-2xl overflow-hidden bg-surface shadow-soft p-8 flex items-center justify-center min-h-[280px] md:min-h-[360px]">
                 <div className="grid grid-cols-2 gap-3 w-full max-w-sm">
-                  {["WhatsApp", "Emails", "Carpetas"].map((label) => (
-                    <div key={label} className="bg-surface-container p-4 rounded-xl text-center">
-                      <p className="text-xs text-on-surface-variant">{label}</p>
+                  {(page.challengeChips || []).map((chip) => (
+                    <div key={chip.label} className="bg-surface-container p-4 rounded-xl text-center">
+                      <p className="text-xs text-on-surface-variant">{chip.label}</p>
                     </div>
                   ))}
                   <div className="bg-primary/10 p-4 rounded-xl text-center border border-primary/20">
@@ -300,23 +251,21 @@ export default function DossierPage() {
               </div>
               <div className="order-1 lg:order-2 flex flex-col gap-6">
                 <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface">
-                  El desafío no es gestionar más procesos. Es lograr que todos trabajen conectados.
+                  {page.challengeTitle}
                 </h2>
                 <p className="font-body text-body-md text-on-surface-variant">
-                  Solicitudes de vacaciones por WhatsApp que se pierden, cadenas interminables de correos para aprobar
-                  una búsqueda, documentos dispersos en diferentes carpetas.
+                  {page.challengeText}
                 </p>
                 <blockquote className="border-l-4 border-primary pl-6 py-2 my-2">
                   <p className="font-heading text-xl md:text-2xl text-primary-container italic">
-                    &ldquo;El problema no es la cantidad de trabajo. Es que la información y los procesos están en
-                    demasiados lugares al mismo tiempo.&rdquo;
+                    &ldquo;{page.challengeQuote}&rdquo;
                   </p>
                 </blockquote>
                 <a
                   href="#features"
                   className="inline-flex items-center gap-2 text-primary font-label-md text-label-md hover:underline underline-offset-4"
                 >
-                  Descubrí una forma más simple de gestionar Recursos Humanos
+                  {page.challengeCta}
                   <ArrowRight className="h-4 w-4" />
                 </a>
               </div>
@@ -328,16 +277,16 @@ export default function DossierPage() {
         <section className="w-full py-16 md:py-24 lg:py-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
           <div className="text-center mb-12 md:mb-16 max-w-3xl mx-auto">
             <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface mb-6">
-              La mayoría de los desafíos no aparecen de un día para el otro…
+              {page.familiarTitle}
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 md:mb-16">
-            {painPoints.map((item) => (
+            {(page.painPoints || []).map((item) => (
               <div
                 key={item.title}
                 className="bg-surface border border-outline-variant/30 rounded-xl p-8 hover:shadow-ethereal hover:-translate-y-1 transition-all duration-300"
               >
-                <item.icon className="text-primary h-9 w-9 mb-6" strokeWidth={1.5} />
+                <DossierGlyph name={item.icon} className="text-primary h-9 w-9 mb-6" />
                 <h3 className="font-label-md text-label-md text-on-surface uppercase mb-3">{item.title}</h3>
                 <p className="font-body text-body-md text-on-surface-variant">{item.body}</p>
               </div>
@@ -345,14 +294,13 @@ export default function DossierPage() {
           </div>
           <div className="bg-secondary-container/50 rounded-2xl p-10 md:p-16 text-center max-w-4xl mx-auto flex flex-col items-center gap-8">
             <h3 className="font-heading text-headline-md text-on-secondary-container">
-              &ldquo;Cuando estos desafíos empiezan a formar parte del día a día, el problema ya no está en las
-              personas, sino en las herramientas.&rdquo;
+              &ldquo;{page.familiarQuote}&rdquo;
             </h3>
             <a
               href="#contacto"
               className="bg-primary text-on-primary px-8 py-4 rounded-full font-label-md text-label-md hover:bg-primary/90 transition-colors"
             >
-              Quiero descubrir cómo simplificar esta gestión
+              {page.familiarCta}
             </a>
           </div>
         </section>
@@ -363,22 +311,22 @@ export default function DossierPage() {
           <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
             <div className="text-center mb-12 md:mb-16">
               <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface max-w-3xl mx-auto">
-                Imaginá una gestión donde la información esté siempre disponible…
+                {page.transformTitle}
               </h2>
             </div>
             <div className="w-full h-[280px] md:h-[480px] lg:h-[560px] rounded-3xl overflow-hidden shadow-ethereal mb-12 md:mb-20 relative group">
               <img
                 alt="Vista de la plataforma"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-                src="/ethos/hero.jpg"
+                src={page.transformImage}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-surface-container-high via-transparent to-transparent" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {pillars.map((p) => (
+              {(page.pillars || []).map((p) => (
                 <div key={p.title} className="flex flex-col gap-4">
                   <div className="w-12 h-12 rounded-full bg-surface-bright flex items-center justify-center text-primary shadow-soft">
-                    <p.icon className="h-5 w-5" />
+                    <DossierGlyph name={p.icon} className="h-5 w-5" />
                   </div>
                   <h4 className="font-label-md text-label-md text-on-surface uppercase">{p.title}</h4>
                   <p className="font-body text-body-md text-on-surface-variant text-sm">{p.body}</p>
@@ -387,13 +335,13 @@ export default function DossierPage() {
             </div>
             <div className="mt-16 md:mt-24 text-center">
               <p className="font-heading text-xl md:text-2xl text-primary italic mb-8">
-                &ldquo;La tecnología tiene sentido cuando ayuda a las personas a trabajar mejor.&rdquo;
+                &ldquo;{page.transformQuote}&rdquo;
               </p>
               <a
                 href="#features"
                 className="inline-flex border-2 border-primary text-primary px-10 py-4 rounded-full font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors"
               >
-                Conocer la solución
+                {page.transformCta}
               </a>
             </div>
           </div>
@@ -406,11 +354,11 @@ export default function DossierPage() {
         >
           <div className="mb-12 md:mb-16">
             <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface max-w-2xl">
-              Una gestión más simple empieza cuando todo trabaja conectado.
+              {page.featuresTitle}
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[minmax(240px,auto)]">
-            {bentoFeatures.map((f) => (
+            {(page.features || []).map((f) => (
               <div
                 key={f.title}
                 className={`bg-surface-container-low rounded-2xl p-8 md:p-10 flex flex-col relative overflow-hidden group ${
@@ -419,7 +367,7 @@ export default function DossierPage() {
               >
                 <div className="z-10 relative">
                   <div className="w-10 h-10 rounded-full bg-surface flex items-center justify-center text-primary mb-6 shadow-soft">
-                    <f.icon className="h-5 w-5" />
+                    <DossierGlyph name={f.icon} className="h-5 w-5" />
                   </div>
                   <h3 className="font-heading text-xl md:text-2xl text-on-surface mb-2">{f.title}</h3>
                   <p className={`font-body text-body-md text-on-surface-variant ${f.wide ? "max-w-sm" : ""}`}>
@@ -434,15 +382,14 @@ export default function DossierPage() {
           </div>
           <div className="mt-16 md:mt-20 border-t border-outline-variant/30 pt-12 md:pt-16 flex flex-col md:flex-row items-center justify-between gap-8">
             <p className="font-heading text-xl text-on-surface max-w-xl">
-              &ldquo;Más que incorporar una nueva herramienta, se trata de construir una forma más simple de
-              trabajar.&rdquo;
+              &ldquo;{page.featuresQuote}&rdquo;
             </p>
-            <Link
-              to="/dossier/modulos"
+            <a
+              href="#contacto"
               className="bg-primary text-on-primary px-8 py-4 rounded-full font-label-md text-label-md whitespace-nowrap hover:shadow-lg hover:shadow-primary/20 transition-all"
             >
-              Quiero conocer cómo funciona
-            </Link>
+              {page.featuresCta}
+            </a>
           </div>
         </section>
 
@@ -450,12 +397,12 @@ export default function DossierPage() {
         <section className="w-full py-16 md:py-24 lg:py-section-gap bg-surface-container-highest">
           <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
             <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface mb-12 md:mb-16 max-w-2xl">
-              Una app pensada para acompañar la evolución de Recursos Humanos.
+              {page.statsTitle}
             </h2>
             <div className="flex flex-col md:flex-row flex-wrap justify-between items-start gap-10 md:gap-12 border-b border-outline-variant/20 pb-12 md:pb-16 mb-12 md:mb-16">
-              {stats.map((s) => (
+              {(page.stats || []).map((s) => (
                 <div key={s.label} className="flex items-center gap-4">
-                  <s.icon className="text-primary h-8 w-8" strokeWidth={1.5} />
+                  <DossierGlyph name={s.icon} className="text-primary h-8 w-8" />
                   <div>
                     <p className="font-heading text-4xl text-on-surface">{s.value}</p>
                     <p className="font-label-md text-label-md text-on-surface-variant uppercase">{s.label}</p>
@@ -468,7 +415,7 @@ export default function DossierPage() {
                 href="#contacto"
                 className="border border-outline text-on-surface px-8 py-4 rounded-full font-label-md text-label-md hover:bg-surface-variant transition-colors"
               >
-                Quiero conversar con un especialista
+                {page.statsCta}
               </a>
             </div>
           </div>
@@ -479,14 +426,13 @@ export default function DossierPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
             <div>
               <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface mb-6">
-                La tecnología es importante. Saber cómo aplicarla a tu organización, todavía más.
+                {page.whyTitle}
               </h2>
               <p className="font-body text-body-lg text-on-surface-variant mb-10 md:mb-12">
-                En Anthrovia no somos solo un puente hacia una herramienta. Somos consultores de Recursos Humanos que
-                entendemos el negocio y los desafíos de gestión antes de acercar una solución.
+                {page.whyText}
               </p>
               <div className="flex flex-col gap-8">
-                {whyItems.map((item) => (
+                {(page.whyItems || []).map((item) => (
                   <div key={item.title} className="flex items-start gap-4">
                     <CheckCircle2 className="text-primary mt-1 h-5 w-5 shrink-0" />
                     <div>
@@ -501,7 +447,7 @@ export default function DossierPage() {
                   href="#contacto"
                   className="inline-flex bg-primary text-on-primary px-8 py-4 rounded-full font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
                 >
-                  Coordinar una conversación
+                  {page.whyCta}
                 </a>
               </div>
             </div>
@@ -509,11 +455,11 @@ export default function DossierPage() {
               <img
                 alt="Consultoría Anthrovia"
                 className="w-full h-full object-cover"
-                src="/ethos/in-company.jpg"
+                src={page.whyImage}
               />
               <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-surface/90 to-transparent">
                 <p className="font-heading text-xl text-on-surface italic">
-                  &ldquo;Creemos en soluciones con impacto.&rdquo;
+                  &ldquo;{page.whyQuote}&rdquo;
                 </p>
               </div>
             </div>
@@ -590,10 +536,10 @@ export default function DossierPage() {
           <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
             <div>
               <h2 className="font-heading text-headline-lg-mobile md:text-headline-lg text-on-surface mb-10 md:mb-12">
-                Dar el primer paso lleva menos tiempo del que imaginás.
+                {page.pathTitle}
               </h2>
               <div className="relative border-l border-outline-variant/30 ml-4 pb-8 space-y-10">
-                {steps.map((step, i) => (
+                {(page.steps || []).map((step, i) => (
                   <div key={step.n} className="relative pl-10">
                     <div
                       className={`absolute w-8 h-8 rounded-full bg-surface -left-[17px] top-0 flex items-center justify-center font-label-md text-sm ${
@@ -611,25 +557,25 @@ export default function DossierPage() {
               </div>
               <div className="mt-10 p-6 bg-surface rounded-xl border border-outline-variant/20">
                 <p className="font-heading text-lg text-primary italic mb-4">
-                  &ldquo;Hoy puede ser el primer paso hacia una gestión más simple.&rdquo;
+                  &ldquo;{page.pathQuote}&rdquo;
                 </p>
                 <a
                   href={`mailto:${email}`}
                   className="text-primary font-label-md text-label-md border-b border-primary pb-1 hover:text-primary-container transition-colors"
                 >
-                  Quiero coordinar una reunión
+                  {page.pathMailtoLabel}
                 </a>
               </div>
             </div>
 
             <div className="bg-surface rounded-3xl p-8 md:p-12 lg:p-14 shadow-ethereal border border-outline-variant/10">
-              <h3 className="font-heading text-2xl md:text-3xl text-on-surface mb-8">Conversemos</h3>
+              <h3 className="font-heading text-2xl md:text-3xl text-on-surface mb-8">{page.formTitle}</h3>
               {submitted ? (
                 <div className="py-12 text-center space-y-4">
                   <CheckCircle2 className="h-12 w-12 text-primary mx-auto" />
-                  <p className="font-heading text-xl text-on-surface">¡Gracias por escribirnos!</p>
+                  <p className="font-heading text-xl text-on-surface">{page.formSuccessTitle}</p>
                   <p className="font-body text-body-md text-on-surface-variant">
-                    Te contactaremos a la brevedad para coordinar una conversación.
+                    {page.formSuccessText}
                   </p>
                   <p className="text-sm text-on-surface-variant pt-4">
                     O escribinos a{" "}
@@ -639,7 +585,7 @@ export default function DossierPage() {
                   </p>
                 </div>
               ) : (
-                <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+                <form className="flex flex-col gap-6" onSubmit={handleSubmit} noValidate>
                   <div className="flex flex-col gap-2">
                     <label htmlFor="dossier-name" className="font-label-md text-xs text-on-surface-variant uppercase tracking-wider">
                       Nombre y apellido
@@ -653,6 +599,7 @@ export default function DossierPage() {
                       placeholder="Ej. Ana García"
                       type="text"
                     />
+                    {fieldErrors.name && <p className="text-sm text-error">{fieldErrors.name}</p>}
                   </div>
                   <div className="flex flex-col gap-2">
                     <label htmlFor="dossier-company" className="font-label-md text-xs text-on-surface-variant uppercase tracking-wider">
@@ -681,6 +628,7 @@ export default function DossierPage() {
                         placeholder="ana@empresa.com"
                         type="email"
                       />
+                      {fieldErrors.email && <p className="text-sm text-error">{fieldErrors.email}</p>}
                     </div>
                     <div className="flex flex-col gap-2">
                       <label htmlFor="dossier-phone" className="font-label-md text-xs text-on-surface-variant uppercase tracking-wider">
@@ -694,6 +642,7 @@ export default function DossierPage() {
                         placeholder="+54 9 11..."
                         type="tel"
                       />
+                      {fieldErrors.phone && <p className="text-sm text-error">{fieldErrors.phone}</p>}
                     </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -725,6 +674,7 @@ export default function DossierPage() {
                           ))}
                           <option value={OTHER_DAY}>Ninguno de estos me queda</option>
                         </select>
+                        {fieldErrors.day && <p className="text-sm text-error">{fieldErrors.day}</p>}
                       </div>
                       {form.day === OTHER_DAY && (
                         <div className="flex flex-col gap-2">
@@ -778,6 +728,7 @@ export default function DossierPage() {
                           ))}
                           <option value={OTHER_SLOT}>Otra</option>
                         </select>
+                        {fieldErrors.slot && <p className="text-sm text-error">{fieldErrors.slot}</p>}
                       </div>
                       {form.slot === OTHER_SLOT && (
                         <div className="flex flex-col gap-2">

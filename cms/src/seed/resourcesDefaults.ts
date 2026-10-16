@@ -1,4 +1,7 @@
 export const defaultResourcesPage = {
+  sectionVisible: true,
+  comingSoonTitle: 'Próximamente',
+  comingSoonText: 'Estamos preparando recursos nuevos. Volvé en unos días.',
   eyebrow: 'Recursos Gratuitos',
   title: 'Herramientas para potenciar tu desarrollo y tu gestión de personas.',
   subtitle:

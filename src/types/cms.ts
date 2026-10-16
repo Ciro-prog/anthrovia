@@ -548,6 +548,7 @@ export interface ResourceItem {
   slug: string
   category: ResourceCategory
   icon?: ResourceIcon
+  image?: string
   excerpt: string
   body?: string
   files: ResourceFile[]
@@ -555,6 +556,9 @@ export interface ResourceItem {
 }
 
 export interface ResourcesPageContent {
+  sectionVisible?: boolean
+  comingSoonTitle?: string
+  comingSoonText?: string
   eyebrow?: string
   title?: string
   subtitle?: string
@@ -571,6 +575,85 @@ export interface ResourcesPageContent {
   closingTitle?: string
   closingText?: string
   closingCta?: string
+}
+
+export type DossierIcon =
+  | 'folder'
+  | 'messages'
+  | 'clipboard'
+  | 'trending'
+  | 'usersround'
+  | 'activity'
+  | 'network'
+  | 'message'
+  | 'linechart'
+  | 'smile'
+  | 'git'
+  | 'todo'
+  | 'graduation'
+  | 'heart'
+  | 'barchart'
+  | 'building'
+  | 'globe'
+  | 'users'
+  | 'smartphone'
+
+export interface DossierTextItem {
+  icon?: DossierIcon
+  title: string
+  body: string
+  wide?: boolean
+}
+
+export interface DossierStatItem {
+  icon?: DossierIcon
+  value: string
+  label: string
+}
+
+export interface DossierPageContent {
+  heroTitle?: string
+  heroHighlight?: string
+  heroSubtitle?: string
+  heroCtaPrimary?: string
+  heroCtaSecondary?: string
+  heroImage?: string
+  trustLabel?: string
+  trustLogos?: { name: string }[]
+  challengeTitle?: string
+  challengeText?: string
+  challengeQuote?: string
+  challengeCta?: string
+  challengeChips?: { label: string }[]
+  familiarTitle?: string
+  painPoints?: DossierTextItem[]
+  familiarQuote?: string
+  familiarCta?: string
+  transformTitle?: string
+  transformImage?: string
+  pillars?: DossierTextItem[]
+  transformQuote?: string
+  transformCta?: string
+  featuresTitle?: string
+  features?: DossierTextItem[]
+  featuresQuote?: string
+  featuresCta?: string
+  statsTitle?: string
+  stats?: DossierStatItem[]
+  statsCta?: string
+  whyTitle?: string
+  whyText?: string
+  whyItems?: { title: string; body: string }[]
+  whyCta?: string
+  whyImage?: string
+  whyQuote?: string
+  pathTitle?: string
+  steps?: { n: string; title: string; body: string }[]
+  pathQuote?: string
+  pathMailtoLabel?: string
+  formTitle?: string
+  formSuccessTitle?: string
+  formSuccessText?: string
 }
 
 export interface BookingWindow {
@@ -591,6 +674,11 @@ export interface SiteSettingsContent {
   defaultEventTypeSlug?: string;
   whatsappNumber?: string;
   contactEmail?: string;
+  loadingTitle?: string;
+  loadingMessage?: string;
+  notFoundTitle?: string;
+  notFoundMessage?: string;
+  notFoundCtaLabel?: string;
   bookingDays?: string[]
   bookingWindows?: BookingWindow[]
   bookingDurationMinutes?: number

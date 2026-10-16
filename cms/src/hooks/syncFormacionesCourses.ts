@@ -2,13 +2,14 @@ import type { CollectionAfterDeleteHook, CollectionBeforeChangeHook, Payload } f
 import { courseBlocksToPayload } from '../seed/courseToBlock'
 import { getCmNivel1TemplateBlocks } from '../seed/cmNivel1Template'
 
-const SKIP_ITEM_IDS = new Set(['liderazgo-emocional'])
+const SKIP_ITEM_IDS = new Set<string>()
 
 const KNOWN_ITEM_SLUGS: Record<string, string> = {
   'cm-nivel-1': 'community-manager-nivel-1',
   'cm-pro': 'community-manager-pro',
   'hablar-publico': 'hablar-en-publico',
   'academia-comercial': 'academia-desarrollo-comercial',
+  'liderazgo-emocional': 'liderazgo-emocional',
 }
 
 export function slugifyTitle(title: string): string {

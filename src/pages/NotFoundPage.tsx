@@ -1,25 +1,15 @@
-import { Link } from "react-router-dom"
-import { Navbar } from "@/components/Navbar"
-import { Footer } from "@/components/Footer"
+import { HoldingPage } from '@/components/HoldingPage'
+import { useCMS } from '@/context/CMSContext'
+import { defaultSiteSettings } from '@/lib/cmsApi'
 
 export function NotFoundPage() {
-  return (
-    <div className="min-h-screen bg-surface text-on-surface flex flex-col">
-      <Navbar />
-      <main className="flex-1 flex flex-col items-center justify-center px-6 pt-32 pb-20 text-center">
-        <p className="font-label-md uppercase tracking-widest text-primary mb-4">404</p>
-        <h1 className="font-heading text-headline-lg text-on-surface mb-4">Esta página no existe</h1>
-        <p className="font-body text-body-lg text-on-surface-variant max-w-md mb-8">
-          El enlace puede estar viejo o la dirección mal escrita.
-        </p>
-        <Link
-          to="/"
-          className="bg-primary text-on-primary px-8 py-3 rounded-full font-label-md uppercase tracking-widest hover:bg-primary-container transition-colors"
-        >
-          Volver al inicio
-        </Link>
-      </main>
-      <Footer />
-    </div>
-  )
+  const { siteSettings } = useCMS()
+  const title = siteSettings.notFoundTitle || defaultSiteSettings.notFoundTitle || 'En mantenimiento'
+  const message =
+    siteSettings.notFoundMessage ||
+    defaultSiteSettings.notFoundMessage ||
+    'Esta dirección no está disponible por ahora. Podés seguir recorriendo el sitio desde el menú o volver al inicio.'
+  const ctaLabel = siteSettings.notFoundCtaLabel || defaultSiteSettings.notFoundCtaLabel || 'Volver al inicio'
+
+  return <HoldingPage eyebrow="Sitio" title={title} message={message} ctaLabel={ctaLabel} />
 }

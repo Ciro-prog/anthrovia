@@ -6,8 +6,9 @@ const groups = [
     links: [
       { href: '/admin/collections/pages', label: 'Páginas', hint: 'Inicio y capacitaciones. Ocultá propósito, misión, redes o noticias' },
       { href: '/admin/collections/courses', label: 'Capacitaciones', hint: 'Página «conocer más» de cada curso' },
-      { href: '/admin/globals/resources-page', label: 'Página de recursos', hint: 'Textos e imágenes de /recursos' },
-      { href: '/admin/collections/resources', label: 'Recursos', hint: 'Cada guía o plantilla' },
+      { href: '/admin/globals/resources-page', label: 'Página de recursos', hint: 'Textos, visibilidad y Próximamente de /recursos' },
+      { href: '/admin/globals/dossier-page', label: 'Página dossier', hint: 'Textos e imágenes de /dossier (sin módulos)' },
+      { href: '/admin/collections/resources', label: 'Recursos', hint: 'Cada guía o plantilla. Publicar / imagen / archivos' },
       { href: '/admin/collections/media', label: 'Fotos y archivos', hint: 'Imágenes y descargas' },
     ],
   },
@@ -26,7 +27,7 @@ const groups = [
       {
         href: '/admin/globals/site-settings',
         label: 'Ajustes del sitio',
-        hint: 'Días, horarios y duración de cada reunión',
+        hint: 'Agenda, textos de carga y página no encontrada',
       },
     ],
   },

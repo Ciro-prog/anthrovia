@@ -25,7 +25,7 @@ const learningLinks = [
 
 export const Navbar = ({ variant }: { variant?: NavVariant }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const { content } = useCMS()
+  const { content, resourcesPage } = useCMS()
   const location = useLocation()
 
   const resolvedVariant: NavVariant =
@@ -34,7 +34,11 @@ export const Navbar = ({ variant }: { variant?: NavVariant }) => {
   const settings = content.sections.find(s => s.type === 'settings') as SettingsSectionContent
   const cvUrl = settings?.cvUrl || "/postulacion"
   const cvText = settings?.cvText || "Dejanos tu CV"
-  const links = resolvedVariant === "learning" ? learningLinks : homeLinks
+  const showResources = resourcesPage.sectionVisible !== false
+  const links =
+    resolvedVariant === "learning"
+      ? learningLinks
+      : homeLinks.filter((link) => showResources || link.to !== "/recursos")
 
   const renderLink = (link: typeof homeLinks[0], mobile = false) => {
     const className = mobile

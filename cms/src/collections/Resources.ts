@@ -92,6 +92,13 @@ export const Resources: CollectionConfig = {
       ],
     },
     {
+      name: 'image',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Imagen',
+      admin: { description: 'Foto de la card. Si está vacía, se muestra el ícono.' },
+    },
+    {
       name: 'excerpt',
       type: 'textarea',
       required: true,

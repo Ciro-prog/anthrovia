@@ -26,6 +26,30 @@ export const ResourcesPage: GlobalConfig = {
         {
           label: 'Hero',
           fields: [
+            {
+              name: 'sectionVisible',
+              type: 'checkbox',
+              label: 'Mostrar Recursos gratuitos',
+              defaultValue: true,
+              admin: {
+                description:
+                  'Si está apagado, se oculta el botón del menú y /recursos muestra Próximamente.',
+              },
+            },
+            {
+              name: 'comingSoonTitle',
+              type: 'text',
+              label: 'Título de Próximamente',
+              defaultValue: 'Próximamente',
+              admin: { condition: (_, sibling) => sibling?.sectionVisible === false },
+            },
+            {
+              name: 'comingSoonText',
+              type: 'textarea',
+              label: 'Texto de Próximamente',
+              defaultValue: 'Estamos preparando recursos nuevos. Volvé en unos días.',
+              admin: { condition: (_, sibling) => sibling?.sectionVisible === false },
+            },
             { name: 'eyebrow', type: 'text', label: 'Etiqueta', defaultValue: 'Recursos Gratuitos' },
             {
               name: 'title',

@@ -27,7 +27,7 @@ function waLabel(number: string) {
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear()
-  const { content, siteSettings } = useCMS()
+  const { content, siteSettings, resourcesPage } = useCMS()
 
   const settings = content.sections.find((s) => s.type === "settings") as SettingsSectionContent
   const contact = content.sections.find((s) => s.type === "contact") as ContactSectionContent | undefined
@@ -115,7 +115,9 @@ export const Footer = () => {
             <Link className="font-body text-body-md text-on-surface-variant hover:text-primary transition-colors" to="/">Inicio</Link>
             <a className="font-body text-body-md text-on-surface-variant hover:text-primary transition-colors" href="/#servicios">Servicios</a>
             <Link className="font-body text-body-md text-on-surface-variant hover:text-primary transition-colors" to="/capacitaciones">Capacitaciones</Link>
-            <Link className="font-body text-body-md text-on-surface-variant hover:text-primary transition-colors" to="/recursos">Recursos</Link>
+            {resourcesPage.sectionVisible !== false && (
+              <Link className="font-body text-body-md text-on-surface-variant hover:text-primary transition-colors" to="/recursos">Recursos</Link>
+            )}
             <a className="font-body text-body-md text-on-surface-variant hover:text-primary transition-colors" href="/#contacto">Contacto</a>
           </div>
 

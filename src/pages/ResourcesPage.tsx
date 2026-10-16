@@ -12,7 +12,9 @@ import {
 } from 'lucide-react'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
+import { HoldingPage } from '@/components/HoldingPage'
 import { useCMS } from '@/context/CMSContext'
+import { siteLoadingMessage } from '@/lib/siteCopy'
 import {
   defaultResourcesPage,
   RESOURCE_CATEGORIES,
@@ -37,9 +39,20 @@ const BADGE: Record<ResourceItem['category'], string> = {
 }
 
 export function ResourcesPage() {
-  const { resourcesPage, resources, isLoading, cmsError } = useCMS()
-  const page = { ...defaultResourcesPage, ...resourcesPage }
+  const { resourcesPage, resources, isLoading, cmsError, isPreview, siteSettings } = useCMS()
   const [filter, setFilter] = useState<ResourceItem['category'] | 'all'>('all')
+  const page = { ...defaultResourcesPage, ...resourcesPage }
+
+  if (page.sectionVisible === false && !isPreview) {
+    return (
+      <HoldingPage
+        eyebrow="Recursos"
+        title={page.comingSoonTitle || 'Próximamente'}
+        message={page.comingSoonText || 'Estamos preparando recursos nuevos. Volvé en unos días.'}
+        ctaLabel="Volver al inicio"
+      />
+    )
+  }
   const visible =
     filter === 'all' ? resources : resources.filter((r) => r.category === filter)
 
@@ -168,7 +181,9 @@ export function ResourcesPage() {
               </p>
             )}
             {isLoading && resources.length === 0 && (
-              <p className="font-body text-body-md text-on-surface-variant mb-8">Cargando recursos…</p>
+              <p className="font-body text-body-md text-on-surface-variant mb-8">
+                {siteLoadingMessage(siteSettings, 'Cargando recursos…')}
+              </p>
             )}
             {!isLoading && visible.length === 0 && (
               <p className="font-body text-body-lg text-on-surface-variant">
@@ -184,13 +199,18 @@ export function ResourcesPage() {
                     className="bg-surface-container-lowest p-8 rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-outline-variant/30 group flex flex-col h-full relative overflow-hidden"
                   >
                     <div className="absolute top-0 left-0 w-full h-1 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                    {item.image && (
+                      <div className="-mx-8 -mt-8 mb-6 h-40 overflow-hidden">
+                        <img src={item.image} alt="" className="w-full h-full object-cover" />
+                      </div>
+                    )}
                     <div className="flex justify-between items-start mb-6">
                       <span
                         className={`${BADGE[item.category]} font-label-md text-xs py-1 px-3 rounded-full uppercase tracking-wider`}
                       >
                         {RESOURCE_CATEGORY_LABEL[item.category]}
                       </span>
-                      <Icon className="w-5 h-5 text-outline" />
+                      {!item.image && <Icon className="w-5 h-5 text-outline" />}
                     </div>
                     <h4 className="font-heading text-xl text-on-surface mb-3 group-hover:text-primary transition-colors line-clamp-2">
                       {item.title}

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom"
 import { Navbar } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { getTextStyle } from "@/lib/utils"
+import { siteLoadingMessage } from "@/lib/siteCopy"
 
 const NewsCard = ({ article }: { article: NewsItem }) => {
   const navigate = useNavigate()
@@ -70,7 +71,7 @@ const NewsCard = ({ article }: { article: NewsItem }) => {
 }
 
 export const NewsPage = () => {
-  const { content, isLoading, cmsError } = useCMS()
+  const { content, isLoading, cmsError, siteSettings } = useCMS()
   const navigate = useNavigate()
   
   const newsSection = content.sections.find(s => s.id === 'news') as NewsSectionContent
@@ -119,7 +120,9 @@ export const NewsPage = () => {
           </p>
         )}
         {isLoading && articles.length === 0 && (
-          <p className="font-body text-body-lg text-on-surface-variant text-center">Cargando noticias…</p>
+          <p className="font-body text-body-lg text-on-surface-variant text-center">
+            {siteLoadingMessage(siteSettings, 'Cargando noticias…')}
+          </p>
         )}
         {!isLoading && articles.length === 0 && (
           <p className="font-body text-body-lg text-on-surface-variant text-center">

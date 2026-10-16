@@ -7,21 +7,25 @@ import {
   ApplicationFormContent,
   ResourcesPageContent,
   ResourceItem,
+  DossierPageContent,
 } from '../types/cms'
 import { initialContent } from '../data/initialContent'
 import { coursesData } from '../data/coursesContent'
 import { defaultApplicationForm } from '../data/applicationFormDefaults'
 import { defaultResources, defaultResourcesPage } from '../data/resourcesDefaults'
+import { defaultDossierPage, mergeDossierPage } from '../data/dossierPageDefaults'
 import {
   applyRemoteSections,
   defaultSiteSettings,
   fetchApplicationForm,
+  fetchDossierPage,
   fetchResources,
   fetchResourcesPage,
   fetchSiteContent,
   fetchSiteSettings,
   getCmsBaseUrl,
   isPreviewMode,
+  mapCmsDossierPage,
   mapCmsResource,
   mapCmsResourcesPage,
 } from '../lib/cmsApi'
@@ -35,6 +39,7 @@ interface CMSContextType {
   applicationForm: ApplicationFormContent
   resourcesPage: ResourcesPageContent
   resources: ResourceItem[]
+  dossierPage: DossierPageContent
   updateSection: (sectionId: string, newContent: Partial<SectionContent>) => void
   saveContent: () => Promise<void>
   isLoading: boolean
@@ -74,6 +79,10 @@ type PreviewPageDoc = {
   body?: string
   icon?: string
   published?: boolean
+  image?: unknown
+  sectionVisible?: boolean
+  comingSoonTitle?: string
+  comingSoonText?: string
   eyebrow?: string
   catalogTitle?: string
   introTitle?: string
@@ -85,6 +94,9 @@ type PreviewPageDoc = {
   closingTitle?: string
   closingText?: string
   closingCta?: string
+  heroTitle?: string
+  pathTitle?: string
+  formTitle?: string
   introImage1?: unknown
   introImage2?: unknown
   introImage3?: unknown
@@ -96,6 +108,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [applicationForm, setApplicationForm] = useState<ApplicationFormContent>(defaultApplicationForm)
   const [resourcesPage, setResourcesPage] = useState<ResourcesPageContent>(defaultResourcesPage)
   const [resources, setResources] = useState<ResourceItem[]>(defaultResources)
+  const [dossierPage, setDossierPage] = useState<DossierPageContent>(defaultDossierPage)
   const [isLoading, setIsLoading] = useState(true)
   const [cmsOnline, setCmsOnline] = useState(false)
   const [cmsError, setCmsError] = useState(false)
@@ -112,6 +125,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const resource = window.location.pathname.match(/^\/recursos\/([^/]+)/)
     if (resource) return resource[1]
     if (window.location.pathname.startsWith('/recursos')) return 'recursos'
+    if (window.location.pathname === '/dossier' || window.location.pathname === '/dossier/') return 'dossier'
     return 'home'
   }, [])
 
@@ -131,17 +145,23 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const load = async () => {
       setIsLoading(true)
       try {
-        const [remote, settings, form, page, list] = await Promise.all([
+        const [remote, settings, form, page, list, dossier] = await Promise.all([
           fetchSiteContent(),
           fetchSiteSettings(),
           fetchApplicationForm(),
           fetchResourcesPage(),
           fetchResources(),
+          fetchDossierPage(),
         ])
         if (!cancelled) {
           setContent(remote.content)
           const reachable =
-            remote.reachable || Boolean(settings) || Boolean(form) || Boolean(page) || Boolean(list)
+            remote.reachable ||
+            Boolean(settings) ||
+            Boolean(form) ||
+            Boolean(page) ||
+            Boolean(list) ||
+            Boolean(dossier)
           setCmsOnline(Boolean(cmsBase) && reachable)
           setCmsError(Boolean(cmsBase) && !reachable)
           if (settings) {
@@ -173,7 +193,8 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               introImage3: page.introImage3 || defaultResourcesPage.introImage3,
             })
           }
-          if (list?.length) setResources(list)
+          if (list) setResources(list)
+          if (dossier) setDossierPage(mergeDossierPage(dossier))
         }
       } catch (err) {
         console.warn('CMS load failed, using local content', err)
@@ -196,7 +217,18 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     if (!isPreview || !liveData) return
 
-    if (liveData.catalogTitle || liveData.introTitle || liveData.howTitle || liveData.introCallout) {
+    if (liveData.heroTitle || liveData.pathTitle || liveData.formTitle) {
+      setDossierPage(mergeDossierPage(mapCmsDossierPage(liveData as Record<string, unknown>)))
+    }
+
+    if (
+      liveData.catalogTitle ||
+      liveData.introTitle ||
+      liveData.howTitle ||
+      liveData.introCallout ||
+      liveData.comingSoonTitle ||
+      liveData.sectionVisible === false
+    ) {
       const mapped = mapCmsResourcesPage(liveData as Record<string, unknown>)
       setResourcesPage({
         ...defaultResourcesPage,
@@ -302,6 +334,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         applicationForm,
         resourcesPage,
         resources,
+        dossierPage,
         updateSection,
         saveContent,
         isLoading,

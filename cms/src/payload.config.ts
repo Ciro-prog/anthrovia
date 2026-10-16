@@ -18,10 +18,12 @@ import { Resources } from './collections/Resources'
 import { SiteSettings } from './globals/SiteSettings'
 import { ApplicationForm } from './globals/ApplicationForm'
 import { ResourcesPage } from './globals/ResourcesPage'
+import { DossierPage } from './globals/DossierPage'
 import { migrations } from './migrations'
 import { seedPages } from './seed/seedPages'
 import { seedCourses } from './seed/seedCourses'
 import { seedResources } from './seed/seedResources'
+import { seedDossierPage } from './seed/seedDossierPage'
 import { availabilityEndpoint } from './endpoints/availability'
 import { defaultPrivacySections, defaultTermsSections } from './seed/legalDefaults'
 import {
@@ -76,7 +78,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Pages, Courses, Leads, EventTypes, Bookings, Applications, Resources],
-  globals: [SiteSettings, ApplicationForm, ResourcesPage],
+  globals: [SiteSettings, ApplicationForm, ResourcesPage, DossierPage],
   endpoints: [availabilityEndpoint],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || 'dev-secret-change-me',
@@ -211,6 +213,20 @@ export default buildConfig({
             ...(termsEmpty
               ? { termsTitle: 'Términos y Condiciones', termsSections: defaultTermsSections }
               : {}),
+            ...(!(current as { loadingMessage?: string }).loadingMessage
+              ? {
+                  loadingTitle: 'Cargando',
+                  loadingMessage: 'Estamos cargando el contenido…',
+                }
+              : {}),
+            ...(!(current as { notFoundTitle?: string }).notFoundTitle
+              ? {
+                  notFoundTitle: 'En mantenimiento',
+                  notFoundMessage:
+                    'Esta dirección no está disponible por ahora. Podés seguir recorriendo el sitio desde el menú o volver al inicio.',
+                  notFoundCtaLabel: 'Volver al inicio',
+                }
+              : {}),
           } as never,
           overrideAccess: true,
         })
@@ -276,6 +292,7 @@ export default buildConfig({
       await seedPages(payload)
       await seedCourses(payload)
       await seedResources(payload)
+      await seedDossierPage(payload)
     } catch (err) {
       const extra =
         typeof err === 'object' && err && 'data' in err

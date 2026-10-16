@@ -4,6 +4,8 @@ import { CoursePageContent, CoursesSectionContent } from "@/types/cms"
 import { Navbar } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { CourseBlockRenderer } from "@/components/learning/CourseBlockRenderer"
+import { LiderazgoManualPage } from "@/components/learning/LiderazgoManualPage"
+import { siteLoadingMessage } from "@/lib/siteCopy"
 
 const COHORT_LABEL: Record<string, string> = {
   open: "Inscripciones abiertas",
@@ -62,16 +64,23 @@ function CourseMessage({ children }: { children: string }) {
 
 export const CoursePage = () => {
   const { slug } = useParams<{ slug: string }>()
-  const { content, isLoading, isPreview, cmsError } = useCMS()
+  const { content, isLoading, isPreview, cmsError, siteSettings } = useCMS()
 
   const coursesSection = content.sections.find((s) => s.type === "courses") as
     | CoursesSectionContent
     | undefined
 
   const course = coursesSection?.courses.find((c) => c.slug === slug)
+  const isLiderazgo = slug === "liderazgo-emocional"
+
+  if (isLiderazgo) {
+    return <LiderazgoManualPage course={course} />
+  }
 
   if (!course) {
-    if (isLoading || isPreview) return <CourseMessage>Cargando la capacitación…</CourseMessage>
+    if (isLoading || isPreview) {
+      return <CourseMessage>{siteLoadingMessage(siteSettings, "Cargando la capacitación…")}</CourseMessage>
+    }
     if (cmsError) {
       return (
         <CourseMessage>

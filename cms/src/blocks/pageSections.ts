@@ -178,7 +178,7 @@ export const ServicesBlock: Block = {
       admin: {
         initCollapsed: true,
         description:
-          'Editá la card acá. Al publicar se crea la URL (/capacitaciones/{título}) y la página «conocer más». Eliminar la card y Publish borra también la página /capacitaciones/…. Liderazgo Emocional sigue en #contacto.',
+          'Editá la card acá. Al publicar se crea la URL (/capacitaciones/{título}) y la página «conocer más». Eliminar la card y Publish borra también la página /capacitaciones/…. Liderazgo Emocional abre /capacitaciones/liderazgo-emocional.',
         components: {
           RowLabel: '/admin/CardRowLabel#CardRowLabel',
         },

@@ -7,9 +7,10 @@ import { useNavigate, useParams } from "react-router-dom"
 import { Navbar } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { Card, CardContent } from "@/components/ui/card"
+import { siteLoadingMessage } from "@/lib/siteCopy"
 
 export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
-  const { content, isLoading, cmsError } = useCMS()
+  const { content, isLoading, cmsError, siteSettings } = useCMS()
   const navigate = useNavigate()
   const [currentSlide, setCurrentSlide] = useState(0)
 
@@ -22,7 +23,7 @@ export const NewsDetailContent = ({ articleId }: { articleId?: string }) => {
 
   if (!article) {
     const message = isLoading
-      ? 'Cargando la noticia…'
+      ? siteLoadingMessage(siteSettings, 'Cargando la noticia…')
       : cmsError
         ? 'No pudimos cargar esta noticia. Probá de nuevo en unos minutos.'
         : 'Noticia no encontrada'

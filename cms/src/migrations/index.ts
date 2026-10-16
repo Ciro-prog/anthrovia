@@ -8,6 +8,10 @@ import * as migration_20260902_054400_resources from './20260902_054400_resource
 import * as migration_20260913_151900_booking_availability from './20260913_151900_booking_availability'
 import * as migration_20261006_120000_booking_week_section_toggles from './20261006_120000_booking_week_section_toggles'
 import * as migration_20261015_140000_application_form_conditions from './20261015_140000_application_form_conditions'
+import * as migration_20261015_192800_resources_visibility from './20261015_192800_resources_visibility'
+import * as migration_20261015_193000_site_status_copy from './20261015_193000_site_status_copy'
+import * as migration_20261015_193200_liderazgo_lead_source from './20261015_193200_liderazgo_lead_source'
+import * as migration_20261015_213500_dossier_page from './20261015_213500_dossier_page'
 
 export const migrations = [
   {
@@ -59,5 +63,25 @@ export const migrations = [
     up: migration_20261015_140000_application_form_conditions.up,
     down: migration_20261015_140000_application_form_conditions.down,
     name: '20261015_140000_application_form_conditions',
+  },
+  {
+    up: migration_20261015_192800_resources_visibility.up,
+    down: migration_20261015_192800_resources_visibility.down,
+    name: '20261015_192800_resources_visibility',
+  },
+  {
+    up: migration_20261015_193000_site_status_copy.up,
+    down: migration_20261015_193000_site_status_copy.down,
+    name: '20261015_193000_site_status_copy',
+  },
+  {
+    up: migration_20261015_193200_liderazgo_lead_source.up,
+    down: migration_20261015_193200_liderazgo_lead_source.down,
+    name: '20261015_193200_liderazgo_lead_source',
+  },
+  {
+    up: migration_20261015_213500_dossier_page.up,
+    down: migration_20261015_213500_dossier_page.down,
+    name: '20261015_213500_dossier_page',
   },
 ]

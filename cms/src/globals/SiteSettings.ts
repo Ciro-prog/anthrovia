@@ -88,7 +88,7 @@ export const SiteSettings: GlobalConfig = {
   label: 'Ajustes del sitio',
   admin: {
     group: 'Agenda',
-    description: 'WhatsApp, horarios de /agendar, días/franjas del dossier y textos legales.',
+    description: 'WhatsApp, horarios de /agendar, textos de carga y 404, dossier y legales.',
     livePreview: {
       url: () => `${previewBase()}/?preview=1`,
     },
@@ -131,6 +131,38 @@ export const SiteSettings: GlobalConfig = {
               name: 'contactEmail',
               type: 'email',
               label: 'Email de contacto',
+            },
+            {
+              name: 'loadingTitle',
+              type: 'text',
+              label: 'Título de carga',
+              defaultValue: 'Cargando',
+              admin: { description: 'Se muestra mientras llega el contenido del CMS.' },
+            },
+            {
+              name: 'loadingMessage',
+              type: 'text',
+              label: 'Texto de carga',
+              defaultValue: 'Estamos cargando el contenido…',
+            },
+            {
+              name: 'notFoundTitle',
+              type: 'text',
+              label: 'Título de página no encontrada',
+              defaultValue: 'En mantenimiento',
+            },
+            {
+              name: 'notFoundMessage',
+              type: 'textarea',
+              label: 'Texto de página no encontrada',
+              defaultValue:
+                'Esta dirección no está disponible por ahora. Podés seguir recorriendo el sitio desde el menú o volver al inicio.',
+            },
+            {
+              name: 'notFoundCtaLabel',
+              type: 'text',
+              label: 'Botón de página no encontrada',
+              defaultValue: 'Volver al inicio',
             },
           ],
         },
