@@ -13,7 +13,7 @@ export const Leads: CollectionConfig = {
     defaultColumns: ['name', 'email', 'source', 'service', 'status', 'createdAt'],
     listSearchableFields: ['name', 'email', 'phone'],
     description:
-      'Mensajes de contacto y de /dossier (Conversemos). Cambiá el Estado: Nuevo → Contactado → Agendado → Cerrado.',
+      'Mensajes de contacto, /dossier (Conversemos) y descargas de recursos. Cambiá el Estado: Nuevo → Contactado → Agendado → Cerrado.',
   },
   access: {
     read: ({ req }) => Boolean(req.user),
@@ -48,6 +48,7 @@ export const Leads: CollectionConfig = {
         { label: 'Capacitaciones', value: 'learning-contact' },
         { label: 'Dossier', value: 'dossier' },
         { label: 'Manual Liderazgo', value: 'liderazgo-manual' },
+        { label: 'Recurso gratis', value: 'resource-download' },
         { label: 'Formulario', value: 'contact-form' },
       ],
       admin: {

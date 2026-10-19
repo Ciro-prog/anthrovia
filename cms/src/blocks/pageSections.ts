@@ -1,4 +1,5 @@
 import type { Block, Field } from 'payload'
+import { FORMACION_TEMPLATES } from '../lib/formacionTemplates'
 
 const sectionId: Field = {
   name: 'sectionId',
@@ -185,6 +186,17 @@ export const ServicesBlock: Block = {
       },
       fields: [
         { name: 'itemId', type: 'text', admin: { hidden: true } },
+        {
+          name: 'template',
+          type: 'select',
+          label: 'Plantilla de la página',
+          defaultValue: 'cm-nivel-1',
+          options: [...FORMACION_TEMPLATES],
+          admin: {
+            description:
+              'Al crear la card, la página «conocer más» se copia de esta formación. Si la card ya tiene página, no se vuelve a clonar.',
+          },
+        },
         ...imagePair('image', 'imageUrl', 'Imagen card'),
         { name: 'title', type: 'text', required: true, label: 'Título' },
         { name: 'description', type: 'textarea', required: true, label: 'Descripción' },

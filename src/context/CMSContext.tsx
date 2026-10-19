@@ -73,6 +73,7 @@ type PreviewPageDoc = {
   inscriptionDeadline?: string
   spots?: number
   cohortStatus?: string
+  template?: string
   excerpt?: string
   category?: string
   files?: unknown
@@ -280,6 +281,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             id: idx >= 0 ? courses[idx].id : `preview-${slug}`,
             slug,
             title: liveData.title || (idx >= 0 ? courses[idx].title : slug),
+            template: liveData.template || (idx >= 0 ? courses[idx].template : undefined),
             blocks: mapped,
             cohortStartDate: liveData.cohortStartDate,
             inscriptionDeadline: liveData.inscriptionDeadline,

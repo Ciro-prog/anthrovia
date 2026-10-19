@@ -62,6 +62,7 @@ type CourseDoc = {
   inscriptionDeadline?: string
   spots?: number
   cohortStatus?: string
+  template?: string
 }
 
 export function isCmsConfigured() {
@@ -282,6 +283,7 @@ export async function fetchSiteContent(): Promise<{ content: SiteContent; reacha
         id: c.courseId || `course-${c.slug}`,
         slug: c.slug,
         title: c.title,
+        template: c.template || undefined,
         blocks: mapCmsCourseBlocks(c.blocks, CMS_URL),
         cohortStartDate: c.cohortStartDate,
         inscriptionDeadline: c.inscriptionDeadline,

@@ -71,7 +71,7 @@ export const CoursePage = () => {
     | undefined
 
   const course = coursesSection?.courses.find((c) => c.slug === slug)
-  const isLiderazgo = slug === "liderazgo-emocional"
+  const isLiderazgo = slug === "liderazgo-emocional" || course?.template === "liderazgo-emocional"
 
   if (isLiderazgo) {
     return <LiderazgoManualPage course={course} />

@@ -12,6 +12,8 @@ import * as migration_20261015_192800_resources_visibility from './20261015_1928
 import * as migration_20261015_193000_site_status_copy from './20261015_193000_site_status_copy'
 import * as migration_20261015_193200_liderazgo_lead_source from './20261015_193200_liderazgo_lead_source'
 import * as migration_20261015_213500_dossier_page from './20261015_213500_dossier_page'
+import * as migration_20261019_121800_leads_source_resource_download from './20261019_121800_leads_source_resource_download'
+import * as migration_20261019_121900_formaciones_template from './20261019_121900_formaciones_template'
 
 export const migrations = [
   {
@@ -83,5 +85,15 @@ export const migrations = [
     up: migration_20261015_213500_dossier_page.up,
     down: migration_20261015_213500_dossier_page.down,
     name: '20261015_213500_dossier_page',
+  },
+  {
+    up: migration_20261019_121800_leads_source_resource_download.up,
+    down: migration_20261019_121800_leads_source_resource_download.down,
+    name: '20261019_121800_leads_source_resource_download',
+  },
+  {
+    up: migration_20261019_121900_formaciones_template.up,
+    down: migration_20261019_121900_formaciones_template.down,
+    name: '20261019_121900_formaciones_template',
   },
 ]

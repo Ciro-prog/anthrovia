@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { coursePageBlocks } from '../blocks/courseBlocks'
 import { removeCardAfterCourseDelete } from '../hooks/syncFormacionesCourses'
+import { FORMACION_TEMPLATES } from '../lib/formacionTemplates'
 
 const previewBase = () =>
   (process.env.PREVIEW_URL || process.env.FRONTEND_URL || 'https://anthroviahr.com').replace(
@@ -19,7 +20,7 @@ export const Courses: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', 'category', 'updatedAt'],
     description:
-      'La card (título, imagen, texto) se edita en Páginas → Formaciones. Acá editá «conocer más». Una card nueva nace con la plantilla de Community Manager Nivel I.',
+      'La card (título, imagen, texto) se edita en Páginas → Formaciones. Acá editá «conocer más». Una card nueva copia la plantilla que elijas al crearla.',
     livePreview: {
       url: ({ data }) => {
         const slug = typeof data?.slug === 'string' ? data.slug : ''
@@ -76,6 +77,17 @@ export const Courses: CollectionConfig = {
               name: 'courseId',
               type: 'text',
               admin: { description: 'ID estable (ej. course-cm-nivel-1)', readOnly: true },
+            },
+            {
+              name: 'template',
+              type: 'select',
+              label: 'Plantilla',
+              defaultValue: 'cm-nivel-1',
+              options: [...FORMACION_TEMPLATES],
+              admin: {
+                readOnly: true,
+                description: 'Se fija al crear la card en Formaciones.',
+              },
             },
             {
               name: 'category',

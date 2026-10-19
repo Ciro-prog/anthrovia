@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { SourceBadge } from './SourceBadge'
 import { sourceMeta } from './sourceMeta'
 
-type Filter = 'all' | 'home' | 'learning' | 'dossier' | 'postulacion' | 'agenda'
+type Filter = 'all' | 'home' | 'learning' | 'dossier' | 'postulacion' | 'agenda' | 'recursos'
 
 type InboxItem = {
   id: string | number
@@ -25,6 +25,7 @@ const FILTERS: { id: Filter; label: string }[] = [
   { id: 'dossier', label: 'Dossier' },
   { id: 'postulacion', label: 'Postulación' },
   { id: 'agenda', label: 'Agenda' },
+  { id: 'recursos', label: 'Recursos' },
 ]
 
 function statusLabel(kind: InboxItem['kind'], status: string) {

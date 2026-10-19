@@ -466,6 +466,7 @@ export interface CoursePageContent {
   id: string;
   slug: string;
   title: string;
+  template?: string;
   blocks: CourseBlock[];
   cohortStartDate?: string;
   inscriptionDeadline?: string;

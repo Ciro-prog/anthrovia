@@ -144,7 +144,11 @@ export function mapCmsBlocksToSections(
                   const slug = String(related?.slug || '')
                   const itemId = String(f.itemId || related?.courseId || related?.id || slug || title)
                   if (!title && !slug) return null
-                  const liderazgo = itemId === 'liderazgo-emocional' || slug === 'liderazgo-emocional'
+                  const template = String(f.template || related?.template || '')
+                  const liderazgo =
+                    template === 'liderazgo-emocional' ||
+                    itemId === 'liderazgo-emocional' ||
+                    slug === 'liderazgo-emocional'
                   return {
                     id: itemId,
                     title,

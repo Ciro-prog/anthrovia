@@ -1,6 +1,11 @@
 import type { CollectionAfterDeleteHook, CollectionBeforeChangeHook, Payload } from 'payload'
+import {
+  isLiderazgoTemplate,
+  normalizeFormacionTemplate,
+  TEMPLATE_COURSE_SLUGS,
+} from '../lib/formacionTemplates'
 import { courseBlocksToPayload } from '../seed/courseToBlock'
-import { getCmNivel1TemplateBlocks } from '../seed/cmNivel1Template'
+import { getFormacionTemplateBlocks } from '../seed/cmNivel1Template'
 
 const SKIP_ITEM_IDS = new Set<string>()
 
@@ -43,12 +48,51 @@ function cardPatch(row: Record<string, unknown>) {
   }
 }
 
+function stripBlockIds(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(stripBlockIds)
+  if (!value || typeof value !== 'object') return value
+  const out: Record<string, unknown> = {}
+  for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+    if (key === 'id') continue
+    out[key] = stripBlockIds(val)
+  }
+  return out
+}
+
+async function cloneTemplateBlocks(payload: Payload, template: string): Promise<Record<string, unknown>[]> {
+  if (isLiderazgoTemplate(template)) return []
+
+  const sourceSlug = TEMPLATE_COURSE_SLUGS[normalizeFormacionTemplate(template)]
+  if (sourceSlug) {
+    try {
+      const found = await payload.find({
+        collection: 'courses',
+        where: { slug: { equals: sourceSlug } },
+        limit: 1,
+        overrideAccess: true,
+        depth: 0,
+      })
+      const blocks = found.docs[0]?.blocks
+      if (Array.isArray(blocks) && blocks.length > 0) {
+        return stripBlockIds(blocks) as Record<string, unknown>[]
+      }
+    } catch (err) {
+      payload.logger.error(
+        `Formaciones: no se pudo leer la plantilla ${sourceSlug}: ${err instanceof Error ? err.message : String(err)}`,
+      )
+    }
+  }
+
+  return courseBlocksToPayload(getFormacionTemplateBlocks(template))
+}
+
 async function findOrCreateCourse(
   payload: Payload,
   row: Record<string, unknown>,
   title: string,
   itemId: string,
 ): Promise<number | string | null> {
+  const template = normalizeFormacionTemplate(row.template, itemId)
   const preferredSlug = KNOWN_ITEM_SLUGS[itemId] || slugifyTitle(title)
 
   const bySlug = await payload.find({
@@ -88,12 +132,13 @@ async function findOrCreateCourse(
       ...cardPatch(row),
       slug,
       courseId: itemId || `course-${slug}`,
-      blocks: courseBlocksToPayload(getCmNivel1TemplateBlocks()) as never,
+      template,
+      blocks: (await cloneTemplateBlocks(payload, template)) as never,
       cohortStatus: 'open',
     } as never,
     overrideAccess: true,
   })
-  payload.logger.info(`Course creado desde Formaciones: ${slug}`)
+  payload.logger.info(`Course creado desde Formaciones (${template}): ${slug}`)
   return created.id
 }
 
@@ -217,6 +262,8 @@ export const syncFormacionesCourses: CollectionBeforeChangeHook = async ({
       }
 
       if (SKIP_ITEM_IDS.has(itemId)) continue
+
+      rec.template = normalizeFormacionTemplate(rec.template, itemId)
 
       try {
         const courseId = await findOrCreateCourse(payload, rec, title, itemId)

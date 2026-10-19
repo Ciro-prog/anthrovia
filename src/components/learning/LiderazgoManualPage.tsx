@@ -21,9 +21,10 @@ export function LiderazgoManualPage({ course }: { course?: CoursePageContent }) 
     | ServicesSectionContent
     | undefined
   const contact = content.sections.find((s) => s.id === "contact") as ContactSectionContent | undefined
-  const formacion = services?.formaciones?.find(
-    (item) => item.id === "liderazgo-emocional" || item.link?.includes("liderazgo-emocional"),
-  )
+  const formacion = services?.formaciones?.find((item) => {
+    if (course?.slug) return Boolean(item.link?.includes(course.slug) || item.id === course.id)
+    return item.id === "liderazgo-emocional" || Boolean(item.link?.includes("liderazgo-emocional"))
+  })
 
   const title = formacion?.title || course?.title || FALLBACK.title
   const description = formacion?.description || FALLBACK.description
